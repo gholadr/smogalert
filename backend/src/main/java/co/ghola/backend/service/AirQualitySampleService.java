@@ -11,14 +11,15 @@ public class AirQualitySampleService {
 
     public static List<AirQualitySample> AirQualitySamples = new ArrayList<AirQualitySample>();
 
-    public AirQualitySample addAirQualitySample(Integer id, String aqi, String message, Date date) throws Exception {
+    public AirQualitySample addAirQualitySample(Long id, String aqi, String message, Date date) throws Exception {
         //Check for already exists
         int index = AirQualitySamples.indexOf(new AirQualitySample(id));
         if (index != -1) throw new Exception("AirQualitySample Record already exists");
-        AirQualitySample q = new AirQualitySample(id, aqi, message, date);
+        AirQualitySample q = new AirQualitySample(aqi, message, date);
         AirQualitySamples.add(q);
         return q;
     }
+/*
 
     public AirQualitySample updateAirQualitySample(AirQualitySample q) throws Exception {
         int index = AirQualitySamples.indexOf(q);
@@ -29,8 +30,9 @@ public class AirQualitySampleService {
         currentAirQualitySample.setDate(q.getDate());
         return q;
     }
+*/
 
-    public void removeAirQualitySample(Integer id) throws Exception {
+    public void removeAirQualitySample(Long id) throws Exception {
         int index = AirQualitySamples.indexOf(new AirQualitySample(id));
         if (index == -1)
             throw new Exception("AirQualitySample Record does not exist");
@@ -51,7 +53,7 @@ public class AirQualitySampleService {
         return results;
     }
 
-    public AirQualitySample getAirQualitySample(Integer id) throws Exception {
+    public AirQualitySample getAirQualitySample(Long id) throws Exception {
         int index = AirQualitySamples.indexOf(new AirQualitySample(id));
         if (index == -1)
             throw new Exception("AirQualitySample Record does not exist");
