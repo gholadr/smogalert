@@ -7,6 +7,7 @@ import com.googlecode.objectify.annotation.Index;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Logger;
 
 @Entity
 public class AirQualitySample {
@@ -19,6 +20,8 @@ public class AirQualitySample {
 
     @Index
     Date date;
+
+    private static final Logger log = Logger.getLogger(AirQualitySample.class.getName());
 
     public AirQualitySample() {
     }
@@ -64,7 +67,10 @@ public class AirQualitySample {
         return date;
     }
 
-    public void setDate(Date date)  { this.date = date; }
+    public void setDate(Date date)  {
+        this.date = date;
+        log.info(date.toString());
+    }
 
     @Override
     public int hashCode() {

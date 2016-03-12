@@ -7,6 +7,7 @@ package co.ghola.backend.service;
         import java.util.Date;
         import java.util.List;
         import java.util.Locale;
+        import java.util.TimeZone;
         import java.util.logging.Logger;
         import com.google.api.server.spi.config.Api;
         import com.google.api.server.spi.config.ApiMethod;
@@ -32,7 +33,8 @@ public class AirQualitySampleServiceAPI {
     public AirQualitySample insertQuote(@Named("aqi") String aqi, @Named("message") String message, @Named("date") String date) throws ParseException{
         AirQualitySample q  =new AirQualitySample();
 
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.ENGLISH);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+        format.setTimeZone(TimeZone.getTimeZone("Asia/Bangkok"));
 
         try {
             q.setDate(format.parse(date));
@@ -72,7 +74,12 @@ public class AirQualitySampleServiceAPI {
     @ApiMethod(name="listAQISamples")
     public CollectionResponse<AirQualitySample> getAirQualitySamples(@Nullable @Named("cursor") String cursorString,
                                                        @Nullable @Named("count") Integer count) {
-        Query<AirQualitySample> query = ofy().load().type(AirQualitySample.class);
+        Query<AirQualitySample> query = ofy()
+                .load()
+                .type(AirQualitySample.class)
+                .order("-date")
+                .filter("date <", new Date());;
+
         if (count != null) query.limit(count);
         if (cursorString != null && cursorString != "") {
             query = query.startAt(Cursor.fromWebSafeString(cursorString));
@@ -96,7 +103,6 @@ public class AirQualitySampleServiceAPI {
                 cursorString = cursor.toWebSafeString();
             }
         }
-        log.info("cursor:" + cursorString);
         return CollectionResponse.<AirQualitySample>builder()
                 .setItems(records)
                 .setNextPageToken(cursorString)
