@@ -1,6 +1,5 @@
 package co.ghola.backend.service;
 
-
         import java.text.ParseException;
         import java.text.SimpleDateFormat;
         import java.time.format.DateTimeParseException;
@@ -9,7 +8,6 @@ package co.ghola.backend.service;
         import java.util.List;
         import java.util.Locale;
         import java.util.logging.Logger;
-
         import com.google.api.server.spi.config.Api;
         import com.google.api.server.spi.config.ApiMethod;
         import com.google.api.server.spi.config.Named;
@@ -32,10 +30,9 @@ public class AirQualitySampleServiceAPI {
 
     @ApiMethod(name = "insertSample")
     public AirQualitySample insertQuote(@Named("aqi") String aqi, @Named("message") String message, @Named("date") String date) throws ParseException{
-//Check for already exists
         AirQualitySample q  =new AirQualitySample();
 
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.ENGLISH);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.ENGLISH);
 
         try {
             q.setDate(format.parse(date));
@@ -102,17 +99,6 @@ public class AirQualitySampleServiceAPI {
         return CollectionResponse.<AirQualitySample>builder().setItems(records).setNextPageToken(cursorString).build();
     }
 
-
-    @ApiMethod(name="listByDate")
-    public List<AirQualitySample> getAirQualitySamplesByDate(@Named("date") Date date) {
-        List<AirQualitySample> results = new ArrayList<AirQualitySample>();
-        for (AirQualitySample AirQualitySample : AirQualitySamples) {
-            if (AirQualitySample.getDate().equals(date)) {
-                results.add(AirQualitySample);
-            }
-        }
-        return results;
-    }
 
     @ApiMethod(name="getAirQualitySample")
     public AirQualitySample getAirQualitySample(@Named("id") Long id) throws NotFoundException {

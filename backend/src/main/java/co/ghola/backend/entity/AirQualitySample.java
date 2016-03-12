@@ -2,6 +2,7 @@ package co.ghola.backend.entity;
 
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Index;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,6 +17,7 @@ public class AirQualitySample {
 
     String message;
 
+    @Index
     Date date;
 
     public AirQualitySample() {

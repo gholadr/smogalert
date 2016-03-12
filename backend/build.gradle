@@ -26,8 +26,8 @@ dependencies {
   compile 'com.google.appengine:appengine-endpoints:1.9.18'
   compile 'com.google.appengine:appengine-endpoints-deps:1.9.18'
     compile 'com.googlecode.objectify:objectify:5.1.11'
-
     compile 'javax.servlet:servlet-api:2.5'
+    compile 'rome:rome:1.0'
 }
 
 appengine {

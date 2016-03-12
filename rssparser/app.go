@@ -14,6 +14,7 @@ import (
     "errors"
     "fmt"
     "io"
+    "net/http"
     "os"
     "time"
     "strings"
@@ -57,11 +58,18 @@ func itemHandler(feed *rss.Feed, ch *rss.Channel, newitems []*rss.Item) {
     last_sample := newitems[len(newitems)-1]
    // for k, val := range newitems { 
     aqi_data :=strings.Split(last_sample.Description, ";")
+
     t, _ := time.Parse(layout, aqi_data[0])
     fmt.Printf("value %s\n", t)
-    bolB, _ := json.Marshal(aqi_data)
+    a := append(aqi_data[:1], aqi_data[3:]...)
+    bolB, _ := json.Marshal(a)
     fmt.Println(string(bolB))
-    //updateEtc(aqi_data, bolB)
+    fmt.Println(strings.Join(a,"/"))
+    APIURL :=  "http://localhost:8080/_ah/api/qirqualitysampleapi/v1/airqualitysample/75/moderate/2016-03-11%2010%3A00%20PM" // "http://localhost:8080/_ah/api/qirqualitysampleapi/v1/airqualitysample/" + strings.Join(a,"/")
+
+    req, err := http.NewRequest("POST", APIURL, nil)
+    fmt.Println(req)
+    fmt.Println(err)
 }
 
 func charsetReader(charset string, r io.Reader) (io.Reader, error) {
@@ -71,55 +79,4 @@ func charsetReader(charset string, r io.Reader) (io.Reader, error) {
     return nil, errors.New("Unsupported character set encoding: " + charset)
 }
 
-// func updateEtc(sample []string, jsonStr []byte){
-//    //url := "http://127.0.0.1:2379/v2/keys/samples"
-//        cfg := client.Config{
-//         Endpoints:               []string{"http://127.0.0.1:2379"},
-//         Transport:               client.DefaultTransport,
-//         // set timeout per request to fail fast when the target endpoint is unavailable
-//         HeaderTimeoutPerRequest: time.Second,
-//     }
-//     c, err := client.New(cfg)
-//     if err != nil {
-//         log.Fatal(err)
-//     }
-//     kapi := client.NewKeysAPI(c)
-//     // set "/foo" key with "bar" value
-//     log.Print("Setting '/samples' key with 'jsonStr' value")
-//     resp, err := kapi.Set(context.Background(), "/samples", jsonStr, nil)
-//     if err != nil {
-//         log.Fatal(err)
-//     } else {
-//         // print common key info
-//         log.Printf("Set is done. Metadata is %q\n", resp)
-//     }
-//     // get "/foo" key's value
-//     log.Print("Getting '/samples' key value")
-//     resp, err = kapi.Get(context.Background(), "/samples", nil)
-//     if err != nil {
-//         log.Fatal(err)
-//     } else {
-//         // print common key info
-//         log.Printf("Get is done. Metadata is %q\n", resp)
-//         // print value
-//         log.Printf("%q key has %q value\n", resp.Node.Key, resp.Node.Value)
-//     }
-   //  fmt.Println("URL:>", url)
 
-   //  req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonStr))
-   // // req.Header.Set("X-Custom-Header", "myvalue")
-   // // req.Header.Set("Content-Type", "application/json")
-
-   //  client := &http.Client{}
-   //  resp, err := client.Do(req)
-   //  if err != nil {
-   //      panic(err)
-   //  }
-   //  defer resp.Body.Close()
-
-   //  fmt.Println("response Status:", resp.Status)
-   //  fmt.Println("response Headers:", resp.Header)
-   //  body, _ := ioutil.ReadAll(resp.Body)
-   //  fmt.Println("response Body:", string(body))
-
-//}

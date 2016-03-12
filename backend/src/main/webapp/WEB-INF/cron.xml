@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cronentries>
+    <cron>
+        <url>/rssfetch</url>
+        <description>Fetch latest AQI sample from US Embassy</description>
+        <schedule>every 1 hour</schedule>
+    </cron>
+
+</cronentries>

@@ -13,6 +13,15 @@
         <url-pattern>/_ah/spi/*</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>rssfetcher</servlet-name>
+        <servlet-class>co.ghola.backend.service.RssFetcher</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>rssfetcher</servlet-name>
+        <url-pattern>/rssfetch</url-pattern>
+    </servlet-mapping>
+
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>

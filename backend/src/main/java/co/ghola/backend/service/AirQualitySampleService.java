@@ -1,64 +1,55 @@
 package co.ghola.backend.service;
 
 
+        import com.google.api.server.spi.config.Named;
+        import com.google.api.server.spi.config.Nullable;
+        import com.google.appengine.api.datastore.Cursor;
+        import com.google.appengine.api.datastore.QueryResultIterator;
+        import com.googlecode.objectify.cmd.Query;
+
+        import java.text.ParseException;
+        import java.text.SimpleDateFormat;
         import java.util.ArrayList;
         import java.util.Date;
         import java.util.List;
+        import java.util.Locale;
+        import java.util.logging.Logger;
 
         import co.ghola.backend.entity.AirQualitySample;
+
+        import static co.ghola.backend.service.OfyService.ofy;
 
 public class AirQualitySampleService {
 
     public static List<AirQualitySample> AirQualitySamples = new ArrayList<AirQualitySample>();
+    private static final Logger log = Logger.getLogger(AirQualitySampleService.class.getName());
 
-    public AirQualitySample addAirQualitySample(Long id, String aqi, String message, Date date) throws Exception {
-        //Check for already exists
-        int index = AirQualitySamples.indexOf(new AirQualitySample(id));
-        if (index != -1) throw new Exception("AirQualitySample Record already exists");
-        AirQualitySample q = new AirQualitySample(aqi, message, date);
-        AirQualitySamples.add(q);
+    public AirQualitySample addAirQualitySample(AirQualitySample q) throws Exception {
+        ofy().save().entity(q).now();
         return q;
     }
-/*
 
-    public AirQualitySample updateAirQualitySample(AirQualitySample q) throws Exception {
-        int index = AirQualitySamples.indexOf(q);
-        if (index == -1) throw new Exception("AirQualitySample Record does not exist");
-        AirQualitySample currentAirQualitySample = AirQualitySamples.get(index);
-        currentAirQualitySample.setAqi(q.getAqi());
-        currentAirQualitySample.setMessage(q.getMessage());
-        currentAirQualitySample.setDate(q.getDate());
-        return q;
-    }
-*/
+    public List<AirQualitySample> getAirQualitySamples(@Nullable String cursorString,
+                                                       @Nullable Integer count) {
+        Query<AirQualitySample> query = ofy().load().type(AirQualitySample.class);
+        if (count != null) query.limit(count);
+        if (cursorString != null && cursorString != "") {
+            query = query.startAt(Cursor.fromWebSafeString(cursorString));
+        }
 
-    public void removeAirQualitySample(Long id) throws Exception {
-        int index = AirQualitySamples.indexOf(new AirQualitySample(id));
-        if (index == -1)
-            throw new Exception("AirQualitySample Record does not exist");
-        AirQualitySamples.remove(index);
-    }
-
-    public List<AirQualitySample> getAirQualitySamples() {
-        return AirQualitySamples;
-    }
-
-    public List<AirQualitySample> getAirQualitySamplesByDate(Date date) {
-        List<AirQualitySample> results = new ArrayList<AirQualitySample>();
-        for (AirQualitySample AirQualitySample : AirQualitySamples) {
-            if (AirQualitySample.getDate().equals(date)) {
-                results.add(AirQualitySample);
+        List<AirQualitySample> records = new ArrayList<AirQualitySample>();
+        QueryResultIterator<AirQualitySample> iterator = query.iterator();
+        int num = 0;
+        while (iterator.hasNext()) {
+            records.add(iterator.next());
+            if (count != null) {
+                num++;
+                if (num == count) break;
             }
         }
-        return results;
+        return records;
     }
 
-    public AirQualitySample getAirQualitySample(Long id) throws Exception {
-        int index = AirQualitySamples.indexOf(new AirQualitySample(id));
-        if (index == -1)
-            throw new Exception("AirQualitySample Record does not exist");
-        return AirQualitySamples.get(index);
-    }
 
 }
 
