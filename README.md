@@ -23,6 +23,7 @@ https://apis-explorer.appspot.com/apis-explorer/?base=http%3A%2F%2Flocalhost%3A8
 ### Goodies under the hood
 
 This app uses:
+
  [Rome 1.0](https://github.com/rometools/rome) for rss parsing
 
  [Objectify](https://github.com/objectify/objectify) as a simple interface to GAE's datastore

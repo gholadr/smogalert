@@ -90,13 +90,17 @@ public class AirQualitySampleServiceAPI {
         }
 
 //Find the next cursor
-        if (cursorString != null && cursorString != "") {
+        if(count != null) {
             Cursor cursor = iterator.getCursor();
             if (cursor != null) {
                 cursorString = cursor.toWebSafeString();
             }
         }
-        return CollectionResponse.<AirQualitySample>builder().setItems(records).setNextPageToken(cursorString).build();
+        log.info("cursor:" + cursorString);
+        return CollectionResponse.<AirQualitySample>builder()
+                .setItems(records)
+                .setNextPageToken(cursorString)
+                .build();
     }
 
 
