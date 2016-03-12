@@ -1,6 +1,6 @@
 # smogalert
 
-### How to browse GAE APIs
+### How to browse the APIs locally
 
 You'll need to run chrome as `unsafe mode`
 
@@ -15,3 +15,16 @@ Now, Google's API Explorer will accept an unsafe `http` target:
 ```
 https://apis-explorer.appspot.com/apis-explorer/?base=http%3A%2F%2Flocalhost%3A8080%2F_ah%2Fapi#p/
 ```
+
+### Access the APIs on GAE
+
+[SmogAlert APIs on GAE] (https://apis-explorer.appspot.com/apis-explorer/?base=https://smogalert-1248.appspot.com/_ah/api#p/aqi/v1/)
+
+### Goodies under the hood
+
+This app uses:
+ [Rome 1.0](https://github.com/rometools/rome) for rss parsing
+
+ [Objectify](https://github.com/objectify/objectify) as a simple interface to GAE's datastore
+
+ [Google Cloud Endpoints] (https://cloud.google.com/appengine/docs/java/endpoints/) to expose the APIs, and generate the client side libs
