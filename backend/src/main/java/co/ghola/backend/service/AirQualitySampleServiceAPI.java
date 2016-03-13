@@ -34,7 +34,7 @@ public class AirQualitySampleServiceAPI {
         AirQualitySample q  =new AirQualitySample();
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
-        format.setTimeZone(TimeZone.getTimeZone("Asia/Bangkok"));
+        //format.setTimeZone(TimeZone.getTimeZone("Asia/Bangkok"));
 
         try {
             q.setDate(format.parse(date));

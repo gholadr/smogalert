@@ -19,9 +19,12 @@ import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.TimeZone;
 import java.util.logging.Logger;
 
@@ -36,9 +39,13 @@ import co.ghola.backend.entity.AirQualitySample;
 public class RssFetcher extends HttpServlet {
 
     private static AirQualitySampleWrapper api =   AirQualitySampleWrapper.getInstance();
+
     private static List<AirQualitySample> AirQualitySamplesInStorage = new ArrayList<AirQualitySample>();
+
     private static List<AirQualitySample> AirQualitySamples = new ArrayList<AirQualitySample>();
+
     private final static String RSS_URL ="http://www.stateair.net/dos/RSS/HoChiMinhCity/HoChiMinhCity-PM2.5.xml";
+
     private static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
 
     private static final Logger log = Logger.getLogger(RssFetcher.class.getName());
@@ -47,11 +54,9 @@ public class RssFetcher extends HttpServlet {
 
         PrintWriter out = resp.getWriter();
 
-        AirQualitySamplesInStorage = api.getAirQualitySamples(null, 24); //retrieve last 24 hrs only
-
         BufferedReader reader = null;
 
-        format.setTimeZone(TimeZone.getTimeZone("Asia/Bangkok"));
+        //format.setTimeZone(TimeZone.getTimeZone("Asia/Bangkok"));
 
         try {
             URL url = new URL(RSS_URL);
@@ -69,39 +74,89 @@ public class RssFetcher extends HttpServlet {
 
             while (itEntries.hasNext()) {
                 SyndEntry entry = (SyndEntry) itEntries.next();
-                System.out.println("Description: " + entry.getDescription().getValue());
-                System.out.println();
-
-                addAirQualitySample(entry.getDescription().getValue());
-
+                AirQualitySample sample = createSampleFromRss(entry.getDescription().getValue());
+                if (sample != null){
+                    AirQualitySamples.add(sample);
+                }
             }
-        } catch (FeedException | ParseException e) {
+        } catch (FeedException e) {
             throw new IOException("Parsing issue, likely date related", e.getCause());
+        }
+
+        //Removing duplicates, if any
+
+        List<AirQualitySample> AirQualitySamplesWithoutDuplicates = removeDuplicates(AirQualitySamples);
+
+        log.info(String.valueOf(AirQualitySamplesWithoutDuplicates.size()));
+
+        //Persisting samples in Datastore
+
+        AirQualitySamplesInStorage = api.getAirQualitySamples(null, 24); //retrieve last 24 hrs only
+
+        Iterator<AirQualitySample> crunchifyIterator = AirQualitySamples.iterator();
+
+        while (crunchifyIterator.hasNext()) {
+            persistAirQualitySample(crunchifyIterator.next());
         }
 
     }
 
-    public static void addAirQualitySample(String rssStr) throws ParseException {
+    private List<AirQualitySample> removeDuplicates(List<AirQualitySample> listWithDuplicates) {
+    /* Set of all attributes seen so far */
+        Set<Date> attributes = new HashSet<Date>();
+    /* All confirmed duplicates go in here */
+        List<AirQualitySample> duplicates = new ArrayList<AirQualitySample>();
+
+        for(AirQualitySample sample : listWithDuplicates) {
+
+            if(attributes.contains(sample.getDate())) {
+
+                duplicates.add(sample);
+            }
+
+            attributes.add(sample.getDate());
+        }
+    /* Clean list without any dups */
+
+        listWithDuplicates.removeAll(duplicates);
+
+        return listWithDuplicates;
+    }
+
+    private static AirQualitySample createSampleFromRss(String rssStr){
+        String[] arr = rssStr.split(";");
+        AirQualitySample sample = null;
+        try {
+             sample = new AirQualitySample(arr[3], arr[4], format.parse(arr[0]));
+        }
+        catch(ParseException e){
+            log.severe(e.getMessage());
+        }
+
+        return sample;
+    }
+
+    public static void persistAirQualitySample(AirQualitySample sample)  {
 
         boolean isPresent = false;
-
-        String[] arr = rssStr.split(";");
-
-        AirQualitySample q = new AirQualitySample(arr[3], arr[4],format.parse(arr[0]));
 
         Iterator<AirQualitySample> crunchifyIterator = AirQualitySamplesInStorage.iterator();
 
         while (crunchifyIterator.hasNext()) {
-            if(crunchifyIterator.next().getDate().equals(q.getDate())){
+            Date StoredDate = crunchifyIterator.next().getDate();
+            if(crunchifyIterator.next().getDate().compareTo(sample.getDate()) == 0){
+
                 isPresent = true;
+
                 break;
             }
         }
-        if(!isPresent){
-            log.info("couldnt find matching record. insert new sample in datastore");
-            api.addAirQualitySample(q);
-        }
 
+        if(!isPresent) {
+
+            api.addAirQualitySample(sample);
+
+        }
     }
 
 }
