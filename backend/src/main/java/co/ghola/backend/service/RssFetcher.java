@@ -7,13 +7,9 @@ import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.io.FeedException;
 import com.sun.syndication.io.SyndFeedInput;
-import com.sun.syndication.io.XmlReader;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
@@ -25,7 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-import java.util.TimeZone;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServlet;
@@ -52,7 +47,7 @@ public class RssFetcher extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
-        PrintWriter out = resp.getWriter();
+       // PrintWriter out = resp.getWriter();
 
         BufferedReader reader = null;
 
@@ -87,8 +82,6 @@ public class RssFetcher extends HttpServlet {
 
         List<AirQualitySample> AirQualitySamplesWithoutDuplicates = removeDuplicates(AirQualitySamples);
 
-        log.info(String.valueOf(AirQualitySamplesWithoutDuplicates.size()));
-
         //Persisting samples in Datastore
 
         AirQualitySamplesInStorage = api.getAirQualitySamples(null, 24); //retrieve last 24 hrs only
@@ -116,14 +109,15 @@ public class RssFetcher extends HttpServlet {
 
             attributes.add(sample.getDate());
         }
-    /* Clean list without any dups */
+
+        /* Clean list without any dups */
 
         listWithDuplicates.removeAll(duplicates);
 
         return listWithDuplicates;
     }
 
-    private static AirQualitySample createSampleFromRss(String rssStr){
+    private  AirQualitySample createSampleFromRss(String rssStr){
         String[] arr = rssStr.split(";");
         AirQualitySample sample = null;
         try {
@@ -136,14 +130,14 @@ public class RssFetcher extends HttpServlet {
         return sample;
     }
 
-    public static void persistAirQualitySample(AirQualitySample sample)  {
+    public  void persistAirQualitySample(AirQualitySample sample)  {
 
         boolean isPresent = false;
 
         Iterator<AirQualitySample> crunchifyIterator = AirQualitySamplesInStorage.iterator();
 
         while (crunchifyIterator.hasNext()) {
-            Date StoredDate = crunchifyIterator.next().getDate();
+
             if(crunchifyIterator.next().getDate().compareTo(sample.getDate()) == 0){
 
                 isPresent = true;
@@ -152,7 +146,7 @@ public class RssFetcher extends HttpServlet {
             }
         }
 
-        if(!isPresent) {
+        if(!isPresent && Integer.valueOf(sample.getAqi()) != -999) {
 
             api.addAirQualitySample(sample);
 

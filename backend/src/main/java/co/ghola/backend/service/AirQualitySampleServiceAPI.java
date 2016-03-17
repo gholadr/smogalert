@@ -2,19 +2,16 @@ package co.ghola.backend.service;
 
         import java.text.ParseException;
         import java.text.SimpleDateFormat;
-        import java.time.format.DateTimeParseException;
         import java.util.ArrayList;
         import java.util.Date;
         import java.util.List;
         import java.util.Locale;
-        import java.util.TimeZone;
         import java.util.logging.Logger;
         import com.google.api.server.spi.config.Api;
         import com.google.api.server.spi.config.ApiMethod;
         import com.google.api.server.spi.config.Named;
         import com.google.api.server.spi.config.Nullable;
         import com.google.api.server.spi.response.CollectionResponse;
-        import com.google.api.server.spi.response.ConflictException;
         import com.google.api.server.spi.response.NotFoundException;
         import com.google.appengine.api.datastore.Cursor;
         import com.google.appengine.api.datastore.QueryResultIterator;
@@ -78,7 +75,7 @@ public class AirQualitySampleServiceAPI {
                 .load()
                 .type(AirQualitySample.class)
                 .order("-date")
-                .filter("date <", new Date());;
+                .filter("date <", new Date());
 
         if (count != null) query.limit(count);
         if (cursorString != null && cursorString != "") {
@@ -116,12 +113,6 @@ public class AirQualitySampleServiceAPI {
         if (index == -1)
             throw new NotFoundException("AirQualitySample Record does not exist");
         return AirQualitySamples.get(index);
-    }
-
-    //Private method to retrieve a <code>Quote</code> record
-    private AirQualitySample findRecord(Long id) {
-        return ofy().load().type(AirQualitySample.class).id(id).now();
-//or return ofy().load().type(Quote.class).filter("id",id).first.now();
     }
 
 }
