@@ -140,7 +140,7 @@ public class RssFetcher extends HttpServlet {
         while (crunchifyIterator.hasNext()) {
             AirQualitySample storedSample = (AirQualitySample)crunchifyIterator.next();
             log.info("date in Datastore:" + storedSample.getDate().toString() + " date in rss sample:" + sample.getDate().toString());
-            if(storedSample.getDate().withTimeAtStartOfDay().equals(sample.getDate().withTimeAtStartOfDay())){
+            if(storedSample.getDate().isEqual(sample.getDate())){
                 log.info("present!");
                 isPresent = true;
             }
