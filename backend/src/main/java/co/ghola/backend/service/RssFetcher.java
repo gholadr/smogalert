@@ -7,6 +7,11 @@ import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.io.FeedException;
 import com.sun.syndication.io.SyndFeedInput;
+
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -41,7 +46,7 @@ public class RssFetcher extends HttpServlet {
 
     private final static String RSS_URL ="http://www.stateair.net/dos/RSS/HoChiMinhCity/HoChiMinhCity-PM2.5.xml";
 
-    private static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+    private static DateTimeFormatter format =  DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 
     private static final Logger log = Logger.getLogger(RssFetcher.class.getName());
     @Override
@@ -96,7 +101,7 @@ public class RssFetcher extends HttpServlet {
 
     private List<AirQualitySample> removeDuplicates(List<AirQualitySample> listWithDuplicates) {
     /* Set of all attributes seen so far */
-        Set<Date> attributes = new HashSet<Date>();
+        Set<DateTime> attributes = new HashSet<DateTime>();
     /* All confirmed duplicates go in here */
         List<AirQualitySample> duplicates = new ArrayList<AirQualitySample>();
 
@@ -120,33 +125,29 @@ public class RssFetcher extends HttpServlet {
     private  AirQualitySample createSampleFromRss(String rssStr){
         String[] arr = rssStr.split(";");
         AirQualitySample sample = null;
-        try {
-             sample = new AirQualitySample(arr[3], arr[4], format.parse(arr[0]));
-        }
-        catch(ParseException e){
-            log.severe(e.getMessage());
-        }
+
+        sample = new AirQualitySample(arr[3].trim(), arr[4].trim(), format.parseDateTime(arr[0]));
 
         return sample;
     }
 
-    public  void persistAirQualitySample(AirQualitySample sample)  {
+    public void persistAirQualitySample(AirQualitySample sample)  {
 
         boolean isPresent = false;
 
         Iterator<AirQualitySample> crunchifyIterator = AirQualitySamplesInStorage.iterator();
 
         while (crunchifyIterator.hasNext()) {
-
-            if(crunchifyIterator.next().getDate().compareTo(sample.getDate()) == 0){
-
+            AirQualitySample storedSample = (AirQualitySample)crunchifyIterator.next();
+            log.info("date in Datastore:" + storedSample.getDate().toString() + " date in rss sample:" + sample.getDate().toString());
+            if(storedSample.getDate().withTimeAtStartOfDay().equals(sample.getDate().withTimeAtStartOfDay())){
+                log.info("present!");
                 isPresent = true;
-
-                break;
             }
+            if (isPresent) break;
         }
 
-        if(!isPresent && Integer.valueOf(sample.getAqi()) != -999) {
+        if(!isPresent && Integer.valueOf(sample.getAqi().trim()) != -999) {
 
             api.addAirQualitySample(sample);
 

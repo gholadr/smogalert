@@ -16,6 +16,11 @@ package co.ghola.backend.service;
         import com.google.appengine.api.datastore.Cursor;
         import com.google.appengine.api.datastore.QueryResultIterator;
         import com.googlecode.objectify.cmd.Query;
+
+        import org.joda.time.DateTime;
+        import org.joda.time.format.DateTimeFormat;
+        import org.joda.time.format.DateTimeFormatter;
+
         import static co.ghola.backend.service.OfyService.ofy;
         import co.ghola.backend.entity.AirQualitySample;
 
@@ -31,15 +36,13 @@ public class AirQualitySampleServiceAPI {
         AirQualitySample q  =new AirQualitySample();
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+
+        DateTimeFormatter dateStringFormat = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+        DateTime time = dateStringFormat.parseDateTime(date);
         //format.setTimeZone(TimeZone.getTimeZone("Asia/Bangkok"));
 
-        try {
-            q.setDate(format.parse(date));
-        }
-        catch(ParseException e){
-            log.severe(e.getMessage());
-            throw new ParseException("Error parsing date", e.getErrorOffset());
-        }
+        q.setDate(time); //format.parse(date));
+
         q.setAqi(aqi);
         q.setMessage(message);
 //Since our @Id field is a Long, Objectify will generate a unique value for us
