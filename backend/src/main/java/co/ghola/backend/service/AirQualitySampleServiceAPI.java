@@ -35,7 +35,7 @@ public class AirQualitySampleServiceAPI {
     public AirQualitySample insertQuote(@Named("aqi") String aqi, @Named("message") String message, @Named("date") String date) throws ParseException{
         AirQualitySample q  =new AirQualitySample();
 
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+       // SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
 
         DateTimeFormatter dateStringFormat = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
         DateTime time = dateStringFormat.parseDateTime(date);
@@ -50,26 +50,6 @@ public class AirQualitySampleServiceAPI {
         ofy().save().entity(q).now();
         return q;
     }
-/*
-    @ApiMethod(name="update")
-    public AirQualitySample updateAirQualitySample(AirQualitySample q) throws NotFoundException {
-        int index = AirQualitySamples.indexOf(q);
-        if (index == -1)
-            throw new NotFoundException("AirQualitySample Record does not exist");
-        AirQualitySample currentAirQualitySample = AirQualitySamples.get(index);
-        currentAirQualitySample.setAqi(q.getAqi());
-        currentAirQualitySample.setMessage(q.getMessage());
-        currentAirQualitySample.setDate(q.getDate());
-        return q;
-    }
-
-    @ApiMethod(name="remove")
-    public void removeAirQualitySample(@Named("id") Integer id) throws NotFoundException {
-        int index = AirQualitySamples.indexOf(new AirQualitySample(id));
-        if (index == -1)
-            throw new NotFoundException("AirQualitySample Record does not exist");
-        AirQualitySamples.remove(index);
-    }*/
 
     @ApiMethod(name="listAQISamples")
     public CollectionResponse<AirQualitySample> getAirQualitySamples(@Nullable @Named("cursor") String cursorString,
@@ -78,7 +58,7 @@ public class AirQualitySampleServiceAPI {
                 .load()
                 .type(AirQualitySample.class)
                 .order("-date")
-                .filter("date <", new Date());
+                .filter("date <", new DateTime());
 
         if (count != null) query.limit(count);
         if (cursorString != null && cursorString != "") {

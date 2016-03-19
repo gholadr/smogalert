@@ -5,7 +5,10 @@ package co.ghola.backend.service;
         import com.google.api.server.spi.config.Nullable;
         import com.google.appengine.api.datastore.Cursor;
         import com.google.appengine.api.datastore.QueryResultIterator;
+
         import com.googlecode.objectify.cmd.Query;
+
+        import org.joda.time.DateTime;
 
         import java.text.ParseException;
         import java.text.SimpleDateFormat;
@@ -40,7 +43,10 @@ public final class AirQualitySampleWrapper {
 
     public static List<AirQualitySample> getAirQualitySamples(@Nullable String cursorString,
                                                        @Nullable Integer count) {
-        Query<AirQualitySample> query = ofy().load().type(AirQualitySample.class);
+        Query<AirQualitySample> query = ofy().load()
+                .type(AirQualitySample.class)
+                .order("-date")
+                .filter("date <", new DateTime());
         if (count != null) query.limit(count);
         if (cursorString != null && cursorString != "") {
             query = query.startAt(Cursor.fromWebSafeString(cursorString));

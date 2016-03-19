@@ -89,7 +89,7 @@ public class RssFetcher extends HttpServlet {
 
         //Persisting samples in Datastore
 
-        AirQualitySamplesInStorage = api.getAirQualitySamples(null, 24); //retrieve last 24 hrs only
+        AirQualitySamplesInStorage = api.getAirQualitySamples(null, null); //retrieve last 24 hrs only
 
         Iterator<AirQualitySample> crunchifyIterator = AirQualitySamples.iterator();
 
