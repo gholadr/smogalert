@@ -5,6 +5,7 @@ import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,7 +22,7 @@ public class AirQualitySample {
     String message;
 
     @Index
-    DateTime date;
+    LocalDateTime date;
 
     private static final Logger log = Logger.getLogger(AirQualitySample.class.getName());
 
@@ -33,7 +34,7 @@ public class AirQualitySample {
         this.id = id;
     }
 
-    public AirQualitySample(String aqi, String message, DateTime date) {
+    public AirQualitySample(String aqi, String message, LocalDateTime date) {
         super();
         //this.id = id;
         this.aqi = aqi;
@@ -65,11 +66,11 @@ public class AirQualitySample {
         this.message = message;
     }
 
-    public DateTime getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(DateTime date)  {
+    public void setDate(LocalDateTime date)  {
         this.date = date;
     }
 

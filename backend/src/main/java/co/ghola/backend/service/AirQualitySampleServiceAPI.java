@@ -15,9 +15,13 @@ package co.ghola.backend.service;
         import com.google.api.server.spi.response.NotFoundException;
         import com.google.appengine.api.datastore.Cursor;
         import com.google.appengine.api.datastore.QueryResultIterator;
+
         import com.googlecode.objectify.cmd.Query;
 
         import org.joda.time.DateTime;
+        import org.joda.time.DateTimeZone;
+        import org.joda.time.LocalDate;
+        import org.joda.time.LocalDateTime;
         import org.joda.time.format.DateTimeFormat;
         import org.joda.time.format.DateTimeFormatter;
 
@@ -35,18 +39,14 @@ public class AirQualitySampleServiceAPI {
     public AirQualitySample insertQuote(@Named("aqi") String aqi, @Named("message") String message, @Named("date") String date) throws ParseException{
         AirQualitySample q  =new AirQualitySample();
 
-       // SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
-
         DateTimeFormatter dateStringFormat = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
-        DateTime time = dateStringFormat.parseDateTime(date);
-        //format.setTimeZone(TimeZone.getTimeZone("Asia/Bangkok"));
+        LocalDateTime time = dateStringFormat.parseLocalDateTime(date);
 
-        q.setDate(time); //format.parse(date));
+        q.setDate(time);
 
         q.setAqi(aqi);
         q.setMessage(message);
-//Since our @Id field is a Long, Objectify will generate a unique value for us
-//when we use put
+
         ofy().save().entity(q).now();
         return q;
     }
@@ -54,11 +54,12 @@ public class AirQualitySampleServiceAPI {
     @ApiMethod(name="listAQISamples")
     public CollectionResponse<AirQualitySample> getAirQualitySamples(@Nullable @Named("cursor") String cursorString,
                                                        @Nullable @Named("count") Integer count) {
+
         Query<AirQualitySample> query = ofy()
                 .load()
                 .type(AirQualitySample.class)
-                .order("-date")
-                .filter("date <", new DateTime());
+                .order("-date");
+                //.filter("date <", new LocalDate());
 
         if (count != null) query.limit(count);
         if (cursorString != null && cursorString != "") {
@@ -88,7 +89,6 @@ public class AirQualitySampleServiceAPI {
                 .setNextPageToken(cursorString)
                 .build();
     }
-
 
     @ApiMethod(name="getAQISample")
     public AirQualitySample getAirQualitySample(@Named("id") Long id) throws NotFoundException {

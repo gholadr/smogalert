@@ -3,12 +3,15 @@ package co.ghola.backend.service;
 /**
  * Created by macbook on 3/12/16.
  */
+
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.io.FeedException;
 import com.sun.syndication.io.SyndFeedInput;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -17,14 +20,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -40,9 +39,9 @@ public class RssFetcher extends HttpServlet {
 
     private static AirQualitySampleWrapper api =   AirQualitySampleWrapper.getInstance();
 
-    private static List<AirQualitySample> AirQualitySamplesInStorage = new ArrayList<AirQualitySample>();
+    private List<AirQualitySample> AirQualitySamplesInStorage = new ArrayList<>();
 
-    private static List<AirQualitySample> AirQualitySamples = new ArrayList<AirQualitySample>();
+    private List<AirQualitySample> AirQualitySamples = new ArrayList<>();
 
     private final static String RSS_URL ="http://www.stateair.net/dos/RSS/HoChiMinhCity/HoChiMinhCity-PM2.5.xml";
 
@@ -52,11 +51,7 @@ public class RssFetcher extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
-       // PrintWriter out = resp.getWriter();
-
         BufferedReader reader = null;
-
-        //format.setTimeZone(TimeZone.getTimeZone("Asia/Bangkok"));
 
         try {
             URL url = new URL(RSS_URL);
@@ -89,7 +84,7 @@ public class RssFetcher extends HttpServlet {
 
         //Persisting samples in Datastore
 
-        AirQualitySamplesInStorage = api.getAirQualitySamples(null, null); //retrieve last 24 hrs only
+        AirQualitySamplesInStorage = api.getAirQualitySamples(null, 24); //retrieve last 24 hrs only
 
         Iterator<AirQualitySample> crunchifyIterator = AirQualitySamples.iterator();
 
@@ -101,7 +96,7 @@ public class RssFetcher extends HttpServlet {
 
     private List<AirQualitySample> removeDuplicates(List<AirQualitySample> listWithDuplicates) {
     /* Set of all attributes seen so far */
-        Set<DateTime> attributes = new HashSet<DateTime>();
+        Set<LocalDateTime> attributes = new HashSet<LocalDateTime>();
     /* All confirmed duplicates go in here */
         List<AirQualitySample> duplicates = new ArrayList<AirQualitySample>();
 
@@ -126,7 +121,7 @@ public class RssFetcher extends HttpServlet {
         String[] arr = rssStr.split(";");
         AirQualitySample sample = null;
 
-        sample = new AirQualitySample(arr[3].trim(), arr[4].trim(), format.parseDateTime(arr[0]));
+        sample = new AirQualitySample(arr[3].trim(), arr[4].trim(), format.parseLocalDateTime(arr[0]));//.withZone(DateTimeZone.forID("Asia/Bangkok")));
 
         return sample;
     }
