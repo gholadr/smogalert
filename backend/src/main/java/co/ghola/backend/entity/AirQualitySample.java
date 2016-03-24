@@ -22,7 +22,7 @@ public class AirQualitySample {
     String message;
 
     @Index
-    LocalDateTime date;
+    Long ts;
 
     private static final Logger log = Logger.getLogger(AirQualitySample.class.getName());
 
@@ -34,12 +34,12 @@ public class AirQualitySample {
         this.id = id;
     }
 
-    public AirQualitySample(String aqi, String message, LocalDateTime date) {
+    public AirQualitySample(String aqi, String message, Long timestamp) {
         super();
         //this.id = id;
         this.aqi = aqi;
         this.message = message;
-        this.date = date;
+        this.ts = timestamp;
     }
 
     public Long getId() {
@@ -66,18 +66,18 @@ public class AirQualitySample {
         this.message = message;
     }
 
-    public LocalDateTime getDate() {
-        return date;
+    public Long getTimestamp() {
+        return ts;
     }
 
-    public void setDate(LocalDateTime date)  {
-        this.date = date;
+    public void setTimestamp(Long timestamp)  {
+        this.ts = timestamp;
     }
 
     @Override
     public String toString() {
         return "AirQualityIndex [id=" + id + ", aqi=" + aqi + ", message="
-                + message + ", date="+ date.toString() +"]";
+                + message + ", timestamp="+ ts.toString() +"]";
     }
 
 }

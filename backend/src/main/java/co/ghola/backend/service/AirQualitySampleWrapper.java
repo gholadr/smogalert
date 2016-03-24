@@ -41,7 +41,7 @@ public final class AirQualitySampleWrapper {
                                                        @Nullable Integer count) {
         Query<AirQualitySample> query = ofy().load()
                 .type(AirQualitySample.class)
-                .order("-date");
+                .order("-ts");
 
         if (count != null) query.limit(count);
         if (cursorString != null && cursorString != "") {

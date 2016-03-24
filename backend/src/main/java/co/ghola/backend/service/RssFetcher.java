@@ -20,10 +20,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -45,7 +49,9 @@ public class RssFetcher extends HttpServlet {
 
     private final static String RSS_URL ="http://www.stateair.net/dos/RSS/HoChiMinhCity/HoChiMinhCity-PM2.5.xml";
 
-    private static DateTimeFormatter format =  DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+   // private static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+
+   // private static DateTimeFormatter format =  DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 
     private static final Logger log = Logger.getLogger(RssFetcher.class.getName());
     @Override
@@ -74,7 +80,7 @@ public class RssFetcher extends HttpServlet {
                     AirQualitySamples.add(sample);
                 }
             }
-        } catch (FeedException e) {
+        } catch (FeedException | ParseException e) {
             throw new IOException("Parsing issue, likely date related", e.getCause());
         }
 
@@ -96,18 +102,18 @@ public class RssFetcher extends HttpServlet {
 
     private List<AirQualitySample> removeDuplicates(List<AirQualitySample> listWithDuplicates) {
     /* Set of all attributes seen so far */
-        Set<LocalDateTime> attributes = new HashSet<LocalDateTime>();
+        Set<Long> attributes = new HashSet<Long>();
     /* All confirmed duplicates go in here */
         List<AirQualitySample> duplicates = new ArrayList<AirQualitySample>();
 
         for(AirQualitySample sample : listWithDuplicates) {
 
-            if(attributes.contains(sample.getDate())) {
+            if(attributes.contains(sample.getTimestamp())) {
 
                 duplicates.add(sample);
             }
 
-            attributes.add(sample.getDate());
+            attributes.add(sample.getTimestamp());
         }
 
         /* Clean list without any dups */
@@ -117,16 +123,16 @@ public class RssFetcher extends HttpServlet {
         return listWithDuplicates;
     }
 
-    private  AirQualitySample createSampleFromRss(String rssStr){
+    private  AirQualitySample createSampleFromRss(String rssStr) throws ParseException{
         String[] arr = rssStr.split(";");
         AirQualitySample sample = null;
 
-        sample = new AirQualitySample(arr[3].trim(), arr[4].trim(), format.parseLocalDateTime(arr[0]));//.withZone(DateTimeZone.forID("Asia/Bangkok")));
+        sample = new AirQualitySample(arr[3].trim(), arr[4].trim(), DateUtils.getInstance().dateString2Long(arr[0]));//.withZone(DateTimeZone.forID("Asia/Bangkok")));
 
         return sample;
     }
 
-    public void persistAirQualitySample(AirQualitySample sample)  {
+    public void persistAirQualitySample( AirQualitySample sample)  {
 
         boolean isPresent = false;
 
@@ -134,8 +140,8 @@ public class RssFetcher extends HttpServlet {
 
         while (crunchifyIterator.hasNext()) {
             AirQualitySample storedSample = (AirQualitySample)crunchifyIterator.next();
-            log.info("date in Datastore:" + storedSample.getDate().toString() + " date in rss sample:" + sample.getDate().toString());
-            if(storedSample.getDate().isEqual(sample.getDate())){
+            log.info("date in Datastore:" + storedSample.getTimestamp().toString() + " date in rss sample:" + sample.getTimestamp().toString());
+            if(storedSample.getTimestamp() == sample.getTimestamp()){
                 log.info("present!");
                 isPresent = true;
             }

@@ -15,16 +15,7 @@ package co.ghola.backend.service;
         import com.google.api.server.spi.response.NotFoundException;
         import com.google.appengine.api.datastore.Cursor;
         import com.google.appengine.api.datastore.QueryResultIterator;
-
         import com.googlecode.objectify.cmd.Query;
-
-        import org.joda.time.DateTime;
-        import org.joda.time.DateTimeZone;
-        import org.joda.time.LocalDate;
-        import org.joda.time.LocalDateTime;
-        import org.joda.time.format.DateTimeFormat;
-        import org.joda.time.format.DateTimeFormatter;
-
         import static co.ghola.backend.service.OfyService.ofy;
         import co.ghola.backend.entity.AirQualitySample;
 
@@ -32,17 +23,20 @@ package co.ghola.backend.service;
 public class AirQualitySampleServiceAPI {
 
     private static final Logger log = Logger.getLogger(AirQualitySampleServiceAPI.class.getName());
+
     public static List<AirQualitySample> AirQualitySamples = new ArrayList<AirQualitySample>();
+
+    //private static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
 
 
     @ApiMethod(name = "insertAQISample")
-    public AirQualitySample insertQuote(@Named("aqi") String aqi, @Named("message") String message, @Named("date") String date) throws ParseException{
+    public AirQualitySample insertQuote(@Named("aqi") String aqi, @Named("message") String message, @Named("timestamp") String timestamp) throws ParseException{
         AirQualitySample q  =new AirQualitySample();
 
-        DateTimeFormatter dateStringFormat = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime time = dateStringFormat.parseLocalDateTime(date);
+        //DateTimeFormatter dateStringFormat = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+        //Date time = format.parse(date);
 
-        q.setDate(time);
+        q.setTimestamp(DateUtils.getInstance().dateString2Long(timestamp));
 
         q.setAqi(aqi);
         q.setMessage(message);
@@ -58,7 +52,7 @@ public class AirQualitySampleServiceAPI {
         Query<AirQualitySample> query = ofy()
                 .load()
                 .type(AirQualitySample.class)
-                .order("-date");
+                .order("-ts");
                 //.filter("date <", new LocalDate());
 
         if (count != null) query.limit(count);
