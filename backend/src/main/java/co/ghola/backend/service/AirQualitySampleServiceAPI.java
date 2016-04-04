@@ -9,6 +9,7 @@ package co.ghola.backend.service;
         import java.util.logging.Logger;
         import com.google.api.server.spi.config.Api;
         import com.google.api.server.spi.config.ApiMethod;
+        import com.google.api.server.spi.config.ApiNamespace;
         import com.google.api.server.spi.config.Named;
         import com.google.api.server.spi.config.Nullable;
         import com.google.api.server.spi.response.CollectionResponse;
@@ -19,7 +20,7 @@ package co.ghola.backend.service;
         import static co.ghola.backend.service.OfyService.ofy;
         import co.ghola.backend.entity.AirQualitySample;
 
-@Api(name="aqi",version="v1", description="An API to manage famous AirQualitySamples")
+@Api(name="aqi",version="v1", description="An API to manage famous AirQualitySamples",namespace = @ApiNamespace(ownerDomain = "backend.ghola.co", ownerName = "backend.ghola.co", packagePath=""))
 public class AirQualitySampleServiceAPI {
 
     private static final Logger log = Logger.getLogger(AirQualitySampleServiceAPI.class.getName());
@@ -29,7 +30,7 @@ public class AirQualitySampleServiceAPI {
     //private static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
 
 
-    @ApiMethod(name = "insertAQISample")
+/*    @ApiMethod(name = "insertAQISample")
     public AirQualitySample insertQuote(@Named("aqi") String aqi, @Named("message") String message, @Named("timestamp") String timestamp) throws ParseException{
         AirQualitySample q  =new AirQualitySample();
 
@@ -43,7 +44,7 @@ public class AirQualitySampleServiceAPI {
 
         ofy().save().entity(q).now();
         return q;
-    }
+    }*/
 
     @ApiMethod(name="listAQISamples")
     public CollectionResponse<AirQualitySample> getAirQualitySamples(@Nullable @Named("cursor") String cursorString,
@@ -84,12 +85,12 @@ public class AirQualitySampleServiceAPI {
                 .build();
     }
 
-    @ApiMethod(name="getAQISample")
+/*    @ApiMethod(name="getAQISample")
     public AirQualitySample getAirQualitySample(@Named("id") Long id) throws NotFoundException {
         int index = AirQualitySamples.indexOf(new AirQualitySample(id));
         if (index == -1)
             throw new NotFoundException("AirQualitySample Record does not exist");
         return AirQualitySamples.get(index);
-    }
+    }*/
 
 }
