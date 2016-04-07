@@ -10,13 +10,12 @@ import android.widget.TextView;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import org.joda.time.LocalDateTime;
-import org.joda.time.tz.UTCProvider;
+
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.TimeZone;
+
 
 import co.ghola.backend.aqi.model.AirQualitySample;
 
@@ -60,6 +59,7 @@ public class AQIListItemAdapter extends RecyclerView.Adapter<AQIListItemAdapter.
         this.mAQIListItems.addAll(list);
         notifyItemRangeChanged(0,list.size());
     }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private TextView text;
 
