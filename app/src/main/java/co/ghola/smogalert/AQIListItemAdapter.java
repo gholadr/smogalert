@@ -25,7 +25,6 @@ import co.ghola.backend.aqi.model.AirQualitySample;
 public class AQIListItemAdapter extends RecyclerView.Adapter<AQIListItemAdapter.ViewHolder> {
     private Context mContext;
     private RecyclerView mRecyclerView;
-    private Calendar calendar = Calendar.getInstance();
 
     public ArrayList<AirQualitySample> mAQIListItems = new ArrayList<AirQualitySample>();
 
@@ -42,6 +41,7 @@ public class AQIListItemAdapter extends RecyclerView.Adapter<AQIListItemAdapter.
 
     @Override
     public void onBindViewHolder(AQIListItemAdapter.ViewHolder viewHolder, int i) {
+
         AirQualitySample aqiListItem = mAQIListItems.get(i);
 
         DateTime time=new DateTime((aqiListItem.getTimestamp()*1000), DateTimeZone.UTC);

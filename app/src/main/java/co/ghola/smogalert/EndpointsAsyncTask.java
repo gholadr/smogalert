@@ -1,21 +1,21 @@
 package co.ghola.smogalert;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v7.widget.RecyclerView;
+import android.provider.UserDictionary;
 import android.util.Log;
-import android.widget.Toast;
-
 import co.ghola.backend.aqi.Aqi;
 import co.ghola.backend.aqi.model.AirQualitySample;
+
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
 import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
-
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 
 /**
@@ -40,7 +40,7 @@ class EndpointsAsyncTask extends AsyncTask<AQIListItemAdapter, Void, AQIListItem
                     // options for running against local devappserver
                     // - 10.0.2.2 is localhost's IP address in Android emulator
                     // - turn off compression when running against local devappserver
-                    .setRootUrl("https://smogalert-1248.appspot.com/_ah/api/")
+                    .setRootUrl(Aqi.DEFAULT_ROOT_URL)
                     .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
                         @Override
                         public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
@@ -53,13 +53,46 @@ class EndpointsAsyncTask extends AsyncTask<AQIListItemAdapter, Void, AQIListItem
         }
 
         try {
-            aqiListItemAdapter
+/*            aqiListItemAdapter
                     .mAQIListItems
                     .addAll(myApiService.listAQISamples()
                             .set("cursor", null)
                             .set("count", 24)
                             .execute()
-                            .getItems());
+                            .getItems());*/
+
+            ArrayList<AirQualitySample> mAQIListItems = new ArrayList<AirQualitySample>();
+            mAQIListItems.addAll(myApiService.listAQISamples()
+                    .set("cursor", null)
+                    .set("count", 24)
+                    .execute()
+                    .getItems());
+
+            Iterator itr = mAQIListItems.iterator();
+
+            // Defines a new Uri object that receives the result of the insertion
+            Uri mNewUri;
+            while (itr.hasNext()){
+
+                // Defines an object to contain the new values to insert
+                ContentValues mNewValues = new ContentValues();
+
+                AirQualitySample aqiSample = (AirQualitySample) itr.next();
+
+            /*
+             * Sets the values of each column and inserts the word. The arguments to the "put"
+             * method are "column name" and "value"
+             */
+            // mNewValues.put(SmogAlertDBContract.AirQualitySample.COLUMN_NAME_ID,new Long(567838) );
+            mNewValues.put(SmogAlertDBContract.AirQualitySample.COLUMN_NAME_AQI, aqiSample.getAqi());
+            mNewValues.put(SmogAlertDBContract.AirQualitySample.COLUMN_NAME_MESSAGE, aqiSample.getMessage());
+            mNewValues.put(SmogAlertDBContract.AirQualitySample.COLUMN_NAME_TS, aqiSample.getTimestamp());
+
+            mNewUri = context.getContentResolver().insert(
+                    SmogAlertDBContract.AirQualitySample.CONTENT_URI,   // the user dictionary content URI
+                    mNewValues                          // the values to insert
+            );
+        }
             return aqiListItemAdapter;
         } catch (IOException e) {
             return null;
