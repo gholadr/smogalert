@@ -34,12 +34,11 @@ public final class AirQualitySampleWrapper {
 
     public static void addAirQualitySample(AirQualitySample q)  {
         ofy().save().entity(q).now();
-        //return q;
     }
 
     public static List<AirQualitySample> getAirQualitySamples(@Nullable String cursorString,
                                                        @Nullable Integer count) {
-        Query<AirQualitySample> query = ofy().load()
+        Query<AirQualitySample> query = ofy().cache(false).load()  //no caching here
                 .type(AirQualitySample.class)
                 .order("-ts");
 

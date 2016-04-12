@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package co.ghola.smogalert;
+package co.ghola.smogalert.contentprovider;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -25,15 +25,18 @@ import android.database.sqlite.SQLiteDatabase;
 
 import android.net.Uri;
 
+import co.ghola.smogalert.contentprovider.SelectionBuilder;
+import co.ghola.smogalert.db.DBContract;
+import co.ghola.smogalert.db.DBHelper;
 
 
 public class AQIContentProvider extends ContentProvider {
-    SmogAlertDBHelper mDatabaseHelper;
+    DBHelper mDatabaseHelper;
 
     /**
      * Content authority for this provider.
      */
-    private static final String AUTHORITY = SmogAlertDBContract.CONTENT_AUTHORITY;
+    private static final String AUTHORITY = DBContract.CONTENT_AUTHORITY;
 
     // The constants below represent individual URI routes, as IDs. Every URI pattern recognized by
     // this ContentProvider is defined using sUriMatcher.addURI(), and associated with one of these
@@ -62,7 +65,7 @@ public class AQIContentProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        mDatabaseHelper = SmogAlertDBHelper.getInstance(getContext());
+        mDatabaseHelper = DBHelper.getInstance(getContext());
         return true;
     }
 
@@ -74,9 +77,9 @@ public class AQIContentProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case ROUTE_AQIS:
-                return SmogAlertDBContract.AirQualitySample.CONTENT_TYPE;
+                return DBContract.AirQualitySample.CONTENT_TYPE;
             case ROUTE_AQIS_ID:
-                return SmogAlertDBContract.AirQualitySample.CONTENT_ITEM_TYPE;
+                return DBContract.AirQualitySample.CONTENT_ITEM_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -98,10 +101,10 @@ public class AQIContentProvider extends ContentProvider {
             case ROUTE_AQIS_ID:
                 // Return a single entry, by ID.
                 String id = uri.getLastPathSegment();
-                builder.where(SmogAlertDBContract.AirQualitySample._ID + "=?", id);
+                builder.where(DBContract.AirQualitySample._ID + "=?", id);
             case ROUTE_AQIS:
                 // Return all known entries.
-                builder.table(SmogAlertDBContract.AirQualitySample.TABLE_NAME)
+                builder.table(DBContract.AirQualitySample.TABLE_NAME)
                         .where(selection, selectionArgs);
                 Cursor c = builder.query(db, projection, sortOrder);
                 // Note: Notification URI must be manually set here for loaders to correctly
@@ -128,8 +131,8 @@ public class AQIContentProvider extends ContentProvider {
         Uri result;
         switch (match) {
             case ROUTE_AQIS:
-                long id = db.insertOrThrow(SmogAlertDBContract.AirQualitySample.TABLE_NAME, null, values);
-                result = Uri.parse(SmogAlertDBContract.AirQualitySample.CONTENT_URI + "/" + id);
+                long id = db.insertOrThrow(DBContract.AirQualitySample.TABLE_NAME, null, values);
+                result = Uri.parse(DBContract.AirQualitySample.CONTENT_URI + "/" + id);
                 break;
             case ROUTE_AQIS_ID:
                 throw new UnsupportedOperationException("Insert not supported on URI: " + uri);
@@ -155,14 +158,14 @@ public class AQIContentProvider extends ContentProvider {
         int count;
         switch (match) {
             case ROUTE_AQIS:
-                count = builder.table(SmogAlertDBContract.AirQualitySample.TABLE_NAME)
+                count = builder.table(DBContract.AirQualitySample.TABLE_NAME)
                         .where(selection, selectionArgs)
                         .delete(db);
                 break;
             case ROUTE_AQIS_ID:
                 String id = uri.getLastPathSegment();
-                count = builder.table(SmogAlertDBContract.AirQualitySample.TABLE_NAME)
-                        .where(SmogAlertDBContract.AirQualitySample._ID + "=?", id)
+                count = builder.table(DBContract.AirQualitySample.TABLE_NAME)
+                        .where(DBContract.AirQualitySample._ID + "=?", id)
                         .where(selection, selectionArgs)
                         .delete(db);
                 break;
@@ -187,14 +190,14 @@ public class AQIContentProvider extends ContentProvider {
         int count;
         switch (match) {
             case ROUTE_AQIS:
-                count = builder.table(SmogAlertDBContract.AirQualitySample.TABLE_NAME)
+                count = builder.table(DBContract.AirQualitySample.TABLE_NAME)
                         .where(selection, selectionArgs)
                         .update(db, values);
                 break;
             case ROUTE_AQIS_ID:
                 String id = uri.getLastPathSegment();
-                count = builder.table(SmogAlertDBContract.AirQualitySample.TABLE_NAME)
-                        .where(SmogAlertDBContract.AirQualitySample._ID + "=?", id)
+                count = builder.table(DBContract.AirQualitySample.TABLE_NAME)
+                        .where(DBContract.AirQualitySample._ID + "=?", id)
                         .where(selection, selectionArgs)
                         .update(db, values);
                 break;

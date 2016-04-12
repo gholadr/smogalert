@@ -1,4 +1,4 @@
-package co.ghola.smogalert;
+package co.ghola.smogalert.db;
 
 import android.content.ContentResolver;
 import android.net.Uri;
@@ -7,13 +7,22 @@ import android.provider.BaseColumns;
 /**
  * Created by gholadr on 4/1/16.
  */
-public class SmogAlertDBContract {
+public class DBContract {
 
     public static final String DATABASE_NAME = "smogalertdb";
 
     public static final int DATABASE_VERSION = 1;
 
     public static final String CONTENT_AUTHORITY = "co.ghola.smogalert";
+
+    /**
+     * Project used when querying content provider. Returns all known fields.
+     */
+    public static final String[] PROJECTION = new String[] {
+            DBContract.AirQualitySample._ID,
+            DBContract.AirQualitySample.COLUMN_NAME_AQI,
+            DBContract.AirQualitySample.COLUMN_NAME_MESSAGE,
+            DBContract.AirQualitySample.COLUMN_NAME_TS};
 
     /**
      * Base URI. (content://com.example.android.network.sync.basicsyncadapter)
@@ -25,7 +34,7 @@ public class SmogAlertDBContract {
      */
     private static final String PATH_AQIS = "air_quality_sample";
 
-    private SmogAlertDBContract() {}
+    private DBContract() {}
 
     public static abstract class AirQualitySample implements BaseColumns {
 
@@ -47,7 +56,7 @@ public class SmogAlertDBContract {
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_AQIS).build();
 
         public static final String TABLE_NAME = "air_quality_sample";
-        //public static final String COLUMN_NAME_ID ="id";
+        public static final String COLUMN_NAME_ID ="_id";
         public static final String COLUMN_NAME_AQI = "aqi";
         public static final String COLUMN_NAME_MESSAGE = "message";
         public static final String COLUMN_NAME_TS = "ts";
@@ -55,8 +64,9 @@ public class SmogAlertDBContract {
     }
 
     public static final String SQL_CREATE_AQI = String.format(
-            "CREATE TABLE %s ( %s TEXT, %s TEXT, %s LONG)",
+            "CREATE TABLE %s ( %s TEXT PRIMARY KEY, %s TEXT, %s TEXT, %s LONG)",
             AirQualitySample.TABLE_NAME,
+            AirQualitySample.COLUMN_NAME_ID,
             AirQualitySample.COLUMN_NAME_AQI,
             AirQualitySample.COLUMN_NAME_MESSAGE,
             AirQualitySample.COLUMN_NAME_TS);

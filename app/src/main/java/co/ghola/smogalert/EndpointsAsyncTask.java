@@ -4,11 +4,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.provider.UserDictionary;
 import android.util.Log;
 import co.ghola.backend.aqi.Aqi;
 import co.ghola.backend.aqi.model.AirQualitySample;
-
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
@@ -78,11 +76,11 @@ class EndpointsAsyncTask extends AsyncTask<AQIListItemAdapter, Void, AQIListItem
                 ContentValues mNewValues = new ContentValues();
 
                 AirQualitySample aqiSample = (AirQualitySample) itr.next();
-
-            /*
+/*
+            *//*
              * Sets the values of each column and inserts the word. The arguments to the "put"
              * method are "column name" and "value"
-             */
+             *//*
             // mNewValues.put(SmogAlertDBContract.AirQualitySample.COLUMN_NAME_ID,new Long(567838) );
             mNewValues.put(SmogAlertDBContract.AirQualitySample.COLUMN_NAME_AQI, aqiSample.getAqi());
             mNewValues.put(SmogAlertDBContract.AirQualitySample.COLUMN_NAME_MESSAGE, aqiSample.getMessage());
@@ -91,7 +89,7 @@ class EndpointsAsyncTask extends AsyncTask<AQIListItemAdapter, Void, AQIListItem
             mNewUri = context.getContentResolver().insert(
                     SmogAlertDBContract.AirQualitySample.CONTENT_URI,   // the user dictionary content URI
                     mNewValues                          // the values to insert
-            );
+            );*/
         }
             return aqiListItemAdapter;
         } catch (IOException e) {

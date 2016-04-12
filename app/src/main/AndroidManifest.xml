@@ -25,13 +25,13 @@
         </activity>
 
         <provider
-            android:name="co.ghola.smogalert.AQIContentProvider"
+            android:name=".contentprovider.AQIContentProvider"
             android:authorities="co.ghola.smogalert"
             android:exported="false" android:enabled="true"/>
 
         <!-- This service implements our SyncAdapter. It needs to be exported, so that the system
 sync framework can access it. -->
-        <service android:name="co.ghola.smogalert.SyncService"
+        <service android:name=".async.SyncService"
             android:exported="true">
             <!-- This intent filter is required. It allows the system to launch our sync service
             as needed. -->
@@ -49,7 +49,7 @@ sync framework can access it. -->
 
        It's also possible to attach a SyncAdapter to an existing account provided by another
        package. In that case, this element could be omitted here. -->
-        <service android:name="co.ghola.smogalert.GenericAccountService">
+        <service android:name=".async.GenericAccountService">
             <!-- Required filter used by the system to launch our account service. -->
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />

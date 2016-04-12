@@ -46,6 +46,8 @@ public class AQIListItemAdapter extends RecyclerView.Adapter<AQIListItemAdapter.
 
         DateTime time=new DateTime((aqiListItem.getTimestamp()*1000), DateTimeZone.UTC);
 
+
+
         viewHolder.setText(aqiListItem.getAqi() + " : " + aqiListItem.getMessage() + " : " + time.toString("MMM d  h aa"));
     }
 

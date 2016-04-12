@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package co.ghola.smogalert;
+package co.ghola.smogalert.async;
 
 import android.app.Service;
 import android.content.Intent;

@@ -4,6 +4,7 @@ package co.ghola.backend.service;
  * Created by macbook on 3/12/16.
  */
 
+import com.google.apphosting.api.ApiProxy;
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.io.FeedException;
@@ -29,6 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServlet;
@@ -36,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import co.ghola.backend.entity.AirQualitySample;
+import sun.util.logging.resources.logging;
 
 // [START example]
 @SuppressWarnings("serial")
@@ -53,7 +56,8 @@ public class RssFetcher extends HttpServlet {
 
    // private static DateTimeFormatter format =  DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 
-    private static final Logger log = Logger.getLogger(RssFetcher.class.getName());
+    private static Logger log = Logger.getLogger(RssFetcher.class.getName());
+
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
@@ -86,13 +90,13 @@ public class RssFetcher extends HttpServlet {
 
         //Removing duplicates, if any
 
-        List<AirQualitySample> AirQualitySamplesWithoutDuplicates = removeDuplicates(AirQualitySamples);
+        List<AirQualitySample> airQualitySamplesWithoutDuplicates = removeDuplicates(AirQualitySamples);
 
         //Persisting samples in Datastore
 
         AirQualitySamplesInStorage = api.getAirQualitySamples(null, 24); //retrieve last 24 hrs only
 
-        Iterator<AirQualitySample> crunchifyIterator = AirQualitySamples.iterator();
+        Iterator<AirQualitySample> crunchifyIterator = airQualitySamplesWithoutDuplicates.iterator();
 
         while (crunchifyIterator.hasNext()) {
             persistAirQualitySample(crunchifyIterator.next());
@@ -140,9 +144,9 @@ public class RssFetcher extends HttpServlet {
 
         while (crunchifyIterator.hasNext()) {
             AirQualitySample storedSample = (AirQualitySample)crunchifyIterator.next();
-            log.info("date in Datastore:" + storedSample.getTimestamp().toString() + " date in rss sample:" + sample.getTimestamp().toString());
+            log.fine("date in Datastore:" + storedSample.getTimestamp().toString() + " date in rss sample:" + sample.getTimestamp().toString());
             if(storedSample.getTimestamp() == sample.getTimestamp()){
-                log.info("present!");
+                log.fine("present!");
                 isPresent = true;
             }
             if (isPresent) break;

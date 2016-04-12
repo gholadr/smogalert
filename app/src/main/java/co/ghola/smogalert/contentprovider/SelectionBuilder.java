@@ -1,4 +1,4 @@
-package co.ghola.smogalert;
+package co.ghola.smogalert.contentprovider;
 
 /**
  * Created by gholadr on 4/8/16.

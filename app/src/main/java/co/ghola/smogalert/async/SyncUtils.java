@@ -1,4 +1,4 @@
-package co.ghola.smogalert;
+package co.ghola.smogalert.async;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -8,12 +8,14 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import co.ghola.smogalert.db.DBContract;
+
 /**
  * Created by gholadr on 4/11/16.
  */
 public class SyncUtils {
     private static final long SYNC_FREQUENCY = 60; // * 60;  // 1 hour (in seconds)
-    private static final String CONTENT_AUTHORITY = SmogAlertDBContract.CONTENT_AUTHORITY;
+    private static final String CONTENT_AUTHORITY = DBContract.CONTENT_AUTHORITY;
     private static final String PREF_SETUP_COMPLETE = "setup_complete";
 
     /**
@@ -74,7 +76,7 @@ public class SyncUtils {
         b.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
         ContentResolver.requestSync(
                 GenericAccountService.GetAccount(),      // Sync account
-                SmogAlertDBContract.CONTENT_AUTHORITY, // Content authority
+                DBContract.CONTENT_AUTHORITY, // Content authority
                 b);                                      // Extras
     }
 }
