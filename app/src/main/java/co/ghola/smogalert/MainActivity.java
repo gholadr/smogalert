@@ -73,12 +73,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Uri uri = DBContract.AirQualitySample.CONTENT_URI;
         return(new CursorLoader(getApplicationContext(),uri, DBContract.PROJECTION, null, null, "ts DESC LIMIT 24"));
-/*
-        return(new CursorLoader(this,
-                DBContract.BASE_CONTENT_URI,
-                null, null,null, "ts DESC LIMIT 24"));*/
     }
-
 
 
     @Override
