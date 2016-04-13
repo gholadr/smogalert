@@ -19,11 +19,17 @@ public class DBContract {
      * Project used when querying content provider. Returns all known fields.
      */
     public static final String[] PROJECTION = new String[] {
-            DBContract.AirQualitySample._ID,
+            DBContract.AirQualitySample.COLUMN_NAME_ID,
             DBContract.AirQualitySample.COLUMN_NAME_AQI,
             DBContract.AirQualitySample.COLUMN_NAME_MESSAGE,
             DBContract.AirQualitySample.COLUMN_NAME_TS};
 
+
+    // Constants representing column positions from PROJECTION.
+    public static final int COLUMN_IDX_ID = 0;
+    public static final int COLUMN_IDX_AQI = 1;
+    public static final int COLUMN_IDX_MESSAGE = 2;
+    public static final int COLUMN_IDX_TS = 3;
     /**
      * Base URI. (content://com.example.android.network.sync.basicsyncadapter)
      */

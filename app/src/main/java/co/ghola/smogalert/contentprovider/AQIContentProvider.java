@@ -101,7 +101,7 @@ public class AQIContentProvider extends ContentProvider {
             case ROUTE_AQIS_ID:
                 // Return a single entry, by ID.
                 String id = uri.getLastPathSegment();
-                builder.where(DBContract.AirQualitySample._ID + "=?", id);
+                builder.where(DBContract.AirQualitySample.COLUMN_NAME_ID + "=?", id);
             case ROUTE_AQIS:
                 // Return all known entries.
                 builder.table(DBContract.AirQualitySample.TABLE_NAME)

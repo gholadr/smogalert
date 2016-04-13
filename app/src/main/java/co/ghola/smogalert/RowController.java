@@ -32,11 +32,11 @@ class RowController extends RecyclerView.ViewHolder {
     }
     void bindModel(Cursor row) {
 
-        String aqi = row.getString(SyncAdapter.COLUMN_NAME_AQI);
+        String aqi = row.getString(DBContract.COLUMN_IDX_AQI);
 
-        DateTime time=new DateTime((row.getLong(SyncAdapter.COLUMN_NAME_TS)*1000), DateTimeZone.UTC);
+        DateTime time=new DateTime((row.getLong(DBContract.COLUMN_IDX_TS)*1000), DateTimeZone.UTC);
 
-        String message = row.getString(SyncAdapter.COLUMN_NAME_MESSAGE);
+        String message = row.getString(DBContract.COLUMN_IDX_MESSAGE);
 
         textRow.setText(aqi + " : " + message + " : " + time.toString("MMM d  h aa"));
 

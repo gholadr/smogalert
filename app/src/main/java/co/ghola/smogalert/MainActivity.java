@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     //private CursRecAdapter adapter;
 
-    private static final long SYNC_FREQUENCY = 60; //
+    private static final long SYNC_FREQUENCY = 60*30; //30mins checks
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,15 +78,18 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
         ((SampleAdapter)mRecyclerView.getAdapter()).setSamples(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
+
         ((SampleAdapter)mRecyclerView.getAdapter()).setSamples(null);
     }
 
     class SampleAdapter extends RecyclerView.Adapter<RowController> {
+
         Cursor samples=null;
 
         @Override

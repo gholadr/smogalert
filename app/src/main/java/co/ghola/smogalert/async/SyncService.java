@@ -43,7 +43,7 @@ public class SyncService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(this.getClass().getCanonicalName(), "Service created");
+        Log.i(this.getClass().getCanonicalName(), "Service created");
         synchronized (sSyncAdapterLock) {
             if (sSyncAdapter == null) {
                 sSyncAdapter = new SyncAdapter(getApplicationContext(), true);

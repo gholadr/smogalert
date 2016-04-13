@@ -15,8 +15,8 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
-        <activity android:name=".MainActivity" >
+        android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,37 +27,51 @@
         <provider
             android:name=".contentprovider.AQIContentProvider"
             android:authorities="co.ghola.smogalert"
-            android:exported="false" android:enabled="true"/>
+            android:enabled="true"
+            android:exported="false" />
 
-        <!-- This service implements our SyncAdapter. It needs to be exported, so that the system
-sync framework can access it. -->
-        <service android:name=".async.SyncService"
+        <!--
+This service implements our SyncAdapter. It needs to be exported, so that the system
+sync framework can access it.
+        -->
+        <service
+            android:name=".async.SyncService"
             android:exported="true">
-            <!-- This intent filter is required. It allows the system to launch our sync service
-            as needed. -->
+
+            <!--
+            This intent filter is required. It allows the system to launch our sync service
+            as needed.
+            -->
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
             </intent-filter>
             <!-- This points to a required XML file which describes our SyncAdapter. -->
-            <meta-data android:name="android.content.SyncAdapter"
+            <meta-data
+                android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter" />
         </service>
 
-        <!-- This implements the account we'll use as an attachment point for our SyncAdapter. Since
+        <!--
+       This implements the account we'll use as an attachment point for our SyncAdapter. Since
        our SyncAdapter doesn't need to authenticate the current user (it just fetches a public RSS
        feed), this account's implementation is largely empty.
 
        It's also possible to attach a SyncAdapter to an existing account provided by another
-       package. In that case, this element could be omitted here. -->
+       package. In that case, this element could be omitted here.
+        -->
         <service android:name=".async.GenericAccountService">
+
             <!-- Required filter used by the system to launch our account service. -->
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
             <!-- This points to an XMLf ile which describes our account service. -->
-            <meta-data android:name="android.accounts.AccountAuthenticator"
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/authenticator" />
         </service>
+
+        <activity android:name=".DetailActivity"></activity>
     </application>
 
 </manifest>

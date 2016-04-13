@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.OperationApplicationException;
 import android.content.SyncResult;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,10 +24,13 @@ import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+
 import co.ghola.backend.aqi.Aqi;
 import co.ghola.backend.aqi.model.AirQualitySample;
 import co.ghola.smogalert.db.DBContract;
 import co.ghola.smogalert.db.DBHelper;
+import hugo.weaving.DebugLog;
 
 /**
  * Created by gholadr on 4/11/16.
@@ -40,22 +44,23 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     private final ContentResolver mContentResolver;
 
-    ArrayList<AirQualitySample> aqiListItems = null;
+    //private ArrayList<AirQualitySample> aqiListItems = null;
 
-    /**
+  /*  *//**
      * Project used when querying content provider. Returns all known fields.
-     */
+     *//*
     private static final String[] PROJECTION = new String[] {
-            DBContract.AirQualitySample._ID,
+            DBContract.AirQualitySample.COLUMN_NAME_ID,
             DBContract.AirQualitySample.COLUMN_NAME_AQI,
             DBContract.AirQualitySample.COLUMN_NAME_MESSAGE,
-            DBContract.AirQualitySample.COLUMN_NAME_TS};
+            DBContract.AirQualitySample.COLUMN_NAME_TS
+    };
 
     // Constants representing column positions from PROJECTION.
     public static final int COLUMN_ID = 0;
     public static final int COLUMN_NAME_AQI = 1;
     public static final int COLUMN_NAME_MESSAGE = 2;
-    public static final int COLUMN_NAME_TS = 3;
+    public static final int COLUMN_NAME_TS = 3;*/
 
     /**
      * Constructor. Obtains handle to content resolver for later use.
@@ -94,28 +99,25 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         Log.i(TAG, "Beginning network synchronization");
         if (myApiService == null) {  // Only do this once
             Aqi.Builder builder = new Aqi.Builder(AndroidHttp.newCompatibleTransport(),
-                    new AndroidJsonFactory(), null)
-                    // options for running against local devappserver
+                    new AndroidJsonFactory(), null);
+  /*                  // options for running against local devappserver
                     // - 10.0.2.2 is localhost's IP address in Android emulator
                     // - turn off compression when running against local devappserver
-                    .setRootUrl(Aqi.DEFAULT_ROOT_URL)
+                   // .setRootUrl(Aqi.DEFAULT_ROOT_URL)
                     .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
                         @Override
                         public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
                             abstractGoogleClientRequest.setDisableGZipContent(true);
                         }
-                    });
+                    });*/
             // end options for devappserver
 
             myApiService = builder.build();
         }
 
+        ArrayList<AirQualitySample> aqiListItems = new ArrayList<AirQualitySample>();
+
         try {
-
-            Log.i(TAG, "");
-
-            aqiListItems = new ArrayList<AirQualitySample>();
-
             Log.d(TAG, "retrieving latest AQI samples from network... ");
 
             aqiListItems.addAll(myApiService.listAQISamples()
@@ -129,58 +131,42 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             return;
         }
 
-
         if (aqiListItems.size() > 0)
             try {
-                updateLocalData(getContext());
+                updateLocalData(getContext(),aqiListItems );
             } catch (RemoteException | OperationApplicationException e){
-                Log.e(TAG, e.getMessage());
+                Log.e(TAG, "issue(s) updating local db" + e.getMessage());
             }
-
     }
 
-    public void updateLocalData(Context context) throws RemoteException, OperationApplicationException {
+    @DebugLog
+    public void updateLocalData(Context context,ArrayList<AirQualitySample> airQualitySampleArrayList) throws RemoteException, OperationApplicationException {
 
         // Get list of all items
-        Log.d(TAG, "Fetching local aqi entries for merge");
+        //Log.d(TAG, "Fetching local aqi entries for merge");
         Uri uri = DBContract.AirQualitySample.CONTENT_URI; // Get all entries
-        Cursor c = context.getContentResolver().query(uri, PROJECTION, null, null, "ts DESC LIMIT 24");
+        Cursor c = context.getContentResolver().query(uri, DBContract.PROJECTION, null, null, "ts DESC LIMIT 24");
 
         if (c == null)
             throw new NullPointerException("null cursor when fetching local db");
 
-        Log.d(TAG, "Found " + c.getCount() + " local aqi entries. Matching against network aqi entries....");
+       Log.d(TAG, "Found " + c.getCount() + " local aqi entries. Matching against network aqi entries....");
 
-        Iterator itr = aqiListItems.iterator();
+        //find dups
+        ArrayList<AirQualitySample> duplicateList =findDuplicates(airQualitySampleArrayList, c); //
 
-        ArrayList<AirQualitySample> duplicates = new ArrayList<AirQualitySample>();
 
-        while (itr.hasNext()) {
-
-            AirQualitySample aqiSample = (AirQualitySample) itr.next();
-
-            while (c.moveToNext()) {
-
-               // Log.d(TAG, "aqiSample.getTimestamp() == c.getLong()" + aqiSample.getTimestamp() + "==" + c.getLong(COLUMN_NAME_TS));
-                if (aqiSample.getTimestamp() == c.getLong(COLUMN_NAME_TS)) {
-
-                    duplicates.add(aqiSample);
-                    c.moveToFirst();
-                    break;
-                }
-            }
+        //if dups, remove them from remote list
+        if (duplicateList.size() > 0) {
+            airQualitySampleArrayList.removeAll(duplicateList);
+            Log.d(TAG, String.format("found %s duplicate records", duplicateList.size()));
         }
 
-        if (duplicates.size() > 0) {
-            aqiListItems.removeAll(duplicates);
-            Log.d(TAG, String.format("found %s duplicate records", duplicates.size()));
-        }
-
-
-        if (aqiListItems.size() > 0 ){
-            Log.d(TAG, String.format("adding new aqi %s  entries to local db",aqiListItems.size()));
+        //if any left items from list, update local db
+        if (airQualitySampleArrayList.size() > 0 ){
+            Log.d(TAG, String.format("adding  %s aqi entries to local db", airQualitySampleArrayList.size()));
             ArrayList<ContentProviderOperation> batch = new ArrayList<ContentProviderOperation>();
-            itr = aqiListItems.iterator();
+            Iterator itr = airQualitySampleArrayList.iterator();
             while (itr.hasNext()) {
 
                 AirQualitySample aqiSample = (AirQualitySample) itr.next();
@@ -193,16 +179,34 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                         .build());
             }
             mContentResolver.applyBatch(DBContract.CONTENT_AUTHORITY, batch);
-            SQLiteDatabase db = DBHelper.getInstance(context).getReadableDatabase();
-            Log.d(TAG, "uri:" + uri);
-            c = context.getContentResolver().query(uri, PROJECTION, null, null, "ts DESC LIMIT 24");
-
         }
         else{
             Log.d(TAG, "no new aqi entry to add. Local DB up to date");
         }
-
     }
 
+    @DebugLog
+    public ArrayList<AirQualitySample> findDuplicates(ArrayList<AirQualitySample> remoteList, Cursor dbCursor){
+
+        ArrayList<AirQualitySample> duplicateList =  new ArrayList<AirQualitySample>();
+        Iterator itr = remoteList.iterator();
+
+        while (itr.hasNext()) {
+
+            AirQualitySample aqiSample = (AirQualitySample) itr.next();
+
+            while (dbCursor.moveToNext()) {
+
+                if (aqiSample.getTimestamp() == dbCursor.getLong(DBContract.COLUMN_IDX_TS)) {
+                    // Log.d(TAG, "DUP: aqiSample.getTimestamp() == c.getLong() " + aqiSample.getTimestamp() + "==" + c.getLong(COLUMN_NAME_TS));
+                    duplicateList.add(aqiSample);
+                    dbCursor.moveToFirst();
+                    break;
+                }
+            }
+        }
+        return duplicateList;
+
+    }
 
 }
