@@ -46,9 +46,9 @@ public class RssFetcher extends HttpServlet {
 
     private static AirQualitySampleWrapper api =   AirQualitySampleWrapper.getInstance();
 
-    private List<AirQualitySample> AirQualitySamplesInStorage = new ArrayList<>();
+    private List<AirQualitySample> dataStoreList = new ArrayList<>();
 
-    private List<AirQualitySample> AirQualitySamples = new ArrayList<>();
+    private List<AirQualitySample> rssList = new ArrayList<>();
 
     private final static String RSS_URL ="http://www.stateair.net/dos/RSS/HoChiMinhCity/HoChiMinhCity-PM2.5.xml";
 
@@ -80,8 +80,8 @@ public class RssFetcher extends HttpServlet {
             while (itEntries.hasNext()) {
                 SyndEntry entry = (SyndEntry) itEntries.next();
                 AirQualitySample sample = createSampleFromRss(entry.getDescription().getValue());
-                if (sample != null){
-                    AirQualitySamples.add(sample);
+                if (sample != null && Integer.valueOf(sample.getAqi().trim())!= -999){
+                    rssList.add(sample);
                 }
             }
         } catch (FeedException | ParseException e) {
@@ -90,16 +90,16 @@ public class RssFetcher extends HttpServlet {
 
         //Removing duplicates, if any
 
-        List<AirQualitySample> airQualitySamplesWithoutDuplicates = removeDuplicates(AirQualitySamples);
+        List<AirQualitySample> cleanRssList = removeDuplicates(rssList);
 
         //Persisting samples in Datastore
 
-        AirQualitySamplesInStorage = api.getAirQualitySamples(null, 24); //retrieve last 24 hrs only
+        dataStoreList = api.getAirQualitySamples(null, 24); //retrieve last 24 hrs only
 
-        Iterator<AirQualitySample> crunchifyIterator = airQualitySamplesWithoutDuplicates.iterator();
+        Iterator<AirQualitySample> itr = cleanRssList.iterator();
 
-        while (crunchifyIterator.hasNext()) {
-            persistAirQualitySample(crunchifyIterator.next());
+        while (itr.hasNext()) {
+            persistAirQualitySample(itr.next());
         }
 
     }
@@ -136,25 +136,26 @@ public class RssFetcher extends HttpServlet {
         return sample;
     }
 
-    public void persistAirQualitySample( AirQualitySample sample)  {
+    public void persistAirQualitySample( AirQualitySample rssListItem)  {
 
         boolean isPresent = false;
 
-        Iterator<AirQualitySample> crunchifyIterator = AirQualitySamplesInStorage.iterator();
+        Iterator<AirQualitySample> itr = dataStoreList.iterator();
 
-        while (crunchifyIterator.hasNext()) {
-            AirQualitySample storedSample = (AirQualitySample)crunchifyIterator.next();
-            log.fine("date in Datastore:" + storedSample.getTimestamp().toString() + " date in rss sample:" + sample.getTimestamp().toString());
-            if(storedSample.getTimestamp() == sample.getTimestamp()){
-                log.fine("present!");
+        while (itr.hasNext()) {
+            AirQualitySample dataStoreListItem = (AirQualitySample)itr.next();
+            log.info("date in Datastore:" + dataStoreListItem.getTimestamp().toString() + " date in rss sample:" + rssListItem.getTimestamp().toString());
+
+            if(dataStoreListItem.getTimestamp().equals(rssListItem.getTimestamp())){
+                log.info("present!");
                 isPresent = true;
+                break;
             }
-            if (isPresent) break;
         }
 
-        if(!isPresent && Integer.valueOf(sample.getAqi().trim()) != -999) {
+        if(!isPresent) {
 
-            api.addAirQualitySample(sample);
+            api.addAirQualitySample(rssListItem);
 
         }
     }

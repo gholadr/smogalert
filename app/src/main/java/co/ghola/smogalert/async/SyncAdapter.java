@@ -21,6 +21,9 @@ import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
 import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -43,6 +46,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     private static Aqi myApiService = null;
 
     private final ContentResolver mContentResolver;
+
+    public static final long SYNC_FREQUENCY = 60*30; //30mins checks
 
     /**
      * Constructor. Obtains handle to content resolver for later use.
@@ -125,18 +130,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     @DebugLog
     public void updateLocalData(Context context,ArrayList<AirQualitySample> airQualitySampleArrayList) throws RemoteException, OperationApplicationException {
 
-        // Get list of all items
-        //Log.d(TAG, "Fetching local aqi entries for merge");
-        Uri uri = DBContract.AirQualitySample.CONTENT_URI; // Get all entries
-        Cursor c = context.getContentResolver().query(uri, DBContract.PROJECTION, null, null, "ts DESC LIMIT 24");
-
-        if (c == null)
-            throw new NullPointerException("null cursor when fetching local db");
-
-       Log.d(TAG, "Found " + c.getCount() + " local aqi entries. Matching against network aqi entries....");
-
         //find dups
-        ArrayList<AirQualitySample> duplicateList =findDuplicates(airQualitySampleArrayList, c); //
+        ArrayList<AirQualitySample> duplicateList =findDuplicates(airQualitySampleArrayList); //
 
 
         //if dups, remove them from remote list
@@ -166,30 +161,46 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         else{
             Log.d(TAG, "no new aqi entry to add. Local DB up to date");
         }
-        if( c != null && !c.isClosed())
-            c.close();
     }
 
     @DebugLog
-    public ArrayList<AirQualitySample> findDuplicates(ArrayList<AirQualitySample> remoteList, Cursor dbCursor){
+    public ArrayList<AirQualitySample> findDuplicates(ArrayList<AirQualitySample> remoteList){
 
         ArrayList<AirQualitySample> duplicateList =  new ArrayList<AirQualitySample>();
-        Iterator itr = remoteList.iterator();
+        Uri uri = DBContract.AirQualitySample.CONTENT_URI; // Get all entries
+        Iterator<AirQualitySample> itr = remoteList.iterator();
+        Cursor c = getContext().getContentResolver().query(uri, DBContract.PROJECTION, null, null, "ts DESC LIMIT 24");
+        if (c == null)
+            throw new NullPointerException("null cursor when fetching local db");
+
+        Log.d(TAG, "Found " + c.getCount() + " local aqi entries. Matching against network aqi entries....");
 
         while (itr.hasNext()) {
 
-            AirQualitySample aqiSample = (AirQualitySample) itr.next();
+            AirQualitySample aqiSample =  itr.next();
 
-            while (dbCursor.moveToNext()) {
 
-                if (aqiSample.getTimestamp() == dbCursor.getLong(DBContract.COLUMN_IDX_TS)) {
-                    // Log.d(TAG, "DUP: aqiSample.getTimestamp() == c.getLong() " + aqiSample.getTimestamp() + "==" + c.getLong(COLUMN_NAME_TS));
+            while (c.moveToNext()) {
+                Log.d(TAG, "xxxxxxxxxxxxxxxxxxxxxxxx");
+                Log.d(TAG, "my aqi OBJ:" + aqiSample.toString());
+
+                String aqi = c.getString(DBContract.COLUMN_IDX_AQI);
+
+                DateTime time=new DateTime((c.getLong(DBContract.COLUMN_IDX_TS)*1000), DateTimeZone.UTC);
+
+                String message = c.getString(DBContract.COLUMN_IDX_MESSAGE);
+                Log.d(TAG, "cursor position:" + c.getPosition());
+                Log.d(TAG, "DUP?:" + (aqiSample.getTimestamp() == c.getLong(DBContract.COLUMN_IDX_TS)) + "=>" + aqiSample.getTimestamp() + "==" + c.getLong(DBContract.COLUMN_IDX_TS) + " aqi: " + aqi + " msg:" + message + " time:" + time.toString("MMM d  h aa") );
+
+                if (aqiSample.getTimestamp().equals(c.getLong(DBContract.COLUMN_IDX_TS))) {
+                   // Log.d(TAG, "DUP: aqiSample.getTimestamp() == c.getLong() " + aqiSample.getTimestamp() + "==" + c.getLong(DBContract.COLUMN_IDX_TS));
                     duplicateList.add(aqiSample);
-                    dbCursor.moveToFirst();
+                    c.moveToPosition(-1);
                     break;
                 }
             }
         }
+        c.close();
         return duplicateList;
 
     }
