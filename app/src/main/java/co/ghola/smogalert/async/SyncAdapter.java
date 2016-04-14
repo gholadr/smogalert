@@ -44,24 +44,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     private final ContentResolver mContentResolver;
 
-    //private ArrayList<AirQualitySample> aqiListItems = null;
-
-  /*  *//**
-     * Project used when querying content provider. Returns all known fields.
-     *//*
-    private static final String[] PROJECTION = new String[] {
-            DBContract.AirQualitySample.COLUMN_NAME_ID,
-            DBContract.AirQualitySample.COLUMN_NAME_AQI,
-            DBContract.AirQualitySample.COLUMN_NAME_MESSAGE,
-            DBContract.AirQualitySample.COLUMN_NAME_TS
-    };
-
-    // Constants representing column positions from PROJECTION.
-    public static final int COLUMN_ID = 0;
-    public static final int COLUMN_NAME_AQI = 1;
-    public static final int COLUMN_NAME_MESSAGE = 2;
-    public static final int COLUMN_NAME_TS = 3;*/
-
     /**
      * Constructor. Obtains handle to content resolver for later use.
      */
@@ -137,6 +119,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             } catch (RemoteException | OperationApplicationException e){
                 Log.e(TAG, "issue(s) updating local db" + e.getMessage());
             }
+
     }
 
     @DebugLog
@@ -183,6 +166,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         else{
             Log.d(TAG, "no new aqi entry to add. Local DB up to date");
         }
+        if( c != null && !c.isClosed())
+            c.close();
     }
 
     @DebugLog
