@@ -92,7 +92,7 @@ public class AQIContentProvider extends ContentProvider {
      * (/entries/{ID}).
      */
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
+    public synchronized  Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
                         String sortOrder) {
         SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
         SelectionBuilder builder = new SelectionBuilder();
@@ -122,7 +122,7 @@ public class AQIContentProvider extends ContentProvider {
      * Insert a new entry into the database.
      */
     @Override
-    public Uri insert(Uri uri, ContentValues values) {
+    public synchronized Uri insert(Uri uri, ContentValues values) {
 
         final SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
 
