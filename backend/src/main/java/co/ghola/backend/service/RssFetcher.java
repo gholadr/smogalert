@@ -38,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import co.ghola.backend.entity.AirQualitySample;
+import sun.rmi.runtime.Log;
 import sun.util.logging.resources.logging;
 
 // [START example]
@@ -88,23 +89,32 @@ public class RssFetcher extends HttpServlet {
             throw new IOException("Parsing issue, likely date related", e.getCause());
         }
 
-        //Removing duplicates, if any
-
-        List<AirQualitySample> cleanRssList = removeDuplicates(rssList);
-
         //Persisting samples in Datastore
 
-        dataStoreList = api.getAirQualitySamples(null, 24); //retrieve last 24 hrs only
+        dataStoreList = api.getAirQualitySamples(null, 1); //retrieve last 24 hrs only
+        Long timeStamp = 0L;
+        if (dataStoreList.size()> 0) {
+            log.info("latest item in datastore:" + dataStoreList.get(0).getTimestamp().toString());
+            timeStamp = dataStoreList.get(0).getTimestamp();
+        }
+
+        //Removing duplicates, if any
+
+        ArrayList<AirQualitySample> cleanRssList = prepRssList(rssList, timeStamp);
+
+        /*saving new items in datastore */
+
+        api.addAirQualitySampleList(cleanRssList);
 
         Iterator<AirQualitySample> itr = cleanRssList.iterator();
 
-        while (itr.hasNext()) {
-            persistAirQualitySample(itr.next());
-        }
+//        while (itr.hasNext()) {
+//            persistAirQualitySample(itr.next());
+//        }
 
     }
 
-    private List<AirQualitySample> removeDuplicates(List<AirQualitySample> listWithDuplicates) {
+    private ArrayList<AirQualitySample> prepRssList(List<AirQualitySample> listWithDuplicates, Long timestamp) {
     /* Set of all attributes seen so far */
         Set<Long> attributes = new HashSet<Long>();
     /* All confirmed duplicates go in here */
@@ -120,11 +130,23 @@ public class RssFetcher extends HttpServlet {
             attributes.add(sample.getTimestamp());
         }
 
+
         /* Clean list without any dups */
 
         listWithDuplicates.removeAll(duplicates);
 
-        return listWithDuplicates;
+
+        /* keeping new RSS fetched samples that are not in the datastore yet */
+        ArrayList<AirQualitySample> rssItemListNotinDataStore = new ArrayList<AirQualitySample>();
+
+        for(AirQualitySample listItem : listWithDuplicates){
+
+            if (listItem.getTimestamp().compareTo(timestamp) > 0 ){
+                rssItemListNotinDataStore.add(listItem);
+            }
+        }
+
+        return rssItemListNotinDataStore;
     }
 
     private  AirQualitySample createSampleFromRss(String rssStr) throws ParseException{
@@ -136,7 +158,7 @@ public class RssFetcher extends HttpServlet {
         return sample;
     }
 
-    public void persistAirQualitySample( AirQualitySample rssListItem)  {
+/*    public void persistAirQualitySample( AirQualitySample rssListItem)  {
 
         boolean isPresent = false;
 
@@ -153,11 +175,11 @@ public class RssFetcher extends HttpServlet {
             }
         }
 
-        if(!isPresent) {
-
-            api.addAirQualitySample(rssListItem);
-
-        }
-    }
+//        if(!isPresent) {
+//
+//            api.addAirQualitySamples(rssListItem);
+//
+//        }*/
+ //   }
 
 }

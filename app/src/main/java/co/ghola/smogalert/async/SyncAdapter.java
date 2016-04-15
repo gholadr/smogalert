@@ -208,8 +208,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             AirQualitySample aqiSample =  itr.next();
 
             while (c.moveToNext()) {
-                Log.d(TAG, "xxxxxxxxxxxxxxxxxxxxxxxx");
-                Log.d(TAG, "my aqi OBJ:" + aqiSample.toString());
+               // Log.d(TAG, "xxxxxxxxxxxxxxxxxxxxxxxx");
+               // Log.d(TAG, "my aqi OBJ:" + aqiSample.toString());
 
                 String aqi = c.getString(DBContract.COLUMN_IDX_AQI);
 
@@ -217,7 +217,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
                 String message = c.getString(DBContract.COLUMN_IDX_MESSAGE);
 
-                Log.d(TAG, "cursor position:" + c.getPosition());
+               // Log.d(TAG, "cursor position:" + c.getPosition());
                 Log.d(TAG, "DUP?:" + (aqiSample.getTimestamp() == c.getLong(DBContract.COLUMN_IDX_TS)) + "=>" + aqiSample.getTimestamp() + "==" + c.getLong(DBContract.COLUMN_IDX_TS) + " aqi: " + aqi + " msg:" + message + " time:" + time.toString("MMM d  h aa") );
 
                 if (aqiSample.getTimestamp().equals(c.getLong(DBContract.COLUMN_IDX_TS))) {

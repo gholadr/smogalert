@@ -14,12 +14,13 @@ import java.util.logging.Logger;
 
 @Entity
 public class AirQualitySample {
-    @Id
-    Long id;
 
     String aqi;
 
     String message;
+
+    @Id
+    Long id;
 
     @Index
     Long ts;
@@ -29,14 +30,14 @@ public class AirQualitySample {
     public AirQualitySample() {
     }
 
-    public AirQualitySample(Long id) {
+    public AirQualitySample(Long timestamp) {
         super();
-        this.id = id;
+        this.ts = timestamp;
     }
 
     public AirQualitySample(String aqi, String message, Long timestamp) {
         super();
-        //this.id = id;
+        this.id = timestamp;
         this.aqi = aqi;
         this.message = message;
         this.ts = timestamp;
@@ -76,7 +77,7 @@ public class AirQualitySample {
 
     @Override
     public String toString() {
-        return "AirQualityIndex [id=" + id + ", aqi=" + aqi + ", message="
+        return "AirQualityIndex [aqi=" + aqi + ", message="
                 + message + ", timestamp="+ ts.toString() +"]";
     }
 

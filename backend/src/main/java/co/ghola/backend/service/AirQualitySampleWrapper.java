@@ -36,6 +36,10 @@ public final class AirQualitySampleWrapper {
         ofy().save().entity(q).now();
     }
 
+    public static void addAirQualitySampleList(ArrayList<AirQualitySample> itemList)  {
+        ofy().save().entities(itemList).now();
+    }
+
     public static List<AirQualitySample> getAirQualitySamples(@Nullable String cursorString,
                                                        @Nullable Integer count) {
         Query<AirQualitySample> query = ofy().cache(false).load()  //no caching here

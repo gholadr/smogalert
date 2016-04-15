@@ -14,7 +14,7 @@ import co.ghola.smogalert.db.DBContract;
  * Created by gholadr on 4/11/16.
  */
 public class SyncUtils {
-    private static final long SYNC_FREQUENCY = 60 * 30; // * 60;  // 1 hour (in seconds)
+    private static final long SYNC_FREQUENCY = 60 * 15; // * 60;  // 1 hour (in seconds)
     private static final String CONTENT_AUTHORITY = DBContract.CONTENT_AUTHORITY;
     private static final String PREF_SETUP_COMPLETE = "setup_complete";
 

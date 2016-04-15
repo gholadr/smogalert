@@ -2,11 +2,7 @@
 <appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
     <application>smogalert-1248</application>
     <version>1</version>
-    <threadsafe>false</threadsafe>
-    <instance-class>B1</instance-class>
-    <manual-scaling>
-        <instances>1</instances>
-    </manual-scaling>
+    <threadsafe>true</threadsafe>
     <system-properties>
         <property name="java.util.logging.config.file" value="WEB-INF/logging.properties"/>
     </system-properties>

@@ -3,7 +3,7 @@
     <cron>
         <url>/rssfetch</url>
         <description>Fetch latest AQI sample from US Embassy</description>
-        <schedule>every 1 hours</schedule>
+        <schedule>every 15 minutes</schedule>
     </cron>
 
 </cronentries>
