@@ -148,6 +148,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 updateLocalData(getContext(),aqiListItems );
             } catch (RemoteException | OperationApplicationException e){
                 Log.e(TAG, "issue(s) updating local db" + e.getMessage());
+                throw new RuntimeException();
             }
     }
 
