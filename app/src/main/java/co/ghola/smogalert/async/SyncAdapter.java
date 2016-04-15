@@ -10,9 +10,12 @@ import android.content.OperationApplicationException;
 import android.content.SyncResult;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.ParseException;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.OperationCanceledException;
 import android.os.RemoteException;
 import android.util.Log;
 
@@ -23,6 +26,7 @@ import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,7 +51,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     private final ContentResolver mContentResolver;
 
-    public static final long SYNC_FREQUENCY = 60*30; //30mins checks
+    //public static final long SYNC_FREQUENCY = 60*30; //30mins checks
 
     /**
      * Constructor. Obtains handle to content resolver for later use.
@@ -84,6 +88,27 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     public void onPerformSync(Account account, Bundle extras, String authority,
                               ContentProviderClient provider, SyncResult syncResult) {
         Log.i(TAG, "Beginning network synchronization");
+        try {
+            performSync(account, extras, authority, provider, syncResult);
+        } catch (final OperationCanceledException e) {
+            Log.e(TAG, "Synchronise failed ", e);
+        } catch (final IOException e) {
+            Log.e(TAG, "Synchronise failed ", e);
+            syncResult.stats.numIoExceptions++;
+        } catch (final JSONException e) {
+            Log.e(TAG, "Synchronise failed ", e);
+            syncResult.stats.numParseExceptions++;
+        } catch (final RuntimeException e) {
+            Log.e(TAG, "Synchronise failed ", e);
+            // Treat runtime exception as an I/O error
+            syncResult.stats.numIoExceptions++;
+        }
+    }
+
+    private void performSync(Account account, Bundle extras,
+                             String authority, ContentProviderClient provider,
+                             SyncResult syncResult) throws
+            OperationCanceledException, IOException, ParseException, JSONException {
         if (myApiService == null) {  // Only do this once
             Aqi.Builder builder = new Aqi.Builder(AndroidHttp.newCompatibleTransport(),
                     new AndroidJsonFactory(), null);
@@ -124,7 +149,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             } catch (RemoteException | OperationApplicationException e){
                 Log.e(TAG, "issue(s) updating local db" + e.getMessage());
             }
-
     }
 
     @DebugLog
@@ -148,13 +172,17 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             while (itr.hasNext()) {
 
                 AirQualitySample aqiSample = (AirQualitySample) itr.next();
-
-                batch.add(ContentProviderOperation.newInsert(DBContract.AirQualitySample.CONTENT_URI)
-                        .withValue(DBContract.AirQualitySample.COLUMN_NAME_ID, aqiSample.getId())
-                        .withValue(DBContract.AirQualitySample.COLUMN_NAME_AQI, aqiSample.getAqi())
-                        .withValue(DBContract.AirQualitySample.COLUMN_NAME_MESSAGE, aqiSample.getMessage())
-                        .withValue(DBContract.AirQualitySample.COLUMN_NAME_TS, aqiSample.getTimestamp())
-                        .build());
+                try {
+                        batch.add(ContentProviderOperation.newInsert(DBContract.AirQualitySample.CONTENT_URI)
+                                .withValue(DBContract.AirQualitySample.COLUMN_NAME_ID, aqiSample.getId())
+                                .withValue(DBContract.AirQualitySample.COLUMN_NAME_AQI, aqiSample.getAqi())
+                                .withValue(DBContract.AirQualitySample.COLUMN_NAME_MESSAGE, aqiSample.getMessage())
+                                .withValue(DBContract.AirQualitySample.COLUMN_NAME_TS, aqiSample.getTimestamp())
+                                .build());
+                    }
+                catch( SQLiteConstraintException e){
+                    Log.e(TAG, e.getMessage());
+                }
             }
             mContentResolver.applyBatch(DBContract.CONTENT_AUTHORITY, batch);
         }
@@ -179,7 +207,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
             AirQualitySample aqiSample =  itr.next();
 
-
             while (c.moveToNext()) {
                 Log.d(TAG, "xxxxxxxxxxxxxxxxxxxxxxxx");
                 Log.d(TAG, "my aqi OBJ:" + aqiSample.toString());
@@ -189,6 +216,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 DateTime time=new DateTime((c.getLong(DBContract.COLUMN_IDX_TS)*1000), DateTimeZone.UTC);
 
                 String message = c.getString(DBContract.COLUMN_IDX_MESSAGE);
+
                 Log.d(TAG, "cursor position:" + c.getPosition());
                 Log.d(TAG, "DUP?:" + (aqiSample.getTimestamp() == c.getLong(DBContract.COLUMN_IDX_TS)) + "=>" + aqiSample.getTimestamp() + "==" + c.getLong(DBContract.COLUMN_IDX_TS) + " aqi: " + aqi + " msg:" + message + " time:" + time.toString("MMM d  h aa") );
 

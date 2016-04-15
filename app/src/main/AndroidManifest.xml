@@ -73,6 +73,9 @@ sync framework can access it.
                 android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/authenticator" />
         </service>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="5500c611d39db003f77ce3f4e3e50cc2c068f7f7" />
     </application>
 
 </manifest>
