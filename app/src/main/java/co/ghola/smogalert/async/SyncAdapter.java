@@ -105,7 +105,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         }
     }
 
-    private synchronized void performSync(Account account, Bundle extras,
+    private void performSync(Account account, Bundle extras,
                              String authority, ContentProviderClient provider,
                              SyncResult syncResult) throws
             OperationCanceledException, IOException, ParseException, JSONException {
@@ -134,7 +134,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
             aqiListItems.addAll(myApiService.listAQISamples()
                     .set("cursor", null)
-                    .set("count", 24)
+                    .set("count",24)
                     .execute()
                     .getItems());
 
@@ -153,7 +153,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     @DebugLog
-    public synchronized void updateLocalData(Context context,ArrayList<AirQualitySample> airQualitySampleArrayList) throws RemoteException, OperationApplicationException {
+    public void updateLocalData(Context context,ArrayList<AirQualitySample> airQualitySampleArrayList) throws RemoteException, OperationApplicationException {
 
         //find dups
         ArrayList<AirQualitySample> duplicateList =findDuplicates(airQualitySampleArrayList); //
@@ -173,17 +173,17 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             while (itr.hasNext()) {
 
                 AirQualitySample aqiSample = (AirQualitySample) itr.next();
-                try {
+               // try {
                         batch.add(ContentProviderOperation.newInsert(DBContract.AirQualitySample.CONTENT_URI)
                                 .withValue(DBContract.AirQualitySample.COLUMN_NAME_ID, aqiSample.getId())
                                 .withValue(DBContract.AirQualitySample.COLUMN_NAME_AQI, aqiSample.getAqi())
                                 .withValue(DBContract.AirQualitySample.COLUMN_NAME_MESSAGE, aqiSample.getMessage())
                                 .withValue(DBContract.AirQualitySample.COLUMN_NAME_TS, aqiSample.getTimestamp())
                                 .build());
-                    }
+           /*         }
                 catch( SQLiteConstraintException e){
                     Log.e(TAG, e.getMessage());
-                }
+                }*/
             }
             mContentResolver.applyBatch(DBContract.CONTENT_AUTHORITY, batch);
         }
@@ -197,17 +197,17 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
         ArrayList<AirQualitySample> duplicateList =  new ArrayList<AirQualitySample>();
         Uri uri = DBContract.AirQualitySample.CONTENT_URI; // Get all entries
-        Iterator<AirQualitySample> itr = remoteList.iterator();
+        //Iterator<AirQualitySample> itr = remoteList.iterator();
         Cursor c = getContext().getContentResolver().query(uri, DBContract.PROJECTION, null, null, "ts DESC LIMIT 24");
+
         if (c == null)
             throw new NullPointerException("null cursor when fetching local db");
 
         Log.d(TAG, "Found " + c.getCount() + " local aqi entries. Matching against network aqi entries....");
 
-        while (itr.hasNext()) {
+        for(Iterator<AirQualitySample> itr = remoteList.iterator(); itr.hasNext(); ) {
 
             AirQualitySample aqiSample =  itr.next();
-
             while (c.moveToNext()) {
                // Log.d(TAG, "xxxxxxxxxxxxxxxxxxxxxxxx");
                // Log.d(TAG, "my aqi OBJ:" + aqiSample.toString());
@@ -224,10 +224,10 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 if (aqiSample.getTimestamp().equals(c.getLong(DBContract.COLUMN_IDX_TS))) {
                    // Log.d(TAG, "DUP: aqiSample.getTimestamp() == c.getLong() " + aqiSample.getTimestamp() + "==" + c.getLong(DBContract.COLUMN_IDX_TS));
                     duplicateList.add(aqiSample);
-                    c.moveToPosition(-1);
                     break;
                 }
             }
+            c.moveToPosition(-1);
         }
         c.close();
         return duplicateList;
