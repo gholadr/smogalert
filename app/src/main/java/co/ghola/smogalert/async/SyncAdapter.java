@@ -105,7 +105,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         }
     }
 
-    private void performSync(Account account, Bundle extras,
+    private synchronized void performSync(Account account, Bundle extras,
                              String authority, ContentProviderClient provider,
                              SyncResult syncResult) throws
             OperationCanceledException, IOException, ParseException, JSONException {
@@ -153,7 +153,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     @DebugLog
-    public void updateLocalData(Context context,ArrayList<AirQualitySample> airQualitySampleArrayList) throws RemoteException, OperationApplicationException {
+    public synchronized void updateLocalData(Context context,ArrayList<AirQualitySample> airQualitySampleArrayList) throws RemoteException, OperationApplicationException {
 
         //find dups
         ArrayList<AirQualitySample> duplicateList =findDuplicates(airQualitySampleArrayList); //
