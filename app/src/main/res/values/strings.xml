@@ -1,4 +1,5 @@
 <resources>
-<!--    <string name="app_name">SmogAlert</string>
-    <string name="title_activity_splash_screen">SplashScreenActivity</string>-->
+  <string name="app_name">SmogAlert - HCMC</string>
+    <string name="tab1">Most Recent</string>
+    <string name="tab2">Last 24hrs</string>
 </resources>

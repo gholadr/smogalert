@@ -31,10 +31,6 @@ public class OneDayActivity extends AppCompatActivity implements LoaderManager.L
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
 
-
-    //private CursRecAdapter adapter;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

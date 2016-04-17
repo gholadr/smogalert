@@ -1,11 +1,13 @@
 <resources xmlns:android="http://schemas.android.com/tools">
-<!--
-    &lt;!&ndash; Base application theme. &ndash;&gt;
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        &lt;!&ndash; Customize your theme here. &ndash;&gt;
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+
+    <style name="Theme.Base" parent="android:Theme.Light" />
+
+    <style name="Theme.Sample" parent="Theme.Base" />
+
+    <style name="AppTheme" parent="Theme.Sample" >
+        <item name="colorPrimary">#3F51B5</item>
+        <item name="colorPrimaryDark">#303F9F</item>
+        <item name="colorAccent">#FF4081</item>
     </style>
 
     <style name="FullscreenTheme" parent="AppTheme">
@@ -29,6 +31,6 @@
 
     <style name="SplashTheme" parent="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
         <item name="android:windowBackground">@drawable/background_splash</item>
-    </style>-->
+    </style>
 
 </resources>
