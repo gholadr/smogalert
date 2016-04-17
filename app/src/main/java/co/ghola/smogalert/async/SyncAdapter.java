@@ -219,7 +219,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 String message = c.getString(DBContract.COLUMN_IDX_MESSAGE);
 
                // Log.d(TAG, "cursor position:" + c.getPosition());
-                Log.d(TAG, "DUP?:" + (aqiSample.getTimestamp() == c.getLong(DBContract.COLUMN_IDX_TS)) + "=>" + aqiSample.getTimestamp() + "==" + c.getLong(DBContract.COLUMN_IDX_TS) + " aqi: " + aqi + " msg:" + message + " time:" + time.toString("MMM d  h aa") );
+                Log.d(TAG, "DUP?:" + (aqiSample.getTimestamp().equals(c.getLong(DBContract.COLUMN_IDX_TS)) ) + "=>" + aqiSample.getTimestamp() + "==" + c.getLong(DBContract.COLUMN_IDX_TS) + " aqi: " + aqi + " msg:" + message + " time:" + time.toString("MMM d  h aa") );
 
                 if (aqiSample.getTimestamp().equals(c.getLong(DBContract.COLUMN_IDX_TS))) {
                    // Log.d(TAG, "DUP: aqiSample.getTimestamp() == c.getLong() " + aqiSample.getTimestamp() + "==" + c.getLong(DBContract.COLUMN_IDX_TS));

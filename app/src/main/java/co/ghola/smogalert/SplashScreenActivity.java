@@ -1,23 +1,12 @@
 package co.ghola.smogalert;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
-import android.annotation.SuppressLint;
-import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
 
-import co.ghola.smogalert.async.GenericAccountService;
-import co.ghola.smogalert.async.SyncAdapter;
 import co.ghola.smogalert.async.SyncUtils;
-import co.ghola.smogalert.db.DBContract;
+
 import com.crashlytics.android.Crashlytics;
 import io.fabric.sdk.android.Fabric;
 
@@ -28,7 +17,7 @@ import io.fabric.sdk.android.Fabric;
 public class SplashScreenActivity extends AppCompatActivity {
 
     // Splash screen timer
-    private static int SPLASH_TIME_OUT = 4000;
+    private static int SPLASH_TIME_OUT = 1000;
 
 
     @Override
@@ -50,7 +39,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             public void run() {
                 // This method will be executed once the timer is over
                 // Start your app main activity
-                Intent i = new Intent(SplashScreenActivity.this, OneDayActivity.class);
+                Intent i = new Intent(SplashScreenActivity.this, MainActivity.class);
                 startActivity(i);
 
                 // close this activity
