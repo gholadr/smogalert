@@ -25,6 +25,8 @@ import android.database.sqlite.SQLiteDatabase;
 
 import android.net.Uri;
 
+import org.greenrobot.eventbus.EventBus;
+
 import co.ghola.smogalert.contentprovider.SelectionBuilder;
 import co.ghola.smogalert.db.DBContract;
 import co.ghola.smogalert.db.DBHelper;
@@ -111,6 +113,7 @@ public class AQIContentProvider extends ContentProvider {
                 // register ContentObservers.
                 Context ctx = getContext();
                 assert ctx != null;
+
                 c.setNotificationUri(ctx.getContentResolver(), uri);
                 return c;
             default:
@@ -161,6 +164,7 @@ public class AQIContentProvider extends ContentProvider {
                 count = builder.table(DBContract.AirQualitySample.TABLE_NAME)
                         .where(selection, selectionArgs)
                         .delete(db);
+
                 break;
             case ROUTE_AQIS_ID:
                 String id = uri.getLastPathSegment();

@@ -47,7 +47,7 @@ dependencies {
     compile 'com.github.lzyzsd:circleprogress:1.1.0@aar'
     compile 'com.android.support:support-v4:23.3.0'
     compile 'com.android.support:design:23.3.0'
-    compile 'com.mikhaellopez:circularfillableloaders:1.2.0'
+    compile 'org.greenrobot:eventbus:3.0.0'
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true;
     }

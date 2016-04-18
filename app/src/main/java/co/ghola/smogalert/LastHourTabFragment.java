@@ -6,16 +6,14 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
-import android.support.v4.widget.CursorAdapter;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.TextView;
-
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
@@ -26,67 +24,50 @@ import hugo.weaving.DebugLog;
 /**
  * Created by gholadr on 4/17/16.
  */
-public class LastHourTabFragment extends ListFragment {
+public class LastHourTabFragment extends Fragment {
 
     private String TAG = getClass().getSimpleName();
     private TextView textView;
-    private Cursor current;
     private AsyncTask task = null;
-/*
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
 
-    }*/
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onDestroy(){
 
-        SimpleCursorAdapter adapter=
-                new SimpleCursorAdapter(
-                        getActivity(),
-                        R.layout.row,
-                        current,DBContract.PROJECTION,
-                        new int[] { R.id.aqi, R.id.message, R.id.date },
-                        0);
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
 
-        adapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
+    }
 
-            public boolean setViewValue(View view, Cursor row, int colIndex) {
-                Log.d(TAG, "colIndex: " + colIndex + " colIndex value:"  + row.getString(colIndex));
-                Log.d(TAG, "view:" + view.toString());
-                if (view.getId() == R.id.date) {
-                    String createDate = row.getString(colIndex);
-                    DateTime time=new DateTime((row.getLong(DBContract.COLUMN_IDX_TS)*1000), DateTimeZone.UTC);
-                    TextView textView = (TextView) view;
-                    textView.setText(time.toString("MMM d  haa"));
-                    return true;
-                }
-                if (view.getId() == R.id.aqi) {
-                    String aqi = row.getString(DBContract.COLUMN_IDX_AQI);
-                    TextView textView = (TextView) view;
-
-                    textView.setText(aqi + " AQI");
-                    return true;
-                }
-                if (view.getId() == R.id.message){
-                    String msg = row.getString(DBContract.COLUMN_IDX_MESSAGE);
-                    TextView textView = (TextView) view;
-
-                    textView.setText(msg);
-                    return true;
-                }
-
-                return false;
-            }
-        });
-        setListAdapter(adapter);
-
-        if (current==null) {
+    @Override
+    public void onResume(){
+        super.onResume();
+        if (task==null) {
             task=new LoadCursorTask(getActivity()).execute();
         }
     }
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+
+        EventBus.getDefault().register(this);
+        return inflater.inflate(R.layout.tab_fragment_last_hour, container, false);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void doThis(Cursor cursor){
+        Log.d(TAG, "new event:" + cursor.toString());
+        cursor.moveToPosition(0);
+        String time=new DateTime((cursor.getLong(DBContract.COLUMN_IDX_TS)*1000), DateTimeZone.UTC).toString("MMM d  haa");
+        String aqi = cursor.getString(DBContract.COLUMN_IDX_AQI);
+        String msg = cursor.getString(DBContract.COLUMN_IDX_MESSAGE);
+        TextView view = (TextView) getView().findViewById(R.id.aqi);
+        view.setText(aqi);
+        view = (TextView) getView().findViewById(R.id.message);
+        view.setText(msg);
+        view = (TextView) getView().findViewById(R.id.date);
+        view.setText(time);
+    }
+
 
     abstract private class BaseTask<T> extends AsyncTask<T, Void, Cursor> {
         final ContentResolver resolver;
@@ -99,8 +80,7 @@ public class LastHourTabFragment extends ListFragment {
 
         @Override
         public void onPostExecute(Cursor result) {
-            ((CursorAdapter)getListAdapter()).changeCursor(result);
-            current=result;
+            EventBus.getDefault().post(result);
             task=null;
         }
 
