@@ -6,6 +6,7 @@ import android.content.ContentProviderClient;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.OperationApplicationException;
 import android.content.SyncResult;
 import android.database.Cursor;
@@ -17,6 +18,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.OperationCanceledException;
 import android.os.RemoteException;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -36,6 +38,8 @@ import java.util.List;
 
 import co.ghola.backend.aqi.Aqi;
 import co.ghola.backend.aqi.model.AirQualitySample;
+import co.ghola.smogalert.broadcastreceiver.MyReceiver;
+import co.ghola.smogalert.broadcastreceiver.PushReceiver;
 import co.ghola.smogalert.db.DBContract;
 import co.ghola.smogalert.db.DBHelper;
 import hugo.weaving.DebugLog;
@@ -135,7 +139,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
             aqiListItems.addAll(myApiService.listAQISamples()
                     .set("cursor", null)
-                    .set("count",24)
+                    .set("count", 24)
                     .execute()
                     .getItems());
 
@@ -188,10 +192,31 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             }
             mContentResolver.applyBatch(DBContract.CONTENT_AUTHORITY, batch);
             EventBus.getDefault().post("new insert");
+            sendBroadcast(context);
         }
         else{
             Log.d(TAG, "no new aqi entry to add. Local DB up to date");
         }
+    }
+
+    public void sendBroadcast(Context context){
+
+        Uri uri = DBContract.AirQualitySample.CONTENT_URI; // Get all entries
+        Cursor c = getContext().getContentResolver().query(uri, DBContract.PROJECTION, null, null, "ts DESC LIMIT 1");
+        if (c != null && c.getCount() > 0){
+
+            c.moveToPosition(0);
+            String aqi = c.getString(DBContract.COLUMN_IDX_AQI);
+            if (Integer.valueOf(aqi) > 50) {
+                Intent intent = new Intent(getContext().getApplicationContext(), PushReceiver.class);
+
+                intent.putExtra("aqi", c.getString(DBContract.COLUMN_IDX_AQI));
+                intent.putExtra("message", c.getString(DBContract.COLUMN_IDX_MESSAGE));
+
+                getContext().getApplicationContext().sendBroadcast(intent);
+            }
+        }
+
     }
 
     @DebugLog
@@ -221,7 +246,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 String message = c.getString(DBContract.COLUMN_IDX_MESSAGE);
 
                // Log.d(TAG, "cursor position:" + c.getPosition());
-                Log.d(TAG, "DUP?:" + (aqiSample.getTimestamp().equals(c.getLong(DBContract.COLUMN_IDX_TS)) ) + "=>" + aqiSample.getTimestamp() + "==" + c.getLong(DBContract.COLUMN_IDX_TS) + " aqi: " + aqi + " msg:" + message + " time:" + time.toString("MMM d  h aa") );
+               // Log.d(TAG, "DUP?:" + (aqiSample.getTimestamp().equals(c.getLong(DBContract.COLUMN_IDX_TS)) ) + "=>" + aqiSample.getTimestamp() + "==" + c.getLong(DBContract.COLUMN_IDX_TS) + " aqi: " + aqi + " msg:" + message + " time:" + time.toString("MMM d  h aa") );
 
                 if (aqiSample.getTimestamp().equals(c.getLong(DBContract.COLUMN_IDX_TS))) {
                    // Log.d(TAG, "DUP: aqiSample.getTimestamp() == c.getLong() " + aqiSample.getTimestamp() + "==" + c.getLong(DBContract.COLUMN_IDX_TS));

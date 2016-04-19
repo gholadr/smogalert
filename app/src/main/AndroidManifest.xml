@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.READ_SYNC_STATS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -16,16 +17,18 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
-        <activity android:name=".MainActivity" android:theme="@style/Theme.AppCompat">
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/Theme.AppCompat">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-<!--        <activity android:name=".MainActivity" android:label="@string/app_name"/>-->
 
-        <activity android:name=".fragment.LastDayTabFragment" android:label="@string/app_name"/>
+        <!-- receiver sends a notification to user when pollution levels are high -->
+        <receiver android:name=".broadcastreceiver.PushReceiver" android:enabled="true" android:exported="true" />
 
         <provider
             android:name=".contentprovider.AQIContentProvider"
@@ -68,14 +71,16 @@ sync framework can access it.
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
-            <!-- This points to an XMLf ile which describes our account service. -->
+            <!-- This points to an XML file which describes our account service. -->
             <meta-data
                 android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/authenticator" />
         </service>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="5500c611d39db003f77ce3f4e3e50cc2c068f7f7" />
+
     </application>
 
 </manifest>
