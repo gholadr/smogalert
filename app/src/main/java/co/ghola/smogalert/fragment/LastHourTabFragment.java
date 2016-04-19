@@ -42,21 +42,22 @@ public class LastHourTabFragment extends Fragment {
 
     @Override
     public void onResume(){
+
         super.onResume();
-        if (task==null) {
-            task=new LoadCursorTask(getActivity()).execute();
-        }
+        if (task==null) task=new LoadCursorTask(getActivity()).execute();
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 
         EventBus.getDefault().register(this);
         return inflater.inflate(R.layout.tab_fragment_last_hour, container, false);
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void doThis(String text){
-        task=new LoadCursorTask(getActivity()).execute();
+        if (task == null) task=new LoadCursorTask(getActivity()).execute();
     }
 
 
@@ -71,15 +72,13 @@ public class LastHourTabFragment extends Fragment {
 
         @Override
         public void onPostExecute(Cursor result) {
-            Log.d(TAG, "firing off doQuery");
-            Log.d(TAG, "new event:" + result.toString());
             if (result.getCount() > 0) {
                 result.moveToPosition(0);
                 String time = new DateTime((result.getLong(DBContract.COLUMN_IDX_TS) * 1000), DateTimeZone.UTC).toString("MMM d  haa");
                 String aqi = result.getString(DBContract.COLUMN_IDX_AQI);
                 String msg = result.getString(DBContract.COLUMN_IDX_MESSAGE);
                 TextView view = (TextView) getView().findViewById(R.id.aqi);
-                view.setText(aqi + " AQI (PM 2.5)");
+                view.setText(aqi + " " + getResources().getString(R.string.aqi_text));
                 view = (TextView) getView().findViewById(R.id.message);
                 view.setText(msg);
                 view = (TextView) getView().findViewById(R.id.date);

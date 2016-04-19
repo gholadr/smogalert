@@ -168,7 +168,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
         //if any left items from list, update local db
         if (airQualitySampleArrayList.size() > 0 ){
-            EventBus.getDefault().post("new insert");
             Log.d(TAG, String.format("adding  %s aqi entries to local db", airQualitySampleArrayList.size()));
             ArrayList<ContentProviderOperation> batch = new ArrayList<ContentProviderOperation>();
             Iterator itr = airQualitySampleArrayList.iterator();
@@ -188,6 +187,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 }*/
             }
             mContentResolver.applyBatch(DBContract.CONTENT_AUTHORITY, batch);
+            EventBus.getDefault().post("new insert");
         }
         else{
             Log.d(TAG, "no new aqi entry to add. Local DB up to date");

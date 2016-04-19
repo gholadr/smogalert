@@ -2,4 +2,5 @@
   <string name="app_name">SmogAlert - HCMC</string>
     <string name="tab1">Most Recent</string>
     <string name="tab2">Last 24hrs</string>
+  <string name="aqi_text">AQI (PM 2.5)</string>
 </resources>
