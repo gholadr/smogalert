@@ -1,9 +1,12 @@
-package co.ghola.smogalert;
+package co.ghola.smogalert.fragment;
 
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+
+import co.ghola.smogalert.fragment.LastDayTabFragment;
+import co.ghola.smogalert.fragment.LastHourTabFragment;
 
 
 /**

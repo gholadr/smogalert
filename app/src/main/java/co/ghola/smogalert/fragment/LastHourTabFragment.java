@@ -1,4 +1,4 @@
-package co.ghola.smogalert;
+package co.ghola.smogalert.fragment;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -17,6 +17,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
+import co.ghola.smogalert.R;
 import co.ghola.smogalert.db.DBContract;
 import hugo.weaving.DebugLog;
 
@@ -54,18 +55,8 @@ public class LastHourTabFragment extends Fragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void doThis(Cursor cursor){
-        Log.d(TAG, "new event:" + cursor.toString());
-        cursor.moveToPosition(0);
-        String time=new DateTime((cursor.getLong(DBContract.COLUMN_IDX_TS)*1000), DateTimeZone.UTC).toString("MMM d  haa");
-        String aqi = cursor.getString(DBContract.COLUMN_IDX_AQI);
-        String msg = cursor.getString(DBContract.COLUMN_IDX_MESSAGE);
-        TextView view = (TextView) getView().findViewById(R.id.aqi);
-        view.setText(aqi);
-        view = (TextView) getView().findViewById(R.id.message);
-        view.setText(msg);
-        view = (TextView) getView().findViewById(R.id.date);
-        view.setText(time);
+    public void doThis(String text){
+        task=new LoadCursorTask(getActivity()).execute();
     }
 
 
@@ -80,7 +71,20 @@ public class LastHourTabFragment extends Fragment {
 
         @Override
         public void onPostExecute(Cursor result) {
-            EventBus.getDefault().post(result);
+            Log.d(TAG, "firing off doQuery");
+            Log.d(TAG, "new event:" + result.toString());
+            if (result.getCount() > 0) {
+                result.moveToPosition(0);
+                String time = new DateTime((result.getLong(DBContract.COLUMN_IDX_TS) * 1000), DateTimeZone.UTC).toString("MMM d  haa");
+                String aqi = result.getString(DBContract.COLUMN_IDX_AQI);
+                String msg = result.getString(DBContract.COLUMN_IDX_MESSAGE);
+                TextView view = (TextView) getView().findViewById(R.id.aqi);
+                view.setText(aqi + " AQI (PM 2.5)");
+                view = (TextView) getView().findViewById(R.id.message);
+                view.setText(msg);
+                view = (TextView) getView().findViewById(R.id.date);
+                view.setText(time);
+            }
             task=null;
         }
 

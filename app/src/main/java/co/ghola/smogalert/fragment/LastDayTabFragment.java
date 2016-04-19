@@ -1,4 +1,4 @@
-package co.ghola.smogalert;
+package co.ghola.smogalert.fragment;
 
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -13,6 +13,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import co.ghola.smogalert.R;
+import co.ghola.smogalert.fragment.RowController;
 import co.ghola.smogalert.db.DBContract;
 
 public class LastDayTabFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {

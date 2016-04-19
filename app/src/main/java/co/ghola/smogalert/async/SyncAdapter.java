@@ -24,6 +24,7 @@ import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
 import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 
+import org.greenrobot.eventbus.EventBus;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.json.JSONException;
@@ -167,6 +168,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
         //if any left items from list, update local db
         if (airQualitySampleArrayList.size() > 0 ){
+            EventBus.getDefault().post("new insert");
             Log.d(TAG, String.format("adding  %s aqi entries to local db", airQualitySampleArrayList.size()));
             ArrayList<ContentProviderOperation> batch = new ArrayList<ContentProviderOperation>();
             Iterator itr = airQualitySampleArrayList.iterator();

@@ -1,25 +1,18 @@
 package co.ghola.smogalert;
 
 
-import android.app.LoaderManager;
-import android.content.Context;
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 
-import co.ghola.smogalert.db.DBContract;
+import com.crashlytics.android.Crashlytics;
+
+import co.ghola.smogalert.async.SyncUtils;
+import co.ghola.smogalert.fragment.PagerAdapter;
+import io.fabric.sdk.android.Fabric;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -28,6 +21,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
+        //setting up SyncService
+        SyncUtils.CreateSyncAccount(this);
+
         setContentView(R.layout.activity_main);
        // Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
      TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);

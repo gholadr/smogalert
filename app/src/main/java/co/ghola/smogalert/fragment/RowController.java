@@ -1,4 +1,4 @@
-package co.ghola.smogalert;
+package co.ghola.smogalert.fragment;
 
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.ghola.backend.aqi.model.AirQualitySample;
+import co.ghola.smogalert.R;
 import co.ghola.smogalert.async.SyncAdapter;
 import co.ghola.smogalert.db.DBContract;
 import co.ghola.smogalert.db.DBHelper;
