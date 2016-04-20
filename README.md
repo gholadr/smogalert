@@ -29,3 +29,9 @@ This app uses:
  [Objectify](https://github.com/objectify/objectify) as a simple interface to GAE's datastore
 
  [Google Cloud Endpoints] (https://cloud.google.com/appengine/docs/java/endpoints/) to expose the APIs, and generate the client side libs
+ 
+ [GreenRobot Eventbus] (https://github.com/greenrobot/EventBus) to manage simply app events
+ 
+ [Iconify] (https://github.com/JoanZapata/android-iconify) for beautiful icons (only 1 so far)
+ 
+ [Fabric] (https://fabric.io) Fabric.io for analytics
