@@ -9,6 +9,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.crashlytics.android.Crashlytics;
+import com.joanzapata.iconify.Iconify;
+import com.joanzapata.iconify.fonts.FontAwesomeModule;
 
 import co.ghola.smogalert.async.SyncUtils;
 import co.ghola.smogalert.fragment.PagerAdapter;
@@ -21,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Iconify.with(new FontAwesomeModule());
         Fabric.with(this, new Crashlytics());
         //setting up SyncService
         SyncUtils.CreateSyncAccount(this);

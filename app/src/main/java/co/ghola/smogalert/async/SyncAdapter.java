@@ -10,38 +10,25 @@ import android.content.Intent;
 import android.content.OperationApplicationException;
 import android.content.SyncResult;
 import android.database.Cursor;
-import android.database.SQLException;
-import android.database.sqlite.SQLiteConstraintException;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.ParseException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.OperationCanceledException;
 import android.os.RemoteException;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
-import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
-import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
-
 import org.greenrobot.eventbus.EventBus;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.json.JSONException;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
-
 import co.ghola.backend.aqi.Aqi;
 import co.ghola.backend.aqi.model.AirQualitySample;
-import co.ghola.smogalert.broadcastreceiver.MyReceiver;
 import co.ghola.smogalert.broadcastreceiver.PushReceiver;
 import co.ghola.smogalert.db.DBContract;
-import co.ghola.smogalert.db.DBHelper;
 import hugo.weaving.DebugLog;
 
 /**
