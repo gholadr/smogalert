@@ -6,13 +6,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:titleTextColor="@android:color/white"
+        app:titleTextAppearance="@style/Toolbar.TitleText"
+        android:background="@color/primary">
+    </android.support.v7.widget.Toolbar>
     <android.support.design.widget.TabLayout
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:elevation="6dp"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+        style="@style/customTablayout"
+        android:elevation="6dp" />
 <!--        android:minHeight="?attr/actionBarSize"-->
 
 
@@ -20,7 +31,6 @@
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/tab_layout"
-        android:background="?attr/colorPrimary" />
-
+        android:layout_below="@id/tab_layout"/>
+    </android.support.v7.widget.LinearLayoutCompat>
 </RelativeLayout>

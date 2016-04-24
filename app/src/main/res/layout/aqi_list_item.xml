@@ -16,7 +16,6 @@
         android:layout_height="wrap_content"
         android:textSize="16sp"
         android:padding="16dp"
-        android:textColor="#fafafa"
         android:visibility="visible"
         android:typeface="normal" />
 

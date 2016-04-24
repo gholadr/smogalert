@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
 import co.ghola.smogalert.R;
+import co.ghola.smogalert.charts.BarCard;
 import co.ghola.smogalert.db.DBContract;
 import hugo.weaving.DebugLog;
 
@@ -25,7 +27,7 @@ import hugo.weaving.DebugLog;
 /**
  * Created by gholadr on 4/17/16.
  */
-public class LastHourTabFragment extends Fragment {
+public class MostRecentTabFragment extends Fragment {
 
     private String TAG = getClass().getSimpleName();
     private TextView textView;
@@ -51,7 +53,9 @@ public class LastHourTabFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 
         EventBus.getDefault().register(this);
-        return inflater.inflate(R.layout.tab_fragment_last_hour, container, false);
+        View view = inflater.inflate(R.layout.tab_fragment_last_hour, container, false);
+        new BarCard( view, getContext());
+        return view;
 
     }
 
@@ -83,6 +87,7 @@ public class LastHourTabFragment extends Fragment {
                 view.setText(msg);
                 view = (TextView) getView().findViewById(R.id.date);
                 view.setText(time);
+
             }
             task=null;
         }

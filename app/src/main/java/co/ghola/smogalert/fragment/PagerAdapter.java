@@ -5,9 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import co.ghola.smogalert.fragment.LastDayTabFragment;
-import co.ghola.smogalert.fragment.LastHourTabFragment;
-
 
 /**
  * Created by gholadr on 4/17/16.
@@ -26,7 +23,7 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
 
         switch (position) {
             case 0:
-                LastHourTabFragment tab1 = new LastHourTabFragment();
+                MostRecentTabFragment tab1 = new MostRecentTabFragment();
                 return tab1;
             case 1:
                 LastDayTabFragment tab2 = new LastDayTabFragment();

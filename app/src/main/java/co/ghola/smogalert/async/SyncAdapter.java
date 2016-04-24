@@ -189,7 +189,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     public void sendBroadcast(Context context){
 
         Uri uri = DBContract.AirQualitySample.CONTENT_URI; // Get all entries
-        Cursor c = getContext().getContentResolver().query(uri, DBContract.PROJECTION, null, null, "ts DESC LIMIT 1");
+        Cursor c = getContext().getContentResolver().query(uri, DBContract.PROJECTION, null, null, "ts DESC LIMIT 4");
         if (c != null && c.getCount() > 0){
 
             c.moveToPosition(0);

@@ -25,9 +25,6 @@ public class LastDayTabFragment extends Fragment implements LoaderManager.Loader
     private RecyclerView.LayoutManager layoutManager;
 
 
-    //private CursRecAdapter adapter;
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.tab_fragment_last_day, container, false);
