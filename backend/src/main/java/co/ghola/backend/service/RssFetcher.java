@@ -4,17 +4,10 @@ package co.ghola.backend.service;
  * Created by macbook on 3/12/16.
  */
 
-import com.google.apphosting.api.ApiProxy;
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.io.FeedException;
 import com.sun.syndication.io.SyndFeedInput;
-
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.LocalDateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,15 +15,11 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServlet;
@@ -38,8 +27,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import co.ghola.backend.entity.AirQualitySample;
-import sun.rmi.runtime.Log;
-import sun.util.logging.resources.logging;
 
 // [START example]
 @SuppressWarnings("serial")
@@ -86,7 +73,7 @@ public class RssFetcher extends HttpServlet {
                 }
             }
         } catch (FeedException | ParseException e) {
-            throw new IOException("Parsing issue, likely date related", e.getCause());
+            log.info(e.getStackTrace().toString());
         }
 
         //Persisting samples in Datastore
@@ -108,10 +95,6 @@ public class RssFetcher extends HttpServlet {
 
         Iterator<AirQualitySample> itr = cleanRssList.iterator();
 
-//        while (itr.hasNext()) {
-//            persistAirQualitySample(itr.next());
-//        }
-
     }
 
     private ArrayList<AirQualitySample> prepRssList(List<AirQualitySample> listWithDuplicates, Long timestamp) {
@@ -130,11 +113,9 @@ public class RssFetcher extends HttpServlet {
             attributes.add(sample.getTimestamp());
         }
 
-
         /* Clean list without any dups */
 
         listWithDuplicates.removeAll(duplicates);
-
 
         /* keeping new RSS fetched samples that are not in the datastore yet */
         ArrayList<AirQualitySample> rssItemListNotinDataStore = new ArrayList<AirQualitySample>();
@@ -157,29 +138,5 @@ public class RssFetcher extends HttpServlet {
 
         return sample;
     }
-
-/*    public void persistAirQualitySample( AirQualitySample rssListItem)  {
-
-        boolean isPresent = false;
-
-        Iterator<AirQualitySample> itr = dataStoreList.iterator();
-
-        while (itr.hasNext()) {
-            AirQualitySample dataStoreListItem = (AirQualitySample)itr.next();
-            log.info("date in Datastore:" + dataStoreListItem.getTimestamp().toString() + " date in rss sample:" + rssListItem.getTimestamp().toString());
-
-            if(dataStoreListItem.getTimestamp().equals(rssListItem.getTimestamp())){
-                log.info("present!");
-                isPresent = true;
-                break;
-            }
-        }
-
-//        if(!isPresent) {
-//
-//            api.addAirQualitySamples(rssListItem);
-//
-//        }*/
- //   }
 
 }

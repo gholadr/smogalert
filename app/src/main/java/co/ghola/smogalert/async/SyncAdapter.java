@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.OperationCanceledException;
 import android.os.RemoteException;
+import android.provider.SyncStateContract;
 import android.util.Log;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
@@ -27,8 +28,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import co.ghola.backend.aqi.Aqi;
 import co.ghola.backend.aqi.model.AirQualitySample;
+import co.ghola.smogalert.R;
 import co.ghola.smogalert.broadcastreceiver.PushReceiver;
 import co.ghola.smogalert.db.DBContract;
+import co.ghola.smogalert.utils.Constants;
+import co.ghola.smogalert.utils.HelperSharedPreferences;
 import hugo.weaving.DebugLog;
 
 /**
@@ -178,30 +182,73 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 }*/
             }
             mContentResolver.applyBatch(DBContract.CONTENT_AUTHORITY, batch);
+
+            sendNotificationWarning(context);
+
             EventBus.getDefault().post("new insert");
-            sendBroadcast(context);
         }
         else{
             Log.d(TAG, "no new aqi entry to add. Local DB up to date");
         }
     }
 
-    public void sendBroadcast(Context context){
+    @DebugLog
+    public void sendNotificationWarning(Context context){
 
         Uri uri = DBContract.AirQualitySample.CONTENT_URI; // Get all entries
         Cursor c = getContext().getContentResolver().query(uri, DBContract.PROJECTION, null, null, "ts DESC LIMIT 1");
+
         if (c != null && c.getCount() > 0){
+            //retrieving previous levels of pollution
+            int previousLevel = HelperSharedPreferences.getSharedPreferencesInt(getContext(), HelperSharedPreferences.SharedPreferencesKeys.levelsKey,-1);
 
+            int currentLevel = -1;
+            String notificationTitle= "";
             c.moveToPosition(0);
-            String aqi = c.getString(DBContract.COLUMN_IDX_AQI);
-            if (Integer.valueOf(aqi) > 50) {
-                Intent intent = new Intent(getContext().getApplicationContext(), PushReceiver.class);
+            String a = c.getString(DBContract.COLUMN_IDX_AQI);
+            int aqi = Integer.valueOf(a);
 
-                intent.putExtra("aqi", c.getString(DBContract.COLUMN_IDX_AQI));
-                intent.putExtra("message", c.getString(DBContract.COLUMN_IDX_MESSAGE));
+            if (aqi <= Constants.GOOD){
+                notificationTitle = context.getResources().getString(R.string.good);
+                currentLevel = Constants.GOOD;
 
-                getContext().getApplicationContext().sendBroadcast(intent);
             }
+            else if (aqi > Constants.GOOD && aqi <= Constants.MODERATE){
+                notificationTitle = context.getResources().getString(R.string.moderate);
+                currentLevel = Constants.MODERATE;
+
+            }
+            else if (aqi > Constants.GOOD && aqi <= Constants.SENSITIVE){
+                notificationTitle = context.getResources().getString(R.string.sensitive);
+                currentLevel = Constants.SENSITIVE;
+
+            }
+            else if (aqi > Constants.SENSITIVE && aqi <= Constants.UNHEALTHY){
+                notificationTitle = context.getResources().getString(R.string.unhealthy);
+                currentLevel = Constants.UNHEALTHY;
+
+            }
+            Log.d(TAG,"current level:" + String.valueOf(currentLevel));
+
+            //persisting levels of pollution with new data in SharedPrefs
+            HelperSharedPreferences.putSharedPreferencesInt(getContext(), HelperSharedPreferences.SharedPreferencesKeys.levelsKey, currentLevel);
+
+            //have levels of pollution changed between the 4 groups (good, moderate, sensitive, unhealthy)
+            if (previousLevel != -1 && (previousLevel != currentLevel)){
+
+                // if the 'do not send notification' setting is off, send a notification
+                Boolean switchOn = HelperSharedPreferences.getSharedPreferencesBoolean(getContext(),HelperSharedPreferences.SharedPreferencesKeys.notificationKey, false);
+
+                if(!switchOn) {
+                    //send push notification to user
+                    Intent intent = new Intent(getContext().getApplicationContext(), PushReceiver.class);
+                    intent.putExtra("aqi", c.getString(DBContract.COLUMN_IDX_AQI));
+                    intent.putExtra("message", c.getString(DBContract.COLUMN_IDX_MESSAGE));
+                    intent.putExtra("title", notificationTitle);
+                    getContext().getApplicationContext().sendBroadcast(intent);
+                }
+            }
+
         }
 
     }
@@ -223,8 +270,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
             AirQualitySample aqiSample =  itr.next();
             while (c.moveToNext()) {
-               // Log.d(TAG, "xxxxxxxxxxxxxxxxxxxxxxxx");
-               // Log.d(TAG, "my aqi OBJ:" + aqiSample.toString());
 
                 String aqi = c.getString(DBContract.COLUMN_IDX_AQI);
 
@@ -232,11 +277,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
                 String message = c.getString(DBContract.COLUMN_IDX_MESSAGE);
 
-               // Log.d(TAG, "cursor position:" + c.getPosition());
-               // Log.d(TAG, "DUP?:" + (aqiSample.getTimestamp().equals(c.getLong(DBContract.COLUMN_IDX_TS)) ) + "=>" + aqiSample.getTimestamp() + "==" + c.getLong(DBContract.COLUMN_IDX_TS) + " aqi: " + aqi + " msg:" + message + " time:" + time.toString("MMM d  h aa") );
-
                 if (aqiSample.getTimestamp().equals(c.getLong(DBContract.COLUMN_IDX_TS))) {
-                   // Log.d(TAG, "DUP: aqiSample.getTimestamp() == c.getLong() " + aqiSample.getTimestamp() + "==" + c.getLong(DBContract.COLUMN_IDX_TS));
                     duplicateList.add(aqiSample);
                     break;
                 }

@@ -21,17 +21,21 @@ import org.greenrobot.eventbus.EventBus;
 
 import co.ghola.smogalert.MainActivity;
 import co.ghola.smogalert.R;
+import co.ghola.smogalert.utils.Constants;
+import hugo.weaving.DebugLog;
 
 public class PushReceiver extends BroadcastReceiver
 {
     private static final String TAG = BroadcastReceiver.class.getSimpleName();
 
     @Override
+    @DebugLog
     public void onReceive(Context context, Intent intent) {
 
         Log.d(TAG, "received!");
-        String notificationTitle = "Dangerous Air Pollution Levels";
-        String notificationDesc =  intent.getStringExtra("aqi") + " AQI (PM 2.5)";
+
+        String notificationTitle = intent.getStringExtra("title");
+        String notificationDesc =  intent.getStringExtra("aqi") + " aqi";
 
         intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 1234, intent, PendingIntent.FLAG_UPDATE_CURRENT);
