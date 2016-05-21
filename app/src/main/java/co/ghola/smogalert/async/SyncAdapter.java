@@ -244,7 +244,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     Intent intent = new Intent(getContext().getApplicationContext(), PushReceiver.class);
                     intent.putExtra("aqi", c.getString(DBContract.COLUMN_IDX_AQI));
                     intent.putExtra("message", c.getString(DBContract.COLUMN_IDX_MESSAGE));
-                    intent.putExtra("title", notificationTitle);
+                    intent.putExtra("desc", notificationTitle);
                     getContext().getApplicationContext().sendBroadcast(intent);
                 }
             }

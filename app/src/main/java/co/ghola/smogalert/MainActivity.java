@@ -3,6 +3,7 @@ package co.ghola.smogalert;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -12,6 +13,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -25,6 +27,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -50,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
     private AsyncTask task = null;
     private static String TAG = MainActivity.class.getSimpleName();
+    private String shareText = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -73,6 +76,20 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        assert fab != null;
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Click action
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT,shareText);
+                sendIntent.setType("text/plain");
+                startActivity(sendIntent);
+            }
+        });
 
 
 
@@ -103,16 +120,23 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         public void onPostExecute(Cursor result) {
             if (result.getCount() > 0) {
                 result.moveToPosition(0);
-                String time = new DateTime((result.getLong(DBContract.COLUMN_IDX_TS) * 1000), DateTimeZone.UTC).toString("MMM d  haa");
+
+                DateTime d = new DateTime((result.getLong(DBContract.COLUMN_IDX_TS) * 1000), DateTimeZone.UTC);
+                String dateText =d.toString("MMM d");
+                String timeText =d.toString("haa");
+                String datetimeText = getApplicationContext().getResources().getString(R.string.date_time);
+                String usEmbassyText = getApplicationContext().getResources().getString(R.string.us_embassy);
+                datetimeText = String.format(datetimeText, dateText, timeText);
                 String aqi = result.getString(DBContract.COLUMN_IDX_AQI);
                 String msg = result.getString(DBContract.COLUMN_IDX_MESSAGE);
                 String blurb = "";
+                String sharedWithText = getApplicationContext().getResources().getString(R.string.shared_with);
                 TextView view = (TextView) findViewById(R.id.aqi);
                 view.setText(aqi + " " + getResources().getString(R.string.aqi_text));
                 view = (TextView) findViewById(R.id.message);
                 view.setText(msg);
                 view = (TextView) findViewById(R.id.date);
-                view.setText(time);
+                view.setText(datetimeText);
                 Integer previousLevel = HelperSharedPreferences.getSharedPreferencesInt(getApplicationContext(), HelperSharedPreferences.SharedPreferencesKeys.levelsKey,-1);
 
                 switch (previousLevel){
@@ -131,7 +155,12 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
                 GaugeView gaugeView = (GaugeView) findViewById(R.id.gauge);
                 gaugeView.setGaugeValue(aqi);
-                gaugeView.setVisibility(View.VISIBLE);
+                if ( gaugeView.getVisibility() != View.VISIBLE ) gaugeView.setVisibility(View.VISIBLE);
+
+                //set share text
+                shareText = getApplicationContext().getResources().getString(R.string.share);
+
+                shareText = String.format(shareText, msg.toLowerCase(), aqi,blurb, usEmbassyText, datetimeText, sharedWithText);
             }
             task=null;
         }
@@ -214,19 +243,6 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
         super.onResume();
         if (task==null) task=new LoadCursorTask(this).execute();
-    }
-
-    public static Bitmap scaleDown(Bitmap realImage, float maxImageSize,
-                                   boolean filter) {
-        float ratio = Math.min(
-                (float) maxImageSize / realImage.getWidth(),
-                (float) maxImageSize / realImage.getHeight());
-        int width = Math.round((float) ratio * realImage.getWidth());
-        int height = Math.round((float) ratio * realImage.getHeight());
-
-        Bitmap newBitmap = Bitmap.createScaledBitmap(realImage, width,
-                height, filter);
-        return newBitmap;
     }
 
 }

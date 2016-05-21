@@ -6,13 +6,19 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">Settings</string>
-    <string name="notifications">Turn Off Notifications</string>
+    <string name="notifications">Turn Off Pollution Alerts</string>
     <string name="good">Good Air Quality</string>
     <string name="moderate">Moderate Air Quality</string>
     <string name="sensitive">Unhealthy for Sensitive Groups</string>
     <string name="unhealthy">Unhealthy</string>
     <string name="good_blurb">The air is fresh. Enjoy the outdoors!</string>
-    <string name="moderate_blurb">Ok to be outside still, but don\'t go for a run!</string>
+    <string name="moderate_blurb">Ok to be outside still, but don\'t go for a run!.</string>
     <string name="sensitive_blurb">Seniors, people with chronic respiratory issues and toddlers should stay inside.</string>
     <string name="unhealthy_blurb">You should probably stay indoors today.</string>
+    <string name="notification_title">Pollution Alert</string>
+    <string name="default_share">Nothing to share yet.</string>
+    <string name="us_embassy">Air quality sample taken from US Embassy of HCMC</string>
+    <string name="date_time" formatted="false">%s, at %s</string>
+    <string name="share" formatted="false">Current pollution levels are %s, with %s AQI. \n\n %s \n\n %s on %s. \n\n\n %s"</string>
+    <string name="shared_with">Shared with SmogAlert. Get it on Play store here:</string>
 </resources>
