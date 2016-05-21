@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                 //set share text
                 shareText = getApplicationContext().getResources().getString(R.string.share);
 
-                shareText = String.format(shareText, msg.toLowerCase(), aqi,blurb, usEmbassyText, datetimeText, sharedWithText);
+                shareText = String.format(shareText, msg.toLowerCase(), aqi, usEmbassyText, datetimeText, sharedWithText);
             }
             task=null;
         }

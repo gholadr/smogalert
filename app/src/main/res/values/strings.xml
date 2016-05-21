@@ -17,8 +17,8 @@
     <string name="unhealthy_blurb">You should probably stay indoors today.</string>
     <string name="notification_title">Pollution Alert</string>
     <string name="default_share">Nothing to share yet.</string>
-    <string name="us_embassy">Air quality sample taken from US Embassy of HCMC</string>
+    <string name="us_embassy">Air quality sample taken from HCMC US Embassy</string>
     <string name="date_time" formatted="false">%s, at %s</string>
-    <string name="share" formatted="false">Current pollution levels are %s, with %s AQI. \n\n %s \n\n %s on %s. \n\n\n %s"</string>
+    <string name="share" formatted="false">Current pollution levels in HCMC are %s, with %s AQI. \n %s on %s. \n\n %s"</string>
     <string name="shared_with">Shared with SmogAlert. Get it on Play store here:</string>
 </resources>
