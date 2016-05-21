@@ -108,10 +108,10 @@ public class GaugeView extends View {
 
         // red
         setGradient(0xffff5c33,0xffff3300);
-        drawDonut(canvas,paint, 135,(float)(Integer.valueOf(text)*1.35)); //corresponds to 150 AQI
+        drawDonut(canvas,paint, 135,(float)(Integer.valueOf(text)*1.35));
 
         //draw text
-        drawText2(canvas, text);
+        drawText(canvas, text);
 
     }
 
@@ -168,7 +168,7 @@ public class GaugeView extends View {
         setMeasuredDimension(width, height);
     }
 
-    private void drawText2(final Canvas canvas, String text){
+    private void drawText(final Canvas canvas, String text){
         Resources resources = getContext().getResources();
         float scale = resources.getDisplayMetrics().density;
         final Paint paint = new Paint(Paint.LINEAR_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
@@ -194,8 +194,7 @@ public class GaugeView extends View {
 
     public void setGaugeValue(String txt){
         this.text = txt;
-        this.setVisibility(View.VISIBLE);
-
+        invalidate();
     }
 
 }

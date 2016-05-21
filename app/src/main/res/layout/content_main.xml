@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:customviews="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_layout"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -11,12 +11,12 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="co.ghola.smogalert.MainActivity"
     tools:showIn="@layout/app_bar_main">
-
 <LinearLayout
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center">
+    android:gravity="center"
+    android:layout_marginTop="@dimen/abc_action_bar_default_height_material">
 
     <co.ghola.smogalert.GaugeView
         android:id="@+id/gauge"
@@ -50,5 +50,7 @@
         android:layout_height="wrap_content"
         android:text=""
         android:textAppearance="?android:attr/textAppearanceSmall"/>
+
 </LinearLayout>
+
 </RelativeLayout>

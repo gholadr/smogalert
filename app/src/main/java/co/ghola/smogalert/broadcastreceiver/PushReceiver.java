@@ -34,8 +34,8 @@ public class PushReceiver extends BroadcastReceiver
 
         Log.d(TAG, "received!");
 
-        String notificationTitle = intent.getStringExtra("title");
-        String notificationDesc =  intent.getStringExtra("aqi") + " aqi";
+        String notificationTitle = context.getResources().getString(R.string.notification_title);
+        String notificationDesc =  intent.getStringExtra("desc");
 
         intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 1234, intent, PendingIntent.FLAG_UPDATE_CURRENT);
