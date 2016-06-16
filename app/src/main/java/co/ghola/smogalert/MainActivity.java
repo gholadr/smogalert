@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                 // Click action
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getApplicationContext().getResources().getString(R.string.share_subject));
                 sendIntent.putExtra(Intent.EXTRA_TEXT,shareText);
                 sendIntent.setType("text/plain");
                 startActivity(sendIntent);
@@ -160,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                 //set share text
                 shareText = getApplicationContext().getResources().getString(R.string.share);
 
-                shareText = String.format(shareText, msg.toLowerCase(), aqi, usEmbassyText, datetimeText, sharedWithText);
+                shareText = String.format(shareText, msg.toLowerCase(), aqi, blurb, usEmbassyText, datetimeText);
             }
             task=null;
         }
@@ -196,6 +197,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     }
 
     @Override
+    @DebugLog
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
        // getMenuInflater().inflate(R.menu.main, menu);
