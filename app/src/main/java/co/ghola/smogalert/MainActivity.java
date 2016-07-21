@@ -16,8 +16,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -39,8 +43,8 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
-import com.roughike.swipeselector.SwipeItem;
-import com.roughike.swipeselector.SwipeSelector;
+import com.viewpagerindicator.CirclePageIndicator;
+
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -50,6 +54,9 @@ import org.joda.time.DateTimeZone;
 
 import co.ghola.smogalert.async.SyncUtils;
 import co.ghola.smogalert.db.DBContract;
+import co.ghola.smogalert.fragments.LocationFragment;
+import co.ghola.smogalert.fragments.StatisticFragment;
+import co.ghola.smogalert.fragments.SummaryFragment;
 import co.ghola.smogalert.utils.Constants;
 import co.ghola.smogalert.utils.HelperSharedPreferences;
 import hugo.weaving.DebugLog;
@@ -61,7 +68,10 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     private AsyncTask task = null;
     private static String TAG = MainActivity.class.getSimpleName();
     private String shareText = "";
-    private SwipeSelector mSwipeSelector,mSwipeSelector2,mSwipeSelector3;
+      FragmentPagerAdapter mAdapterViewPager;
+     FragmentPagerAdapter mAdapterViewPager1;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +95,20 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
+        ViewPager vpPager = (ViewPager) findViewById(R.id.vpPager);
+        ViewPager vpPager2 = (ViewPager) findViewById(R.id.vpPager2);
+        ViewPager vpPager3 = (ViewPager) findViewById(R.id.vpPager3);
+        mAdapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
+        mAdapterViewPager1 = new MyPagerAdapter1(getSupportFragmentManager());
+        vpPager.setAdapter(mAdapterViewPager);
+        vpPager2.setAdapter(mAdapterViewPager1);
+        vpPager3.setAdapter(mAdapterViewPager);
+        CirclePageIndicator titleIndicator = (CirclePageIndicator) findViewById(R.id.indicator);
+        titleIndicator.setViewPager(vpPager);
+        CirclePageIndicator titleIndicator2 = (CirclePageIndicator) findViewById(R.id.indicator2);
+        titleIndicator2.setViewPager(vpPager2);
+        CirclePageIndicator titleIndicator3 = (CirclePageIndicator) findViewById(R.id.indicator3);
+        titleIndicator3.setViewPager(vpPager3);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         assert fab != null;
@@ -172,6 +195,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                 shareText = getApplicationContext().getResources().getString(R.string.share);
 
                 shareText = String.format(shareText, msg.toLowerCase(), aqi, blurb, usEmbassyText, datetimeText);
+                EventBus.getDefault().postSticky(shareText);
             }
             task=null;
         }
@@ -257,8 +281,72 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         if (task==null) task=new LoadCursorTask(this).execute();
     }
 
-    private void setSwipeItem()
-    {
-//
+    public static class MyPagerAdapter extends FragmentPagerAdapter {
+        private static int NUM_ITEMS = 2;
+
+        public MyPagerAdapter(FragmentManager fragmentManager) {
+            super(fragmentManager);
+        }
+
+        // Returns total number of pages
+        @Override
+        public int getCount() {
+            return NUM_ITEMS;
+        }
+
+        // Returns the fragment to display for that page
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case 0: // Fragment # 0 - This will show FirstFragment
+                    return SummaryFragment.newInstance(0, "Page # 1");
+                case 1: // Fragment # 0 - This will show FirstFragment different title
+                    return SummaryFragment.newInstance(1, "Page # 2");
+
+                default:
+                    return null;
+            }
+        }
+
+        // Returns the page title for the top indicator
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return "Page " + position;
+        }
+
+    }
+    public static class MyPagerAdapter1 extends FragmentPagerAdapter {
+        private static int NUM_ITEMS = 2;
+
+        public MyPagerAdapter1(FragmentManager fragmentManager) {
+            super(fragmentManager);
+        }
+
+        // Returns total number of pages
+        @Override
+        public int getCount() {
+            return NUM_ITEMS;
+        }
+
+        // Returns the fragment to display for that page
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+
+                case 0: // Fragment # 1 - This will show SecondFragment
+                    return LocationFragment.newInstance(0, "Page # 3");
+                case 1: // Fragment # 1 - This will show SecondFragment
+                    return StatisticFragment.newInstance(1, "Page # 4");
+                default:
+                    return null;
+            }
+        }
+
+        // Returns the page title for the top indicator
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return "Page " + position;
+        }
+
     }
 }
