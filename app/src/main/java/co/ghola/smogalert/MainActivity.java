@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.SweepGradient;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -23,17 +24,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
+import com.roughike.swipeselector.SwipeItem;
+import com.roughike.swipeselector.SwipeSelector;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -54,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     private AsyncTask task = null;
     private static String TAG = MainActivity.class.getSimpleName();
     private String shareText = "";
+    private SwipeSelector mSwipeSelector,mSwipeSelector2,mSwipeSelector3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +84,8 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         assert fab != null;
@@ -132,12 +142,12 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                 String msg = result.getString(DBContract.COLUMN_IDX_MESSAGE);
                 String blurb = "";
                 String sharedWithText = getApplicationContext().getResources().getString(R.string.shared_with);
-                TextView view = (TextView) findViewById(R.id.aqi);
-                view.setText(aqi + " " + getResources().getString(R.string.aqi_text));
-                view = (TextView) findViewById(R.id.message);
-                view.setText(msg);
-                view = (TextView) findViewById(R.id.date);
-                view.setText(datetimeText);
+//                TextView view = (TextView) findViewById(R.id.aqi);
+//                view.setText(aqi + " " + getResources().getString(R.string.aqi_text));
+//                view = (TextView) findViewById(R.id.message);
+//                view.setText(msg);
+//                view = (TextView) findViewById(R.id.date);
+//                view.setText(datetimeText);
                 Integer previousLevel = HelperSharedPreferences.getSharedPreferencesInt(getApplicationContext(), HelperSharedPreferences.SharedPreferencesKeys.levelsKey,-1);
 
                 switch (previousLevel){
@@ -151,12 +161,12 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                     case Constants.UNHEALTHY : blurb = getApplicationContext().getResources().getString(R.string.unhealthy_blurb);
                         break;
                 }
-                view = (TextView) findViewById(R.id.blurb);
-                view.setText(blurb);
+                //view = (TextView) findViewById(R.id.blurb);
+                //view.setText(blurb);
 
-                GaugeView gaugeView = (GaugeView) findViewById(R.id.gauge);
-                gaugeView.setGaugeValue(aqi);
-                if ( gaugeView.getVisibility() != View.VISIBLE ) gaugeView.setVisibility(View.VISIBLE);
+                //GaugeView gaugeView = (GaugeView) findViewById(R.id.gauge);
+                //gaugeView.setGaugeValue(aqi);
+                //if ( gaugeView.getVisibility() != View.VISIBLE ) gaugeView.setVisibility(View.VISIBLE);
 
                 //set share text
                 shareText = getApplicationContext().getResources().getString(R.string.share);
@@ -247,4 +257,8 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         if (task==null) task=new LoadCursorTask(this).execute();
     }
 
+    private void setSwipeItem()
+    {
+//
+    }
 }

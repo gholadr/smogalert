@@ -64,6 +64,7 @@ dependencies {
     compile 'com.android.support:support-v4:23.3.0'
     compile 'com.android.support:design:23.3.0'
     compile 'org.greenrobot:eventbus:3.0.0'
+    compile "com.daimajia.swipelayout:library:1.2.0@aar"
     compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2'
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true;

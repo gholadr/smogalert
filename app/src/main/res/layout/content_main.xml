@@ -11,46 +11,73 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="co.ghola.smogalert.MainActivity"
     tools:showIn="@layout/app_bar_main">
-<LinearLayout
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:layout_marginTop="@dimen/abc_action_bar_default_height_material">
 
-    <co.ghola.smogalert.GaugeView
-        android:id="@+id/gauge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
-        customviews:radius="90dp"
-        customviews:value=""
-        android:layout_gravity="center" />
-    <TextView
-        android:id="@+id/aqi"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textAppearance="?android:attr/textAppearanceSmall"/>
-    <TextView
-        android:id="@+id/message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textAppearance="?android:attr/textAppearanceSmall"/>
-    <TextView
-        android:id="@+id/date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textAppearance="?android:attr/textAppearanceSmall"/>
-    <TextView
-        android:id="@+id/blurb"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textAppearance="?android:attr/textAppearanceSmall"/>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:layout_marginTop="@dimen/abc_action_bar_default_height_material"
+        android:id="@+id/linearLayout"
+        >
 
-</LinearLayout>
+
+        <com.roughike.swipeselector.SwipeSelector
+            android:id="@+id/swipe_tab_1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignTop="@+id/linearLayout"
+            />
+
+
+
+
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:layout_marginTop="205dp"
+        >
+
+        <com.roughike.swipeselector.SwipeSelector
+            android:id="@+id/swipe_tab_2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignTop="@+id/linearLayout" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="NGUYEN PUSSY"/>
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:layout_marginTop="350dp"
+        >
+
+        <com.roughike.swipeselector.SwipeSelector
+            android:id="@+id/swipe_tab_3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignTop="@+id/linearLayout" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="NGUYEN PUSSY"/>
+
+
+    </LinearLayout>
+
 
 </RelativeLayout>
