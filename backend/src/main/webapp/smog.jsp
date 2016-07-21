@@ -28,7 +28,7 @@
             String message;
             String timeStamp;
             DateTime d = new DateTime(aqi.getTimestamp() * 1000, DateTimeZone.UTC);
-            String dateText =d.toString("MMMM d");
+            String dateText =d.toString("MM.dd");
             String timeText =d.toString("haa");
             String datetimeText = String.format("%s, %s", dateText, timeText);
             pageContext.setAttribute("airQualityIndex", aqi.getAqi());
