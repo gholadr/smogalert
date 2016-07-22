@@ -1,9 +1,13 @@
 package co.ghola.smogalert;
 
 
+import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -41,6 +45,8 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
+import java.util.List;
+
 import co.ghola.smogalert.async.SyncUtils;
 import co.ghola.smogalert.db.DBContract;
 import co.ghola.smogalert.utils.Constants;
@@ -54,7 +60,6 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     private AsyncTask task = null;
     private static String TAG = MainActivity.class.getSimpleName();
     private String shareText = "";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,28 +71,46 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
+        navigationView.setNavigationItemSelectedListener(this);        
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         assert fab != null;
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Click action
-                Intent sendIntent = new Intent();
-                sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getApplicationContext().getResources().getString(R.string.share_subject));
-                sendIntent.putExtra(Intent.EXTRA_TEXT,shareText);
-                sendIntent.setType("text/plain");
-                startActivity(sendIntent);
+//                Click action
+//                Intent sendIntent = new Intent();
+//                sendIntent.setAction(Intent.ACTION_SEND);
+//                sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getApplicationContext().getResources().getString(R.string.share_subject));
+//                sendIntent.putExtra(Intent.EXTRA_TEXT,shareText);
+//                sendIntent.setType("text/plain");
+//                startActivity(sendIntent);
+                Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,getApplicationContext().getResources().getString(R.string.share_subject));
+                shareIntent.putExtra(android.content.Intent.EXTRA_TEXT,shareText);
+                PackageManager pm = getApplicationContext().getPackageManager();
+                List<ResolveInfo> activityList = pm.queryIntentActivities(shareIntent, 0);
+                for (final ResolveInfo app : activityList)
+                {
+                    if ((app.activityInfo.name).startsWith("com.facebook"))
+                    {
+                        Log.d("DebugText",shareText);
+                        final ActivityInfo activity = app.activityInfo;
+                        final ComponentName name = new ComponentName(activity.applicationInfo.packageName, activity.name);
+                        shareIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+                        shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                        shareIntent.setComponent(name);
+                        getApplicationContext().startActivity(shareIntent);
+                        break;
+                    }
+                }
+
             }
         });
 
@@ -112,8 +135,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
         BaseTask(Context ctxt) {
             super();
-
-            resolver=ctxt.getContentResolver();
+                 resolver=ctxt.getContentResolver();
         }
 
         @Override
@@ -138,7 +160,6 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                 view = (TextView) findViewById(R.id.date);
                 view.setText(datetimeText);
                 Integer previousLevel = HelperSharedPreferences.getSharedPreferencesInt(getApplicationContext(), HelperSharedPreferences.SharedPreferencesKeys.levelsKey,-1);
-
                 switch (previousLevel){
 
                     case Constants.GOOD : blurb = getApplicationContext().getResources().getString(R.string.good_blurb);
