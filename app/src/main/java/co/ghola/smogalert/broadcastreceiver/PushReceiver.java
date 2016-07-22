@@ -1,7 +1,5 @@
 package co.ghola.smogalert.broadcastreceiver;
 
-import android.app.Activity;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -12,20 +10,14 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
-import org.greenrobot.eventbus.EventBus;
-
 import co.ghola.smogalert.MainActivity;
 import co.ghola.smogalert.R;
-import co.ghola.smogalert.utils.Constants;
 import hugo.weaving.DebugLog;
 
-public class PushReceiver extends BroadcastReceiver
-{
+public class PushReceiver extends BroadcastReceiver {
     private static final String TAG = BroadcastReceiver.class.getSimpleName();
 
     @Override
@@ -35,7 +27,7 @@ public class PushReceiver extends BroadcastReceiver
         Log.d(TAG, "received!");
 
         String notificationTitle = context.getResources().getString(R.string.notification_title);
-        String notificationDesc =  intent.getStringExtra("desc");
+        String notificationDesc = intent.getStringExtra("desc");
 
         intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 1234, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -50,7 +42,7 @@ public class PushReceiver extends BroadcastReceiver
                 .setContentText(notificationDesc)
                 .setSmallIcon(R.mipmap.ic_icon)
                 .setLargeIcon(largeIcon)
-                .setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 })
+                .setVibrate(new long[] {1000, 1000, 1000, 1000, 1000})
                 .setLights(Color.RED, 3000, 3000)
                 .setSound(alarmSound)
                 .setContentIntent(pendingIntent)
