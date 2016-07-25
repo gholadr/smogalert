@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -32,6 +33,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
 
@@ -54,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     private AsyncTask task = null;
     private static String TAG = MainActivity.class.getSimpleName();
     private String shareText = "";
-
+    ShareDialog shareDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,11 +68,12 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         EventBus.getDefault().register(this);
         //setting up SyncService
         SyncUtils.CreateSyncAccount(this);
-
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        shareDialog = new ShareDialog(this);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -83,12 +89,19 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
             @Override
             public void onClick(View view) {
                 // Click action
-                Intent sendIntent = new Intent();
-                sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getApplicationContext().getResources().getString(R.string.share_subject));
-                sendIntent.putExtra(Intent.EXTRA_TEXT,shareText);
-                sendIntent.setType("text/plain");
-                startActivity(sendIntent);
+//                Intent sendIntent = new Intent();
+//                sendIntent.setAction(Intent.ACTION_SEND);
+//                sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getApplicationContext().getResources().getString(R.string.share_subject));
+//                sendIntent.putExtra(Intent.EXTRA_TEXT,shareText);
+//                sendIntent.setType("text/plain");
+//                startActivity(sendIntent);
+                ShareLinkContent content = new ShareLinkContent.Builder()
+                        .setContentUrl(Uri.parse("https://smogalert-1248.appspot.com/khoibui"))
+                        .setContentTitle(getApplicationContext().getResources().getString(R.string.share_subject))
+                        .setContentDescription(shareText)
+                        .setImageUrl(Uri.parse("http://i.imgur.com/sN1B51f.png"))
+                        .build();
+                shareDialog.show(content);
             }
         });
 
@@ -135,6 +148,9 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                 TextView view = (TextView) findViewById(R.id.aqi);
                 view.setText(aqi + " " + getResources().getString(R.string.aqi_text));
                 view = (TextView) findViewById(R.id.message);
+                if(msg.equals("Moderate")){
+                    msg = getApplicationContext().getResources().getString(R.string.moderate_msg);
+                }
                 view.setText(msg);
                 view = (TextView) findViewById(R.id.date);
                 view.setText(datetimeText);
