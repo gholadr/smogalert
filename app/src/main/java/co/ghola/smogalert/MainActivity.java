@@ -4,6 +4,7 @@ package co.ghola.smogalert;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -56,6 +57,7 @@ import co.ghola.smogalert.async.SyncUtils;
 import co.ghola.smogalert.db.DBContract;
 import co.ghola.smogalert.fragments.LocationFragment;
 import co.ghola.smogalert.fragments.StatisticFragment;
+import co.ghola.smogalert.fragments.Summary2Fragment;
 import co.ghola.smogalert.fragments.SummaryFragment;
 import co.ghola.smogalert.utils.Constants;
 import co.ghola.smogalert.utils.HelperSharedPreferences;
@@ -159,6 +161,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                 String dateText =d.toString("MMM d");
                 String timeText =d.toString("haa");
                 String datetimeText = getApplicationContext().getResources().getString(R.string.date_time);
+                EventBus.getDefault().postSticky(datetimeText);
                 String usEmbassyText = getApplicationContext().getResources().getString(R.string.us_embassy);
                 datetimeText = String.format(datetimeText, dateText, timeText);
                 String aqi = result.getString(DBContract.COLUMN_IDX_AQI);
@@ -193,10 +196,10 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
                 //set share text
                 shareText = getApplicationContext().getResources().getString(R.string.share);
-
                 shareText = String.format(shareText, msg.toLowerCase(), aqi, blurb, usEmbassyText, datetimeText);
-
+                //Passing Data to Each Fragments
                 EventBus.getDefault().postSticky(aqi);
+                passData(shareText);
             }
             task=null;
         }
@@ -302,7 +305,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                 case 0: // Fragment # 0 - This will show FirstFragment
                     return SummaryFragment.newInstance(0, "Page # 1");
                 case 1: // Fragment # 0 - This will show FirstFragment different title
-                    return SummaryFragment.newInstance(1, "Page # 2");
+                    return Summary2Fragment.newInstance(1, "Page # 2");
 
                 default:
                     return null;
@@ -348,6 +351,15 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         public CharSequence getPageTitle(int position) {
             return "Page " + position;
         }
+
+    }
+
+    private void passData(String shareText)
+    {
+        SharedPreferences pref =this.getPreferences(0);
+        SharedPreferences.Editor edt = pref.edit();
+        edt.putString("sharekey", shareText);
+        edt.apply();
 
     }
 }

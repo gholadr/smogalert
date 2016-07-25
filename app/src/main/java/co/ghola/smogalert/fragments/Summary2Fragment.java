@@ -1,11 +1,11 @@
 package co.ghola.smogalert.fragments;
 
 import android.animation.ValueAnimator;
-import android.graphics.Color;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.common.eventbus.Subscribe;
 
 import org.greenrobot.eventbus.EventBus;
-
-import java.util.Date;
 
 import co.ghola.smogalert.MainActivity;
 import co.ghola.smogalert.R;
@@ -27,50 +26,52 @@ import co.ghola.smogalert.R;
 /**
  * Created by alecksjohansson on 7/21/16.
  */
-public class SummaryFragment extends Fragment {
+public class Summary2Fragment extends Fragment {
     // Store instance variables
     private String title;
     private int page;
-    private TextView mAQITextView;
-    private ImageView imageView;
+    private String mSummaryText;
 
     // newInstance constructor for creating fragment with arguments
-    public static SummaryFragment newInstance(int page, String title) {
-        SummaryFragment mSummaryFragment = new SummaryFragment();
+    public static Summary2Fragment newInstance(int page, String title) {
+        Summary2Fragment mSummary2Fragment = new Summary2Fragment();
         Bundle args = new Bundle();
         args.putInt("someInt", page);
         args.putString("someTitle", title);
-        mSummaryFragment.setArguments(args);
-        return mSummaryFragment;
+        mSummary2Fragment.setArguments(args);
+        return mSummary2Fragment;
     }
-
     // Store instance variables based on arguments passed
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        page = getArguments().getInt("someInt", 0);
-        title = getArguments().getString("someTitle");
-
-
+        page = getArguments().getInt("someInt", 1);
+        title = getArguments().getString("SummaryFragment");
+        //Get Data from Activity
+        getData();
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        imageView = (ImageView) view.findViewById(R.id.imageBackground);
-        Glide.with(getContext()).load(R.drawable.background_1_test).centerCrop().into(imageView);
         super.onViewCreated(view, savedInstanceState);
     }
 
     // Inflate the view for the fragment based on layout XML
+
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.first_fragment, container, false);
-        ImageView mImageView = (ImageView) view.findViewById(R.id.myimg);
-        Glide.with(getActivity()).load(R.drawable.cloud).fitCenter().into(mImageView);
-        TextView tvAQI = (TextView) view.findViewById(R.id.tvAQI);
-        String shareText = EventBus.getDefault().getStickyEvent(String.class);
-        tvAQI.setText(shareText);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.summary_fragment, container, false);
+        ImageView mImageView = (ImageView) view.findViewById(R.id.background2);
+        Toast.makeText(getContext(),mSummaryText,Toast.LENGTH_LONG).show();
+        Glide.with(getActivity()).load(R.drawable.background_test_2).centerCrop().into(mImageView);
         return view;
+    }
+    public void getData()
+    {
+        String strtext= "";
+        SharedPreferences pref = getActivity().getPreferences(0);
+         mSummaryText= pref.getString("sharekey",strtext);
+
     }
 }

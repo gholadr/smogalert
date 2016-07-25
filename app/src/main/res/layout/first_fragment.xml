@@ -13,7 +13,35 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/imageBackground"/>
+            android:id="@+id/imageBackground"
+            android:background="#000"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="left">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="15dp"
+            android:text="Ho Chi Minh"
+            android:textSize="18sp"
+            android:textColor="#FFF"
+            android:fontFamily="sans-serif" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:layout_marginLeft="15dp"
+            android:text="9:00 AM"
+            android:textSize="30sp"
+            android:textColor="#FFF"
+            android:fontFamily="sans-serif" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,32 +54,43 @@
             android:id="@+id/myimg"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:scaleType="center"
-             />
+            android:scaleType="center" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/linearLayout">
-
-        <android.support.v7.widget.CardView
-            android:id="@+id/cardViewQuestion"
-            android:layout_width="180dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="7dp"
-            android:elevation="10dp"
-            app:cardCornerRadius="5dp"
-            app:contentPadding="10dp">
+        android:orientation="horizontal"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        >
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/tvAQI"
+                android:textSize="28sp"
+                android:text="TEST"
+                android:textColor="#FFF"
+                android:fontFamily="sans-serif"
                 android:gravity="center"
-                />
-        </android.support.v7.widget.CardView>
+                android:layout_marginTop="80dp" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvSwipe"
+            android:textSize="20sp"
+
+            android:text="Swipe for More Detail --->"
+            android:textColor="#FFF"
+            android:fontFamily="sans-serif-condensed"
+            android:gravity="center"
+            android:layout_marginTop="120dp" />
     </LinearLayout>
 
 </RelativeLayout>
