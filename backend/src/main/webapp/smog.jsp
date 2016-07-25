@@ -1,3 +1,10 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:fb="http://ogp.me/ns/fb#" >
+ <head>
+    <meta property="og:image" content="http://i.imgur.com/sN1B51f.png" />
+ <head/>
+
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="co.ghola.backend.entity.AirQualitySample" %>
 <%@ page import="com.googlecode.objectify.Key" %>
@@ -18,7 +25,9 @@
           .list();
     if (aqis.isEmpty()) {
 %>
-<p>No Samples</p>
+<center>
+  <p>No Samples</p>
+</center>
 <%
     } else {
 
@@ -28,17 +37,25 @@
             String message;
             String timeStamp;
             DateTime d = new DateTime(aqi.getTimestamp() * 1000, DateTimeZone.UTC);
-            String dateText =d.toString("MM.dd");
-            String timeText =d.toString("haa");
-            String datetimeText = String.format("%s, %s", dateText, timeText);
-            pageContext.setAttribute("airQualityIndex", aqi.getAqi());
-            pageContext.setAttribute("message", aqi.getMessage());
-            pageContext.setAttribute("timeStamp",datetimeText );
+            String dateText =d.toString("MM/dd");
+            String timeText =d.toString("h a");
+            String datetimeText = String.format("%s at %s", dateText, timeText);
+            pageContext.setAttribute("airQualityIndex", "Air Quality: "+aqi.getAqi()+" AQI");
+            pageContext.setAttribute("message", "Level: "+aqi.getMessage());
+            pageContext.setAttribute("timeStamp","Time: "+datetimeText);
+            pageContext.setAttribute("location","Location: "+"Ho Chi Minh City");
+            pageContext.setAttribute("by","AQI sample measured by air quality sensor from the US Embassy");
 %>
-<p><b>${fn:escapeXml(airQualityIndex)}</b></p>
-<blockquote>${fn:escapeXml(message)}</blockquote></P>
-<blockquote>${fn:escapeXml(timeStamp)}</blockquote></P>
+<center>  
+  <img src="http://i.imgur.com/sN1B51f.png" alt="Icon" width="128" height="128">
+  <p><b>${fn:escapeXml(airQualityIndex)}</b></p>
+  <blockquote>${fn:escapeXml(message)}</blockquote></P>
+  <blockquote>${fn:escapeXml(timeStamp)}</blockquote></P>
+  <blockquote>${fn:escapeXml(location)}</blockquote></P>
+  <blockquote>${fn:escapeXml(by)}</blockquote></P>
+</center>
 <%
         }
     }
 %>
+</html>
