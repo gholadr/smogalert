@@ -1,7 +1,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:fb="http://ogp.me/ns/fb#" >
+      xmlns:og="http://ogp.me/ns#"
+      xmlns:fb="https://www.facebook.com/2008/fbml">
  <head>
-    <meta property="og:image" content="http://i.imgur.com/sN1B51f.png" />
+ <meta property="og:title" content="khoi bui" />
+ <meta property="og:site_name" content="Khoi Bui"/>
+ <meta property="og:url" content="https://smogalert-1248.appspot.com/khoibui" />
+ <meta property="og:image" content="http://i.imgur.com/sN1B51f.png" />
+ <meta property="og:description"
+          content="real time AQI for HCMC"/>
  <head/>
 
 
