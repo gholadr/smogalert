@@ -10,9 +10,9 @@
     <string name="notifications">Turn Off Pollution Alerts</string>
     <string name="good">Good Air Quality</string>
     <string name="moderate">Moderate Air Quality</string>
-    <string name="moderate_msg">Trung bình</string>
-    <string name="healthy_msg">Tốt</string>
-    <string name="unhelthy_msg">Ô nhiễm nặng</string>
+    <string name="moderate_msg">Moderate</string>
+    <string name="healthy_msg">Healthy</string>
+    <string name="unhelthy_msg">Unhealthy</string>
     <string name="sensitive">Unhealthy for Sensitive Groups</string>
     <string name="unhealthy">Unhealthy</string>
     <string name="good_blurb">The air is fresh. Enjoy the outdoors!</string>
