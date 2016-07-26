@@ -22,12 +22,20 @@
         <url-pattern>/rssfetch</url-pattern>
     </servlet-mapping>
     <servlet>
-        <servlet-name>khoibui</servlet-name>
-        <jsp-file>/smog.jsp</jsp-file>
+        <servlet-name>khoibui-en</servlet-name>
+        <jsp-file>/smog-en.jsp</jsp-file>
+    </servlet>
+    <servlet>
+        <servlet-name>khoibui-vn</servlet-name>
+        <jsp-file>/smog-vn.jsp</jsp-file>
     </servlet>
     <servlet-mapping>
-        <servlet-name>khoibui</servlet-name>
-        <url-pattern>/khoibui</url-pattern>
+        <servlet-name>khoibui-en</servlet-name>
+        <url-pattern>/khoibui-en</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>khoibui-vn</servlet-name>
+        <url-pattern>/khoibui-vn</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
