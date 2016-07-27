@@ -28,6 +28,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
@@ -63,6 +64,10 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     FragmentPagerAdapter mAdapterViewPager;
     FragmentPagerAdapter mAdapterViewPager1;
     ShareDialog shareDialog;
+    private ViewPager vpPager;
+    int tab;
+    ImageView leftNav;
+    ImageView rightNav;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         Fabric.with(this, new Crashlytics());
         Iconify.with(new FontAwesomeModule());
         EventBus.getDefault().register(this);
+
         //setting up SyncService
         FacebookSdk.sdkInitialize(getApplicationContext());
         shareDialog = new ShareDialog(this);
@@ -85,44 +91,10 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        final ViewPager vpPager = (ViewPager) findViewById(R.id.vpPager);
-
-        final ImageView leftNav = (ImageView) findViewById(R.id.left_nav);
-        final ImageView rightNav = (ImageView) findViewById(R.id.right_nav);
-        leftNav.setVisibility(View.INVISIBLE);
-
-        leftNav.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int tab = vpPager.getCurrentItem();
-                if (tab == 1) {
-                    leftNav.setVisibility(View.INVISIBLE);
-                    rightNav.setVisibility(View.VISIBLE);
-                }
-                if (tab > 0) {
-                    tab--;
-                    vpPager.setCurrentItem(tab);
-                } else if (tab == 0) {
-                    vpPager.setCurrentItem(tab);
-                }
-                Log.d("TAB", "TAB" + tab);
-            }
-        });
-
-        rightNav.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int tab = vpPager.getCurrentItem();
-                if (tab == 0) {
-                    leftNav.setVisibility(View.VISIBLE);
-                    rightNav.setVisibility(View.INVISIBLE);
-                }
-
-                tab++;
-                vpPager.setCurrentItem(tab);
-            }
-        });
+        vpPager= (ViewPager) findViewById(R.id.vpPager);
+        tab = vpPager.getCurrentItem();
+        getViewPagerSwipe();
+        setViewPagerPosition();
 
 //        ViewPager vpPager2 = (ViewPager) findViewById(R.id.vpPager2);
 //        ViewPager vpPager3 = (ViewPager) findViewById(R.id.vpPager3);
@@ -415,7 +387,70 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         }
 
     }
+    private void setViewPagerPosition()
+    {
+          leftNav = (ImageView) findViewById(R.id.left_nav);
+          rightNav = (ImageView) findViewById(R.id.right_nav);
+        leftNav.setVisibility(View.INVISIBLE);
+        leftNav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                if (tab == 1) {
+                    leftNav.setVisibility(View.INVISIBLE);
+                    rightNav.setVisibility(View.VISIBLE);
+                }
+                if (tab > 0) {
+                    tab--;
+                    vpPager.setCurrentItem(tab);
+                } else if (tab == 0) {
+                    vpPager.setCurrentItem(tab);
+                }
+            }
+        });
+
+        rightNav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                 tab = vpPager.getCurrentItem();
+                if (tab == 0) {
+                    leftNav.setVisibility(View.VISIBLE);
+                    rightNav.setVisibility(View.INVISIBLE);
+                }
+
+                tab++;
+                vpPager.setCurrentItem(tab);
+            }
+        });
+    }
+    private void getViewPagerSwipe()
+    {
+        vpPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                if(position == 1)
+                {
+                    rightNav.setVisibility(View.INVISIBLE);
+                    leftNav.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    leftNav.setVisibility(View.INVISIBLE);
+                    rightNav.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+    }
     private void passData(String shareText) {
         SharedPreferences pref = this.getPreferences(0);
         SharedPreferences.Editor edt = pref.edit();
