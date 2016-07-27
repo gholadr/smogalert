@@ -96,7 +96,7 @@
                 Menu <i class="fa fa-bars"></i>
             </button>
             <a class="navbar-brand page-scroll" href="#page-top">
-                <img src="http://i.imgur.com/sN1B51f.png" alt="icon" height="20" width="20" style>&emsp;</i><span class="light">Air Quality Index is now :&emsp;</span><b>${fn:escapeXml(airQualityIndex)}</b>
+                <span class="light">Air Quality Index is now :&emsp;</span><b>${fn:escapeXml(airQualityIndex)}</b>
             </a>
         </div>
 
