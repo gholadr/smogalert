@@ -1,27 +1,21 @@
 package co.ghola.smogalert.fragments;
 
-import android.animation.ValueAnimator;
-import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.Date;
+import java.util.Calendar;
 
-import co.ghola.smogalert.MainActivity;
 import co.ghola.smogalert.R;
 
 /**
@@ -33,6 +27,9 @@ public class SummaryFragment extends Fragment {
     private int page;
     private TextView mAQITextView;
     private ImageView imageView;
+    public TextView tvTime;
+    public TextView tvAQI;
+    private Handler mHandler = new Handler();
 
     // newInstance constructor for creating fragment with arguments
     public static SummaryFragment newInstance(int page, String title) {
@@ -50,8 +47,6 @@ public class SummaryFragment extends Fragment {
         super.onCreate(savedInstanceState);
         page = getArguments().getInt("someInt", 0);
         title = getArguments().getString("someTitle");
-
-
     }
 
     @Override
@@ -59,6 +54,8 @@ public class SummaryFragment extends Fragment {
         imageView = (ImageView) view.findViewById(R.id.imageBackground);
         Glide.with(getContext()).load(R.drawable.background_1_test).centerCrop().into(imageView);
         super.onViewCreated(view, savedInstanceState);
+
+
     }
 
     // Inflate the view for the fragment based on layout XML
@@ -68,9 +65,24 @@ public class SummaryFragment extends Fragment {
         View view = inflater.inflate(R.layout.first_fragment, container, false);
         ImageView mImageView = (ImageView) view.findViewById(R.id.myimg);
         Glide.with(getActivity()).load(R.drawable.cloud).fitCenter().into(mImageView);
-        TextView tvAQI = (TextView) view.findViewById(R.id.tvAQI);
-        String shareText = EventBus.getDefault().getStickyEvent(String.class);
-        tvAQI.setText(shareText);
+        tvAQI = (TextView) view.findViewById(R.id.tvAQI);
+        tvTime = (TextView) view.findViewById(R.id.tvTime);
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                String shareText = EventBus.getDefault().getStickyEvent(String.class);
+                tvAQI.setText(shareText + " AQI");
+                Calendar calendar = Calendar.getInstance();
+                int hours = calendar.get(Calendar.HOUR_OF_DAY);
+                int minutes = calendar.get(Calendar.MINUTE);
+                if (minutes < 10) {
+                    tvTime.setText("  " + hours + ":" + "0" + minutes);
+                } else {
+                    tvTime.setText("  " + hours + ":" + minutes);
+                }
+            }
+        });
         return view;
     }
+
 }

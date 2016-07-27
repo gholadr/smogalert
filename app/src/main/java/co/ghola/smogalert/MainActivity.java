@@ -5,23 +5,17 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.SweepGradient;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -29,23 +23,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.facebook.FacebookSdk;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.viewpagerindicator.CirclePageIndicator;
-
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -65,15 +55,14 @@ import hugo.weaving.DebugLog;
 import io.fabric.sdk.android.Fabric;
 
 
-public class MainActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener,NavigationView.OnNavigationItemSelectedListener  {
+public class MainActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, NavigationView.OnNavigationItemSelectedListener {
 
     private AsyncTask task = null;
     private static String TAG = MainActivity.class.getSimpleName();
     private String shareText = "";
-      FragmentPagerAdapter mAdapterViewPager;
-     FragmentPagerAdapter mAdapterViewPager1;
-
-
+    FragmentPagerAdapter mAdapterViewPager;
+    FragmentPagerAdapter mAdapterViewPager1;
+    ShareDialog shareDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,12 +71,12 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         Iconify.with(new FontAwesomeModule());
         EventBus.getDefault().register(this);
         //setting up SyncService
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        shareDialog = new ShareDialog(this);
         SyncUtils.CreateSyncAccount(this);
-
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -97,20 +86,57 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        ViewPager vpPager = (ViewPager) findViewById(R.id.vpPager);
-        ViewPager vpPager2 = (ViewPager) findViewById(R.id.vpPager2);
-        ViewPager vpPager3 = (ViewPager) findViewById(R.id.vpPager3);
+        final ViewPager vpPager = (ViewPager) findViewById(R.id.vpPager);
+
+        final ImageView leftNav = (ImageView) findViewById(R.id.left_nav);
+        final ImageView rightNav = (ImageView) findViewById(R.id.right_nav);
+        leftNav.setVisibility(View.INVISIBLE);
+
+        leftNav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int tab = vpPager.getCurrentItem();
+                if (tab == 1) {
+                    leftNav.setVisibility(View.INVISIBLE);
+                    rightNav.setVisibility(View.VISIBLE);
+                }
+                if (tab > 0) {
+                    tab--;
+                    vpPager.setCurrentItem(tab);
+                } else if (tab == 0) {
+                    vpPager.setCurrentItem(tab);
+                }
+                Log.d("TAB", "TAB" + tab);
+            }
+        });
+
+        rightNav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int tab = vpPager.getCurrentItem();
+                if (tab == 0) {
+                    leftNav.setVisibility(View.VISIBLE);
+                    rightNav.setVisibility(View.INVISIBLE);
+                }
+
+                tab++;
+                vpPager.setCurrentItem(tab);
+            }
+        });
+
+//        ViewPager vpPager2 = (ViewPager) findViewById(R.id.vpPager2);
+//        ViewPager vpPager3 = (ViewPager) findViewById(R.id.vpPager3);
         mAdapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
         mAdapterViewPager1 = new MyPagerAdapter1(getSupportFragmentManager());
         vpPager.setAdapter(mAdapterViewPager);
-        vpPager2.setAdapter(mAdapterViewPager1);
-        vpPager3.setAdapter(mAdapterViewPager);
+//        vpPager2.setAdapter(mAdapterViewPager1);
+//        vpPager3.setAdapter(mAdapterViewPager);
         CirclePageIndicator titleIndicator = (CirclePageIndicator) findViewById(R.id.indicator);
         titleIndicator.setViewPager(vpPager);
-        CirclePageIndicator titleIndicator2 = (CirclePageIndicator) findViewById(R.id.indicator2);
-        titleIndicator2.setViewPager(vpPager2);
-        CirclePageIndicator titleIndicator3 = (CirclePageIndicator) findViewById(R.id.indicator3);
-        titleIndicator3.setViewPager(vpPager3);
+//        CirclePageIndicator titleIndicator2 = (CirclePageIndicator) findViewById(R.id.indicator2);
+//        titleIndicator2.setViewPager(vpPager2);
+//        CirclePageIndicator titleIndicator3 = (CirclePageIndicator) findViewById(R.id.indicator3);
+//        titleIndicator3.setViewPager(vpPager3);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         assert fab != null;
@@ -118,28 +144,35 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
             @Override
             public void onClick(View view) {
                 // Click action
-                Intent sendIntent = new Intent();
-                sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getApplicationContext().getResources().getString(R.string.share_subject));
-                sendIntent.putExtra(Intent.EXTRA_TEXT,shareText);
-                sendIntent.setType("text/plain");
-                startActivity(sendIntent);
+                // Intent sendIntent = new Intent();
+                // sendIntent.setAction(Intent.ACTION_SEND);
+                // sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getApplicationContext().getResources().getString(R.string.share_subject));
+                // sendIntent.putExtra(Intent.EXTRA_TEXT, shareText);
+                // sendIntent.setType("text/plain");
+                // startActivity(sendIntent);
+
+                ShareLinkContent content = new ShareLinkContent.Builder()
+                        .setContentUrl(Uri.parse("https://smogalert-1248.appspot.com/khoibui"))
+                        .setContentTitle(getApplicationContext().getResources().getString(R.string.share_subject))
+                        .setContentDescription(shareText)
+                        .setImageUrl(Uri.parse("http://i.imgur.com/sN1B51f.png"))
+                        .build();
+                shareDialog.show(content);
             }
         });
 
 
-
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void doThis(String text){
-        if (task == null) task=new LoadCursorTask(this).execute();
+    @Subscribe (threadMode = ThreadMode.MAIN)
+    public void doThis(String text) {
+        if (task == null) task = new LoadCursorTask(this).execute();
     }
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-        HelperSharedPreferences.putSharedPreferencesBoolean(this, HelperSharedPreferences.SharedPreferencesKeys.notificationKey,isChecked);
+        HelperSharedPreferences.putSharedPreferencesBoolean(this, HelperSharedPreferences.SharedPreferencesKeys.notificationKey, isChecked);
 
     }
 
@@ -149,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         BaseTask(Context ctxt) {
             super();
 
-            resolver=ctxt.getContentResolver();
+            resolver = ctxt.getContentResolver();
         }
 
         @Override
@@ -158,8 +191,8 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                 result.moveToPosition(0);
 
                 DateTime d = new DateTime((result.getLong(DBContract.COLUMN_IDX_TS) * 1000), DateTimeZone.UTC);
-                String dateText =d.toString("MMM d");
-                String timeText =d.toString("haa");
+                String dateText = d.toString("MMM d");
+                String timeText = d.toString("haa");
                 String datetimeText = getApplicationContext().getResources().getString(R.string.date_time);
                 EventBus.getDefault().postSticky(datetimeText);
                 String usEmbassyText = getApplicationContext().getResources().getString(R.string.us_embassy);
@@ -174,17 +207,22 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 //                view.setText(msg);
 //                view = (TextView) findViewById(R.id.date);
 //                view.setText(datetimeText);
-                Integer previousLevel = HelperSharedPreferences.getSharedPreferencesInt(getApplicationContext(), HelperSharedPreferences.SharedPreferencesKeys.levelsKey,-1);
+                Integer previousLevel = HelperSharedPreferences.getSharedPreferencesInt(getApplicationContext(), HelperSharedPreferences.SharedPreferencesKeys.levelsKey, - 1);
+                SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
-                switch (previousLevel){
+                switch (previousLevel) {
 
-                    case Constants.GOOD : blurb = getApplicationContext().getResources().getString(R.string.good_blurb);
+                    case Constants.GOOD:
+                        blurb = getApplicationContext().getResources().getString(R.string.good_blurb);
                         break;
-                    case Constants.MODERATE : blurb = getApplicationContext().getResources().getString(R.string.moderate_blurb);
+                    case Constants.MODERATE:
+                        blurb = getApplicationContext().getResources().getString(R.string.moderate_blurb);
                         break;
-                    case Constants.SENSITIVE : blurb = getApplicationContext().getResources().getString(R.string.sensitive_blurb);
+                    case Constants.SENSITIVE:
+                        blurb = getApplicationContext().getResources().getString(R.string.sensitive_blurb);
                         break;
-                    case Constants.UNHEALTHY : blurb = getApplicationContext().getResources().getString(R.string.unhealthy_blurb);
+                    case Constants.UNHEALTHY:
+                        blurb = getApplicationContext().getResources().getString(R.string.unhealthy_blurb);
                         break;
                 }
                 //view = (TextView) findViewById(R.id.blurb);
@@ -196,20 +234,43 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
                 //set share text
                 shareText = getApplicationContext().getResources().getString(R.string.share);
+
+                String send = "";
+                send = msg + " #"
+                        + aqi + " #"
+                        + returnBlurb(aqi) + " #"
+                        + usEmbassyText + " #"
+                        + datetimeText;
                 shareText = String.format(shareText, msg.toLowerCase(), aqi, blurb, usEmbassyText, datetimeText);
                 //Passing Data to Each Fragments
                 EventBus.getDefault().postSticky(aqi);
-                passData(shareText);
+                passData(send);
             }
-            task=null;
+            task = null;
+        }
+
+        public String returnBlurb(String aqi) {
+            if (aqi != null || aqi != "") {
+                Integer convertedAqi = Integer.parseInt(aqi);
+                if (convertedAqi.intValue() > 151) {
+                    return getApplicationContext().getResources().getString(R.string.unhealthy_blurb);
+                } else if (convertedAqi.intValue() > 100) {
+                    return getApplicationContext().getResources().getString(R.string.sensitive_blurb);
+                } else if (convertedAqi.intValue() > 51) {
+                    return getApplicationContext().getResources().getString(R.string.moderate_blurb);
+                } else {
+                    return getApplicationContext().getResources().getString(R.string.good_blurb);
+                }
+            }
+            return "";
         }
 
         @DebugLog
         protected Cursor doQuery() {
-            Cursor result=resolver.query(DBContract.AirQualitySample.CONTENT_URI,
+            Cursor result = resolver.query(DBContract.AirQualitySample.CONTENT_URI,
                     DBContract.PROJECTION, null, null, "ts DESC LIMIT 1");
 
-            return(result);
+            return (result);
         }
     }
 
@@ -238,9 +299,9 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     @DebugLog
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-       // getMenuInflater().inflate(R.menu.main, menu);
+        // getMenuInflater().inflate(R.menu.main, menu);
         SwitchCompat switchCompat = (SwitchCompat) findViewById(R.id.switch_compat);
-        Boolean switchOn = HelperSharedPreferences.getSharedPreferencesBoolean(getApplicationContext(),HelperSharedPreferences.SharedPreferencesKeys.notificationKey, false);
+        Boolean switchOn = HelperSharedPreferences.getSharedPreferencesBoolean(getApplicationContext(), HelperSharedPreferences.SharedPreferencesKeys.notificationKey, false);
         switchCompat.setChecked(switchOn);
         switchCompat.setOnCheckedChangeListener(this);
         return true;
@@ -261,7 +322,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
+    @SuppressWarnings ("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
@@ -270,8 +331,9 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
 
         EventBus.getDefault().unregister(this);
         super.onDestroy();
@@ -279,10 +341,10 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
 
         super.onResume();
-        if (task==null) task=new LoadCursorTask(this).execute();
+        if (task == null) task = new LoadCursorTask(this).execute();
     }
 
     public static class MyPagerAdapter extends FragmentPagerAdapter {
@@ -306,7 +368,6 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                     return SummaryFragment.newInstance(0, "Page # 1");
                 case 1: // Fragment # 0 - This will show FirstFragment different title
                     return Summary2Fragment.newInstance(1, "Page # 2");
-
                 default:
                     return null;
             }
@@ -319,6 +380,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         }
 
     }
+
     public static class MyPagerAdapter1 extends FragmentPagerAdapter {
         private static int NUM_ITEMS = 2;
 
@@ -354,9 +416,8 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
     }
 
-    private void passData(String shareText)
-    {
-        SharedPreferences pref =this.getPreferences(0);
+    private void passData(String shareText) {
+        SharedPreferences pref = this.getPreferences(0);
         SharedPreferences.Editor edt = pref.edit();
         edt.putString("sharekey", shareText);
         edt.apply();
