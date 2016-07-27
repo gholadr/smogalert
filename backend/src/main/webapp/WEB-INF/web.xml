@@ -31,14 +31,14 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>khoibui-en</servlet-name>
-        <url-pattern>/khoibui-en</url-pattern>
+        <url-pattern>/en</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>khoibui-vn</servlet-name>
-        <url-pattern>/khoibui-vn</url-pattern>
+        <url-pattern>/</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
-        <welcome-file>index.html</welcome-file>
+        <welcome-file>smog-vn.jsp</welcome-file>
     </welcome-file-list>
     <filter>
         <filter-name>ObjectifyFilter</filter-name>

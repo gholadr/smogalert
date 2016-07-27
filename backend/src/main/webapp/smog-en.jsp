@@ -131,7 +131,7 @@
                     <a class="page-scroll" href="#contact">Contact</a>
                 </li>
                 <li>
-                    <a class="page-scroll" href="khoibui-vn">VN</a>
+                    <a class="page-scroll" href="/">VN</a>
                 </li>
             </ul>
         </div>

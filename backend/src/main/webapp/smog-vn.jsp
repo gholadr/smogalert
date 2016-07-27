@@ -129,7 +129,7 @@
                     <a class="page-scroll" href="#contact">Liên Hệ </a>
                 </li>
                 <li>
-                    <a class="page-scroll" href="khoibui-en">EN</a>
+                    <a class="page-scroll" href="/en">EN</a>
                 </li>
             </ul>
         </div>
