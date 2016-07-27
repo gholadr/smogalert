@@ -94,6 +94,7 @@ public class RssFetcher extends HttpServlet {
         api.addAirQualitySampleList(cleanRssList);
 
         Iterator<AirQualitySample> itr = cleanRssList.iterator();
+        resp.sendRedirect("smog.jsp");
 
     }
 
