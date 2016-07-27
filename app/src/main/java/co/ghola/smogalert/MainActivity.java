@@ -65,7 +65,12 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     FragmentPagerAdapter mAdapterViewPager1;
     ShareDialog shareDialog;
     private ViewPager vpPager;
-    int tab;
+    private ViewPager vpPager2;
+    private ViewPager vpPager3;
+    private int tab1;
+    private int tab2;
+    private ImageView leftNav2;
+    private ImageView rightNav2;
     ImageView leftNav;
     ImageView rightNav;
 
@@ -91,24 +96,35 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        vpPager= (ViewPager) findViewById(R.id.vpPager);
-        tab = vpPager.getCurrentItem();
-        getViewPagerSwipe();
-        setViewPagerPosition();
 
-//        ViewPager vpPager2 = (ViewPager) findViewById(R.id.vpPager2);
-//        ViewPager vpPager3 = (ViewPager) findViewById(R.id.vpPager3);
+        //ViewPager1 Properties
+        vpPager= (ViewPager) findViewById(R.id.vpPager);
+        tab1 = vpPager.getCurrentItem();
+        setViewPagerListener();
+        getSwipePosition();
+
+        //ViewPager2 Properies
+        vpPager2 = (ViewPager) findViewById(R.id.vpPager2);
+        tab2 = vpPager2.getCurrentItem();
+        setViewPagerListener2();
+        getSwipePosition2();
+
+        vpPager3 = (ViewPager) findViewById(R.id.vpPager3);
         mAdapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
         mAdapterViewPager1 = new MyPagerAdapter1(getSupportFragmentManager());
+
+        //Set Adapter for ViewPagers
         vpPager.setAdapter(mAdapterViewPager);
-//        vpPager2.setAdapter(mAdapterViewPager1);
-//        vpPager3.setAdapter(mAdapterViewPager);
+        vpPager2.setAdapter(mAdapterViewPager1);
+        vpPager3.setAdapter(mAdapterViewPager);
+
+        //Set Indicators for ViewPagers
         CirclePageIndicator titleIndicator = (CirclePageIndicator) findViewById(R.id.indicator);
         titleIndicator.setViewPager(vpPager);
-//        CirclePageIndicator titleIndicator2 = (CirclePageIndicator) findViewById(R.id.indicator2);
-//        titleIndicator2.setViewPager(vpPager2);
-//        CirclePageIndicator titleIndicator3 = (CirclePageIndicator) findViewById(R.id.indicator3);
-//        titleIndicator3.setViewPager(vpPager3);
+        CirclePageIndicator titleIndicator2 = (CirclePageIndicator) findViewById(R.id.indicator2);
+        titleIndicator2.setViewPager(vpPager2);
+        CirclePageIndicator titleIndicator3 = (CirclePageIndicator) findViewById(R.id.indicator3);
+        titleIndicator3.setViewPager(vpPager3);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         assert fab != null;
@@ -387,7 +403,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         }
 
     }
-    private void setViewPagerPosition()
+    private void setViewPagerListener()
     {
           leftNav = (ImageView) findViewById(R.id.left_nav);
           rightNav = (ImageView) findViewById(R.id.right_nav);
@@ -395,16 +411,15 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         leftNav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (tab == 1) {
+                if (tab1 == 1) {
                     leftNav.setVisibility(View.INVISIBLE);
                     rightNav.setVisibility(View.VISIBLE);
                 }
-                if (tab > 0) {
-                    tab--;
-                    vpPager.setCurrentItem(tab);
-                } else if (tab == 0) {
-                    vpPager.setCurrentItem(tab);
+                if (tab1 > 0) {
+                    tab1--;
+                    vpPager.setCurrentItem(tab1);
+                } else if (tab1 == 0) {
+                    vpPager.setCurrentItem(tab1);
                 }
             }
         });
@@ -412,18 +427,19 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         rightNav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 tab = vpPager.getCurrentItem();
-                if (tab == 0) {
+                 tab1 = vpPager.getCurrentItem();
+                if (tab1 == 0) {
                     leftNav.setVisibility(View.VISIBLE);
                     rightNav.setVisibility(View.INVISIBLE);
                 }
 
-                tab++;
-                vpPager.setCurrentItem(tab);
+                tab1++;
+                vpPager.setCurrentItem(tab1);
             }
         });
     }
-    private void getViewPagerSwipe()
+
+    private void getSwipePosition()
     {
         vpPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -451,6 +467,73 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
             }
         });
     }
+    private void getSwipePosition2()
+    {
+        vpPager2.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                if(position == 1)
+                {
+                    rightNav2.setVisibility(View.INVISIBLE);
+                    leftNav2.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    leftNav2.setVisibility(View.INVISIBLE);
+                    rightNav2.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+    }
+    private void setViewPagerListener2()
+    {
+        leftNav2 = (ImageView) findViewById(R.id.left_nav2);
+        rightNav2 = (ImageView) findViewById(R.id.right_nav2);
+        leftNav2.setVisibility(View.INVISIBLE);
+        leftNav2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (tab2 == 1) {
+                    leftNav2.setVisibility(View.INVISIBLE);
+                    rightNav2.setVisibility(View.VISIBLE);
+                }
+                if (tab2 > 0) {
+                    tab2--;
+                    vpPager2.setCurrentItem(tab2);
+                } else if (tab2 == 0) {
+                    vpPager2.setCurrentItem(tab2);
+                }
+            }
+        });
+
+        rightNav2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tab2 = vpPager.getCurrentItem();
+                if (tab2 == 0) {
+                    leftNav2.setVisibility(View.VISIBLE);
+                    rightNav2.setVisibility(View.INVISIBLE);
+                }
+
+                tab2++;
+                vpPager2.setCurrentItem(tab2);
+            }
+        });
+    }
+
+
+
     private void passData(String shareText) {
         SharedPreferences pref = this.getPreferences(0);
         SharedPreferences.Editor edt = pref.edit();
