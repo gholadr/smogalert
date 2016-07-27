@@ -31,7 +31,7 @@
           .list();
     if (aqis.isEmpty()) {
 %>
-<strong>Oh snap!</strong> <a href="#" class="alert-link">No Samples Found</a> Please Start the Fetch RSS again
+<strong>Oh snap!</strong> <a href="#" class="alert-link">No Samples Found</a>
 <%
     } else {
 
@@ -133,6 +133,9 @@
                 <li>
                     <a class="page-scroll" href="/">VN</a>
                 </li>
+                <li>
+                <a href='https://play.google.com/store/apps/details?id=com.disruptorbeam.StarTrekTimelines&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' height="50" width="129" src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
+                </li>
             </ul>
         </div>
         <!-- /.navbar-collapse -->
@@ -146,11 +149,16 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-8 col-md-offset-2">
-                    <h1 class="brand-heading">Khoi Bui</h1>
+                <br/>
+                    <h1 class="brand-heading">
+Khói Bụi</h1>
                     <div class="jumbotron" style="background-color: rgba(0, 0, 0, 0.5);
 ">
-                        <p class="intro-text">The most powerful app to check Air Quality
-                            in <br>Ho Chi Minh</br></p>
+                        <p class="intro-text">Breathe Easy.</br>
+                          A real-time, accurate air quality app for Ho Chi Minh city is here. </br>
+                          <span class="small"></span>
+                          </p>
+
                         <a href="#about" class="btn btn-circle page-scroll">
                             <i class="fa fa-angle-double-down animated" style="margin-top:8px"></i>
                         </a>
@@ -170,29 +178,32 @@
             <div class="row">
                 <div class="col s12 m4">
                     <div class="icon-block">
-                        <h1 class="brand-heading">About Khoi Bui</h1>
-                        <h4 class="center"><font color="#4FC3F7">Update Frequenly</font></h4>
-                        <p class="light">We did most of the heavy lifting for you to provide real time information about Air Quality in Ho Chi Minh.</p>
+                        <h1 class="brand-heading">About Khói Bụi</h1>
+                        <p class="light">Khói Bụi measures the Air Quality Index (<a href="https://en.wikipedia.org/wiki/Air_quality_index">AQI</a>), a number used by governmental and international health organizations to indicate air pollution.
+                        When pollution blankets the city, it affects everyone, regardless of where you live in Ho Chi Minh City. Groups most at risk are infants, the elderly and people with chronic respiratory illness.</p>
+                        <h4 class="center"><font color="#4FC3F7">Accurate Air Quality Monitoring</font></h4>
+                        <p class="light">The app fetches AQI in  real-time from the US Embassy air quality monitoring station in District 1, Ho Chi Minh City. </p>
                     </div>
                 </div>
 
                 <div class="col s12 m4">
                     <div class="icon-block">
-                        <h4 class="center"><font color="#80D8FF">User Experience Focused</font></h4>
-                        <p class="light">By utilizing elements and principles of Material Design, we using Flat Model Design that always keep up with the latest trends. By doing this will enhance our UI and UX experience.</p>
+                        <h4 class="center"><font color="#80D8FF">Instant Alert</font></h4>
+                        <p class="light">Real-time notifications sent directly to your phone when a significant change in air quality occurs, helping you to safely plan your outdoor activities.</p>
                     </div>
                 </div>
 
                 <div class="col s12 m4">
                     <div class="icon-block">
                         <h4 class="center"><font color="#80D8FF">Easy to Use</font></h4>
-                        <p class="light">Just by clicking on Air Quality on the navigation bar. Will take you to more Information Air Quality page.</p>
+                        <p class="light">The app is intuitive and simple, giving you the only information you need to breathe easy in Ho Chi Minh city.</p>
                     </div>
                 </div>
             </div>
 
         </div>
     </div>
+
 </section>
 
 <!-- Download Section -->
@@ -203,7 +214,7 @@
             <div class="jumbotron" style="background-color: rgba(0, 0, 0, 0.5);
             ">
                     <h2>Download Khoi Bui</h2>
-                    <p>You can download Khoi Bui for free on the preview page at Google Play Store.</p>
+                    <p>You can download Khoi Bui for free from the Google Play Store.</p>
                     <a href="http://startbootstrap.com/template-overviews/grayscale/" class="btn btn-default btn-lg" style="background-color:="#4FC3F7"><FONT COLOR="#4FC3F7">Visit Download Page</font></a>
                 </div>
             </div>
@@ -217,46 +228,52 @@
         <div class="col-lg-8 col-lg-offset-2">
             <h2>Contact Us</h2>
             <p>Feel free to email us to provide some feedback on our app, or to just say hello!</p>
-            <p><a href="mailto:feedback@startbootstrap.com">david@mysquar.com</a>
+            <p><a href="mailto:feedback@startbootstrap.com">gholadr@gmail.com</a>
             </p>
+            <!--
             <ul class="list-inline banner-social-buttons">
                 <li>
                     <a href="https://twitter.com/SBootstrap" class="btn btn-default btn-lg"><i class="fa fa-twitter fa-fw"></i> <span class="network-name">Twitter</span></a>
                 </li>
+
                 <li>
-                    <a href="https://github.com/IronSummitMedia/startbootstrap" class="btn btn-default btn-lg"><i class="fa fa-github fa-fw"></i> <span class="network-name">Github</span></a>
+                    <a href="https://github.com/gholap" class="btn btn-default btn-lg"><i class="fa fa-github fa-fw"></i> <span class="network-name">Github</span></a>
                 </li>
+
                 <li>
-                    <a href="https://plus.google.com/+Startbootstrap/posts" class="btn btn-default btn-lg"><i class="fa fa-google-plus fa-fw"></i> <span class="network-name">Google+</span></a>
+                    <a href="https://plus.google.com/u/2/106428478761684802811/posts" class="btn btn-default btn-lg"><i class="fa fa-google-plus fa-fw"></i> <span class="network-name">Google+</span></a>
                 </li>
             </ul>
+-->
         </div>
     </div>
 </section>
 
-<!-- Map Section -->
-<div class="container" style="margin-top:20px">
-    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.574792560306!2d106.68525451463888!3d10.767216992327782!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f181a063ce9%3A0xe6cc50389f63d4d1!2zQ2FvIOG7kWMgdsSDbiBwaMOybmcgVmltZWRpbWV4IEhvw6AgQsOsbmg!5e0!3m2!1svi!2s!4v1469589382737" width="1113" height="500" frameborder="0" style="border:0" allowfullscreen></iframe>
-</div>
+
 
 <!-- Footer -->
 <footer>
     <div class="container text-center">
-        <p>Copyright &copy; Khoi Bui 2016</p>
+        <p>Copyright &copy; Khói Bụi 2016</p>
     </div>
 </footer>
 
+<!--
 <!-- jQuery -->
 <script src="vendor/jquery/jquery.js"></script>
+-->
 
 <!-- Bootstrap Core JavaScript -->
 <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
 
+<!--
 <!-- Plugin JavaScript -->
 <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
 
+
 <!-- Google Maps API Key - Use your own API key to enable the map feature. More information on the Google Maps API can be found at https://developers.google.com/maps/ -->
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRngKslUGJTlibkQ3FkfTxj3Xss1UlZDA&sensor=false"></script>
+-->
 
 <!-- Theme JavaScript -->
 <script src="js/grayscale.min.js"></script>
