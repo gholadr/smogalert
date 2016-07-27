@@ -1,7 +1,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:fb="http://ogp.me/ns/fb#" >
+      xmlns:og="http://ogp.me/ns#"
+      xmlns:fb="https://www.facebook.com/2008/fbml">
  <head>
-    <meta property="og:image" content="http://i.imgur.com/sN1B51f.png" />
+ <meta property="og:title" content="khoi bui" />
+ <meta property="og:site_name" content="Khoi Bui"/>
+ <meta property="og:url" content="https://smogalert-1248.appspot.com/khoibui" />
+ <meta property="og:image" content="http://i.imgur.com/sN1B51f.png" />
+ <meta property="og:description"
+          content="real time AQI for HCMC"/>
  <head/>
 
 
@@ -44,7 +50,20 @@
             pageContext.setAttribute("location","Location: "+"Ho Chi Minh City");
             pageContext.setAttribute("by","AQI sample measured by air quality sensor from the US Embassy");
 %>
+<<<<<<< HEAD:backend/src/main/webapp/smog.jsp
 
+=======
+<body>
+<center>  
+  <img src="http://i.imgur.com/sN1B51f.png" alt="Icon" width="128" height="128">
+  <p><b>${fn:escapeXml(airQualityIndex)}</b></p>
+  <blockquote>${fn:escapeXml(message)}</blockquote></P>
+  <blockquote>${fn:escapeXml(timeStamp)}</blockquote></P>
+  <blockquote>${fn:escapeXml(location)}</blockquote></P>
+  <blockquote>${fn:escapeXml(by)}</blockquote></P>
+</center>
+</body>
+>>>>>>> 2ede3442272f74c85c2ff01a7f9ae0c7bebfe21a:backend/src/main/webapp/smog-en.jsp
 <%
         }
     }
