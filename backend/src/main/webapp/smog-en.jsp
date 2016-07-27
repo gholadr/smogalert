@@ -50,20 +50,15 @@
             pageContext.setAttribute("location","Location: "+"Ho Chi Minh City");
             pageContext.setAttribute("by","AQI sample measured by air quality sensor from the US Embassy");
 %>
-<<<<<<< HEAD:backend/src/main/webapp/smog.jsp
+
 
 =======
 <body>
 <center>  
-  <img src="http://i.imgur.com/sN1B51f.png" alt="Icon" width="128" height="128">
-  <p><b>${fn:escapeXml(airQualityIndex)}</b></p>
-  <blockquote>${fn:escapeXml(message)}</blockquote></P>
-  <blockquote>${fn:escapeXml(timeStamp)}</blockquote></P>
-  <blockquote>${fn:escapeXml(location)}</blockquote></P>
-  <blockquote>${fn:escapeXml(by)}</blockquote></P>
+
 </center>
 </body>
->>>>>>> 2ede3442272f74c85c2ff01a7f9ae0c7bebfe21a:backend/src/main/webapp/smog-en.jsp
+
 <%
         }
     }
@@ -134,6 +129,9 @@
                 </li>
                 <li>
                     <a class="page-scroll" href="#contact">Contact</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="khoibui-vn">VN</a>
                 </li>
             </ul>
         </div>
