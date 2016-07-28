@@ -6,4 +6,8 @@
  iframe, object, embed {
      max-width: 100%;
  }
+ .center {
+     text-align: center;
+
+ }
 /*# sourceMappingURL=bootstrap.min.css.map */

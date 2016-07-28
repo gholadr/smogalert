@@ -31,7 +31,7 @@
           .list();
     if (aqis.isEmpty()) {
 %>
-<strong>Oh snap!</strong> <a href="#" class="alert-link">No Samples Found</a> Please Start the Fetch RSS again
+
 <%
     } else {
 
@@ -45,16 +45,18 @@
             String timeText =d.toString("h a");
             String datetimeText = String.format("%s at %s", dateText, timeText);
             pageContext.setAttribute("airQualityIndex",aqi.getAqi()+" AQI");
-            pageContext.setAttribute("message", "Cấp độ: "+aqi.getMessage());
-            pageContext.setAttribute("timeStamp","Thời : "+datetimeText);
-            pageContext.setAttribute("location","Vị Trí: "+"Thành Phố Hồ Chí ");
-            pageContext.setAttribute("bởi","mẫu AQI được đo bằng cảm biến từ Đại Sứ Quán Mỹ");
+            pageContext.setAttribute("message", "Cấp Độ: "+aqi.getMessage());
+            pageContext.setAttribute("timeStamp","Thời Gian: "+datetimeText);
+            pageContext.setAttribute("location","Vị Trí: "+"Thành Phố Hồ Chí Minh");
+            pageContext.setAttribute("by","AQI sample measured by air quality sensor from the US Embassy");
 %>
 
 
-=======
-<body>
 
+<body>
+<center>
+
+</center>
 </body>
 
 <%
@@ -75,7 +77,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Khoi Bui</title>
+    <title>Khói Bụi</title>
 
 
     <!-- Bootstrap Core CSS -->
@@ -102,13 +104,13 @@
 
 <!-- Navigation -->
 <nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
-    <div class="container">
+    <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-main-collapse">
                 Menu <i class="fa fa-bars"></i>
             </button>
             <a class="navbar-brand page-scroll" href="#page-top">
-                <span class="light">Chất lương không khí hiện thời  :&emsp;</span><b>${fn:escapeXml(airQualityIndex)}</b>
+                <span class="light">Chất Lượng Không Khí hiện tại :&emsp;</span><b>${fn:escapeXml(airQualityIndex)}</b>
             </a>
         </div>
 
@@ -120,18 +122,18 @@
                     <a href="#page-top"></a>
                 </li>
                 <li>
-                    <a class="page-scroll" href="#about">Giới Thiệu </a>
+                    <a class="page-scroll" href="#about">Giới Thiệu</a>
                 </li>
                 <li>
                     <a class="page-scroll" href="#download">Tải Về</a>
                 </li>
                 <li>
-                    <a class="page-scroll" href="#contact">Liên Hệ </a>
+                    <a class="page-scroll" href="#contact">Liên Hệ</a>
                 </li>
                 <li>
                     <a class="page-scroll" href="/en">EN</a>
                 </li>
-            </ul>
+                    <a href='https://play.google.com/store/apps/details?id=com.disruptorbeam.StarTrekTimelines&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' height="50" width="129" src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
         </div>
         <!-- /.navbar-collapse -->
     </div>
@@ -144,10 +146,16 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-8 col-md-offset-2">
-                    <h1 class="brand-heading">Khoi Bui</h1>
+                <br/>
+                    <h1 class="brand-heading">
+Khói Bụi</h1>
                     <div class="jumbotron" style="background-color: rgba(0, 0, 0, 0.5);
 ">
-                        <p class="intro-text">Là phần mềm dùng để kiểm tra Chất Lượng Không Khí ở Thành Phố Hồ Chí Minh </br></p>
+                        <p class="intro-text">Thở dễ dàng.</br>
+                          Khói Bụi là ứng dụng thời gian thực, và có độ chính xác cao để đo chất lượng không khí ở Thành Phố Hồ Chí Minh. </br>
+                          <span class="small"></span>
+                          </p>
+
                         <a href="#about" class="btn btn-circle page-scroll">
                             <i class="fa fa-angle-double-down animated" style="margin-top:8px"></i>
                         </a>
@@ -167,29 +175,32 @@
             <div class="row">
                 <div class="col s12 m4">
                     <div class="icon-block">
-                        <h1 class="brand-heading">Giới Thiệu Khoi Bui</h1>
-                        <h4 class="center"><font color="#4FC3F7">Cập Nhật Liên Tục</font></h4>
-                        <p class="light">Chúng tôi đảm bảo rằng người dùng sẽ được cập nhật thông tin liên tục về Chất Lương Không Khí ở Thành Phố Hồ Chí Minh.</p>
+                        <h1 class="brand-heading">Giới Thiệu Khói Bụi</h1>
+                        <p class="light">Khói Bụi đo chỉ số chất lượng không khí (<a href="https://en.wikipedia.org/wiki/Air_quality_index">AQI</a>), là một con số được sử dụng bởi chính phủ và tổ chức y tế toàn cầu để chỉ ra mức độ ô nhiễm của không khí.
+                        Khi ô nhiễm bao trùm thành phố, nó ảnh hưởng đến tất cả mọi người, bất kể nơi đâu bạn sống trong Thành Phố Hồ Chí Minh. Nhóm nguời dễ bị ảnh hưởng nhất là trẻ sơ sinh, người già và những người có bệnh về đường hô hấp mãn tính.</p>
+                        <h4 class="center"><font color="#4FC3F7">Giám sát chất lượng không khí chính xác</font></h4>
+                        <p class="light">Ứng dụng lấy dữ liệu thời gian thực từ Đại Sứ quán Mỹ ở Quận 1, Thành Phố Hồ Chí Minh. </p>
                     </div>
                 </div>
 
                 <div class="col s12 m4">
                     <div class="icon-block">
-                        <h4 class="center"><font color="#80D8FF">User Experience Focused</font></h4>
-                        <p class="light">By utilizing elements and principles of Material Design, we using Flat Model Design that always keep up with the latest trends. By doing this will enhance our UI and UX experience.</p>
+                        <h4 class="center"><font color="#80D8FF">Lập Tức Cảnh Báo</font></h4>
+                        <p class="light">Những thông báo thời gian thực sẽ gửi trực tiếp đến điện thoại của bạn khi chất lượng không khí thay đổi đáng kể, giúp cho bạn lập kế hoạch hoạt động ngoài trời một cách an toàn hơn.</p>
                     </div>
                 </div>
 
                 <div class="col s12 m4">
                     <div class="icon-block">
-                        <h4 class="center"><font color="#80D8FF">Dễ dàng sử dụng</font></h4>
-                        <p class="light">Chỉ cần Click vào tải về và cài đặt, là bạn có thể sử dụng ứng dụng. </p>
+                        <h4 class="center"><font color="#80D8FF">Dễ Dàng Sử Dụng</font></h4>
+                        <p class="light">Ứng dụng trực giác, và đơn giản, để cho bạn thông tin bạn cần để thở dễ dàng hơn trong Thành Phố Hồ Chí Minh.</p>
                     </div>
                 </div>
             </div>
 
         </div>
     </div>
+
 </section>
 
 <!-- Download Section -->
@@ -199,9 +210,9 @@
             <div class="col-lg-8 col-lg-offset-2">
             <div class="jumbotron" style="background-color: rgba(0, 0, 0, 0.5);
             ">
-                    <h2>Tải  Khoi Bui</h2>
-                    <p>Các bạn có thể tải ứng dụng khói bụi miễn phí ở Google Play Store.</p>
-                    <a href="http://startbootstrap.com/template-overviews/grayscale/" class="btn btn-default btn-lg" style="background-color:="#4FC3F7"><FONT COLOR="#4FC3F7">Visit Download Page</font></a>
+                    <h2>Tải về Khói Bụi</h2>
+                    <p>Bạn có thể tải Khói Bụi ở Google Play Store.</p>
+                    <a href="http://startbootstrap.com/template-overviews/grayscale/" class="btn btn-default btn-lg" style="background-color:="#4FC3F7"><FONT COLOR="#4FC3F7">Trang Tải Về</font></a>
                 </div>
             </div>
         </div>
@@ -212,45 +223,33 @@
 <section id="contact" class="container content-section text-center">
     <div class="row">
         <div class="col-lg-8 col-lg-offset-2">
-            <h2>Liên hệ</h2>
-            <p>Đừng ngại liên lạc với chúng tôi qua địa chỉ Email.</p>
-            <p><a href="mailto:feedback@startbootstrap.com">david@mysquar.com</a>
+            <h2>Liên Hệ</h2>
+            <p>Đừng ngại liên hệ chúng tôi với Email</p>
+            <p><a href="mailto:feedback@startbootstrap.com">gholadr@gmail.com</a>
             </p>
-            <ul class="list-inline banner-social-buttons">
-                <li>
-                    <a href="https://twitter.com/SBootstrap" class="btn btn-default btn-lg"><i class="fa fa-twitter fa-fw"></i> <span class="network-name">Twitter</span></a>
-                </li>
-                <li>
-                    <a href="https://github.com/IronSummitMedia/startbootstrap" class="btn btn-default btn-lg"><i class="fa fa-github fa-fw"></i> <span class="network-name">Github</span></a>
-                </li>
-                <li>
-                    <a href="https://plus.google.com/+Startbootstrap/posts" class="btn btn-default btn-lg"><i class="fa fa-google-plus fa-fw"></i> <span class="network-name">Google+</span></a>
-                </li>
-            </ul>
         </div>
     </div>
 </section>
 
-<!-- Map Section -->
-<div class="container" style="margin-top:20px">
-    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.574792560306!2d106.68525451463888!3d10.767216992327782!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f181a063ce9%3A0xe6cc50389f63d4d1!2zQ2FvIOG7kWMgdsSDbiBwaMOybmcgVmltZWRpbWV4IEhvw6AgQsOsbmg!5e0!3m2!1svi!2s!4v1469589382737" width="1113" height="500" frameborder="0" style="border:0" allowfullscreen></iframe>
-</div>
+
 
 <!-- Footer -->
 <footer>
-    <div class="container text-center">
+    <div class="center">
         <p>Copyright &copy; Khoi Bui 2016</p>
     </div>
 </footer>
-
+<!--
 <!-- jQuery -->
 <script src="vendor/jquery/jquery.js"></script>
 
 <!-- Bootstrap Core JavaScript -->
 <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
 
+<!--
 <!-- Plugin JavaScript -->
 <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+
 
 <!-- Google Maps API Key - Use your own API key to enable the map feature. More information on the Google Maps API can be found at https://developers.google.com/maps/ -->
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRngKslUGJTlibkQ3FkfTxj3Xss1UlZDA&sensor=false"></script>
