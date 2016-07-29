@@ -50,6 +50,7 @@ import co.ghola.smogalert.fragments.LocationFragment;
 import co.ghola.smogalert.fragments.StatisticFragment;
 import co.ghola.smogalert.fragments.Summary2Fragment;
 import co.ghola.smogalert.fragments.SummaryFragment;
+import co.ghola.smogalert.utils.BaseTask;
 import co.ghola.smogalert.utils.Constants;
 import co.ghola.smogalert.utils.HelperSharedPreferences;
 import hugo.weaving.DebugLog;
@@ -154,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
     @Subscribe (threadMode = ThreadMode.MAIN)
     public void doThis(String text) {
-        if (task == null) task = new LoadCursorTask(this).execute();
+        if (task == null) task = new LoadCursorTask(this).execute(Constants.LAST_HOUR);
     }
 
     @Override
@@ -163,14 +164,15 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         HelperSharedPreferences.putSharedPreferencesBoolean(this, HelperSharedPreferences.SharedPreferencesKeys.notificationKey, isChecked);
 
     }
+    private class LoadCursorTask extends BaseTask<Integer> {
+        LoadCursorTask(Context ctxt) {
+            super(ctxt);
+        }
 
-    abstract private class BaseTask<T> extends AsyncTask<T, Void, Cursor> {
-        final ContentResolver resolver;
-
-        BaseTask(Context ctxt) {
-            super();
-
-            resolver = ctxt.getContentResolver();
+        @Override
+        protected Cursor doInBackground(Integer... params) {
+            int post = params[0].intValue();
+            return (doQuery(post));
         }
 
         @Override
@@ -213,14 +215,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                         blurb = getApplicationContext().getResources().getString(R.string.unhealthy_blurb);
                         break;
                 }
-                //view = (TextView) findViewById(R.id.blurb);
-                //view.setText(blurb);
 
-                //GaugeView gaugeView = (GaugeView) findViewById(R.id.gauge);
-                //gaugeView.setGaugeValue(aqi);
-                //if ( gaugeView.getVisibility() != View.VISIBLE ) gaugeView.setVisibility(View.VISIBLE);
-
-                //set share text
                 shareText = getApplicationContext().getResources().getString(R.string.share);
 
                 String send = "";
@@ -237,6 +232,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
             task = null;
         }
 
+
         public String returnBlurb(String aqi) {
             if (aqi != null || aqi != "") {
                 Integer convertedAqi = Integer.parseInt(aqi);
@@ -251,25 +247,6 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                 }
             }
             return "";
-        }
-
-        @DebugLog
-        protected Cursor doQuery() {
-            Cursor result = resolver.query(DBContract.AirQualitySample.CONTENT_URI,
-                    DBContract.PROJECTION, null, null, "ts DESC LIMIT 1");
-
-            return (result);
-        }
-    }
-
-    private class LoadCursorTask extends BaseTask<Void> {
-        LoadCursorTask(Context ctxt) {
-            super(ctxt);
-        }
-
-        @Override
-        protected Cursor doInBackground(Void... params) {
-            return (doQuery());
         }
     }
 
@@ -315,7 +292,6 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     public boolean onNavigationItemSelected(MenuItem item) {
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -332,7 +308,9 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     public void onResume() {
 
         super.onResume();
-        if (task == null) task = new LoadCursorTask(this).execute();
+        if (task==null) task=new LoadCursorTask(this).execute(new Integer(Constants.LAST_HOUR));
+
+
     }
 
     public static class MyPagerAdapter extends FragmentPagerAdapter {

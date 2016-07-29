@@ -1,8 +1,15 @@
 package co.ghola.smogalert.fragments;
 
+import android.content.ContentResolver;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.RectF;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,12 +28,24 @@ import com.github.mikephil.charting.formatter.AxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+
 import java.util.ArrayList;
 
+import co.ghola.smogalert.MainActivity;
 import co.ghola.smogalert.R;
 import co.ghola.smogalert.chart.DayAxisValueFormatter;
 import co.ghola.smogalert.chart.MyAxisValueFormatter;
 import co.ghola.smogalert.chart.XYMarkerView;
+import co.ghola.smogalert.db.DBContract;
+import co.ghola.smogalert.utils.BaseTask;
+import co.ghola.smogalert.utils.Constants;
+import co.ghola.smogalert.utils.HelperSharedPreferences;
+import hugo.weaving.DebugLog;
 
 /**
  * Created by alecksjohansson on 7/21/16.
@@ -36,8 +55,9 @@ public class StatisticFragment extends android.support.v4.app.Fragment {
     private String title;
     private int page;
     private BarChart mBarChart;
-    ArrayList<BarEntry> entries = new ArrayList<>();
-    ArrayList<String> labels = new ArrayList<String>();
+    private AsyncTask task = null;
+    private String shareText = "";
+
     BarDataSet mDataSet;
     private SeekBar mSeekBarX, mSeekBarY;
 
@@ -142,16 +162,41 @@ public class StatisticFragment extends android.support.v4.app.Fragment {
         l.setTextSize(11f);
         l.setXEntrySpace(4f);
         mBarChart.setMarkerView(new XYMarkerView(getContext(), xAxisFormatter));
-
         setData(6, 200);
-
-
-
-
-
         return view;
     }
 
+    private class LoadCursorTask extends BaseTask<Integer> {
+        LoadCursorTask(Context ctxt) {
+            super(ctxt);
+        }
+        @Override
+        public void onPostExecute(Cursor result) {
+            if (result.getCount() > 0) {
+                for(int i=0;i<250;i++) {
+                    result.moveToPosition(i);
+                    String aqi = result.getString(DBContract.COLUMN_IDX_AQI);
+                    Log.d("res", "" + aqi);
+                }
+            }
+            task=null;
+        }
+        @Subscribe(threadMode = ThreadMode.MAIN)
+        public void doThis(String text){
+            if (task == null) task=new LoadCursorTask(getContext()).execute(new Integer(Constants.LAST_7_DAYS));
+        }
 
-    
+        @Override
+        protected Cursor doInBackground(Integer... params) {
+            int post = params[0].intValue();
+            return (doQuery(post));
+        }
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (task==null) task=new LoadCursorTask(getActivity()).execute(new Integer(Constants.LAST_7_DAYS));
+    }
 }
