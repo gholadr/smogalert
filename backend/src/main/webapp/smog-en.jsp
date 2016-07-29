@@ -1,25 +1,10 @@
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:og="http://ogp.me/ns#"
-      xmlns:fb="https://www.facebook.com/2008/fbml">
- <head>
- <meta property="og:title" content="khoi bui" />
- <meta property="og:site_name" content="Khoi Bui"/>
- <meta property="og:url" content="https://smogalert-1248.appspot.com/khoibui" />
- <meta property="og:image" content="http://i.imgur.com/sN1B51f.png" />
- <meta property="og:description"
-          content="real time AQI for HCMC"/>
- <head/>
-
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="co.ghola.backend.entity.AirQualitySample" %>
 <%@ page import="com.googlecode.objectify.Key" %>
 <%@ page import="com.googlecode.objectify.ObjectifyService" %>
 <%@ page import="org.joda.time.*" %>
-
 <%@ page import="java.util.List" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-
 <%
     // Run an ancestor query to ensure we see the most up-to-date
     // view of the Greetings belonging to the selected Guestbook.
@@ -29,12 +14,6 @@
           .order("-ts")       // Most recent first - date is indexed.
           .limit(1)             // Only show 5 of them.
           .list();
-    if (aqis.isEmpty()) {
-%>
-
-<%
-    } else {
-
       // Look at all of our greetings
         for (AirQualitySample aqi : aqis) {
             String airQualityIndex;
@@ -42,44 +21,29 @@
             String timeStamp;
             DateTime d = new DateTime(aqi.getTimestamp() * 1000, DateTimeZone.UTC);
             String dateText =d.toString("MM/dd");
-            String timeText =d.toString("h a");
-            String datetimeText = String.format("%s at %s", dateText, timeText);
+            String timeText =d.toString("h a ");
+            String datetimeText = String.format("at %s", timeText);
             pageContext.setAttribute("airQualityIndex",aqi.getAqi()+" AQI");
             pageContext.setAttribute("message", "Level: "+aqi.getMessage());
-            pageContext.setAttribute("timeStamp","Time: "+datetimeText);
-            pageContext.setAttribute("location","Location: "+"Ho Chi Minh City");
-            pageContext.setAttribute("by","AQI sample measured by air quality sensor from the US Embassy");
-%>
-
-
-
-<body>
-<center>
-
-</center>
-</body>
-
-<%
+            pageContext.setAttribute("timeStamp",datetimeText);
         }
-    }
 %>
-</html>
-
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
+    <meta name="description" content="Khói Bụi. A real-time, accurate air quality app for Ho Chi Minh City.">
     <meta name="author" content="">
-
-    <title>Khoi Bui</title>
-
-
+     <meta property="og:title" content="Khói Bụi" />
+     <meta property="og:site_name" content="Khói Bụi"/>
+     <meta property="og:url" content="https://smogalert-1248.appspot.com/khoibui" />
+     <meta property="og:image" content="http://i.imgur.com/sN1B51f.png" />
+     <meta property="og:description" />
+    <title>Khói Bụi</title>
+    <!-- favicon -->
+    <link rel="shortcut icon" href="img/favicon.ico"/>
     <!-- Bootstrap Core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
@@ -109,9 +73,8 @@
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-main-collapse">
                 Menu <i class="fa fa-bars"></i>
             </button>
-            <a class="navbar-brand page-scroll" href="#page-top">
-                <span class="light">Air Quality Index is now :&emsp;</span><b>${fn:escapeXml(airQualityIndex)}</b>
-            </a>
+                <span class="nav navbar-nav">Air Quality Index ${fn:escapeXml(timeStamp)} is ${fn:escapeXml(airQualityIndex)}</span>
+
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -152,7 +115,7 @@ Khói Bụi</h1>
                     <div class="jumbotron" style="background-color: rgba(0, 0, 0, 0.5);
 ">
                         <p class="intro-text">Breathe Easy.</br>
-                          A real-time, accurate air quality app for Ho Chi Minh city is here. </br>
+                          A real-time, accurate air quality app for Ho Chi Minh City is here. </br>
                           <span class="small"></span>
                           </p>
 

@@ -1,22 +1,8 @@
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:og="http://ogp.me/ns#"
-      xmlns:fb="https://www.facebook.com/2008/fbml">
- <head>
- <meta property="og:title" content="khoi bui" />
- <meta property="og:site_name" content="Khoi Bui"/>
- <meta property="og:url" content="https://smogalert-1248.appspot.com/khoibui" />
- <meta property="og:image" content="http://i.imgur.com/sN1B51f.png" />
- <meta property="og:description"
-          content="real time AQI for HCMC"/>
- <head/>
-
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="co.ghola.backend.entity.AirQualitySample" %>
 <%@ page import="com.googlecode.objectify.Key" %>
 <%@ page import="com.googlecode.objectify.ObjectifyService" %>
 <%@ page import="org.joda.time.*" %>
-
 <%@ page import="java.util.List" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
@@ -29,12 +15,6 @@
           .order("-ts")       // Most recent first - date is indexed.
           .limit(1)             // Only show 5 of them.
           .list();
-    if (aqis.isEmpty()) {
-%>
-
-<%
-    } else {
-
       // Look at all of our greetings
         for (AirQualitySample aqi : aqis) {
             String airQualityIndex;
@@ -49,37 +29,24 @@
             pageContext.setAttribute("timeStamp","Thời Gian: "+datetimeText);
             pageContext.setAttribute("location","Vị Trí: "+"Thành Phố Hồ Chí Minh");
             pageContext.setAttribute("by","AQI sample measured by air quality sensor from the US Embassy");
-%>
-
-
-
-<body>
-<center>
-
-</center>
-</body>
-
-<%
-        }
     }
 %>
-</html>
-
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
+    <meta name="description" content="Khói Bụi là ứng dụng thời gian thực, và có độ chính xác cao để đo chất lượng không khí ở Thành Phố Hồ Chí Minh.">
+    <meta name="author" content="Khói Bụi">
+     <meta property="og:title" content="Khói Bụi" />
+     <meta property="og:site_name" content="Khói Bụi"/>
+     <meta property="og:url" content="http://khoibui.co" />
+     <meta property="og:image" content="http://i.imgur.com/sN1B51f.png" />
+     <meta property="og:description"
+              content="Khói Bụi là ứng dụng thời gian thực, và có độ chính xác cao để đo chất lượng không khí ở Thành Phố Hồ Chí Minh."/>
     <title>Khói Bụi</title>
-
-
+    <link rel="shortcut icon" href="img/favicon.ico"/>
     <!-- Bootstrap Core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
