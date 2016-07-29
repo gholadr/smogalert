@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
         @DebugLog
         protected Cursor doQuery(int count) {
-            String args = String.format("ts DESC LIMIT %i", count);
+            String args = String.format("ts DESC LIMIT %s", count);
             Cursor result=resolver.query(DBContract.AirQualitySample.CONTENT_URI, DBContract.PROJECTION, null, null, args);
 
             return(result);
