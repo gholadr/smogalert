@@ -121,15 +121,16 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
     }
 
-    abstract private class BaseTask<T> extends AsyncTask<Integer, Void, Cursor> {
-        final ContentResolver resolver;
-
-        BaseTask(Context ctxt) {
-            super();
-
-            resolver=ctxt.getContentResolver();
+    private class LoadCursorTask extends BaseTask<Void> {
+        LoadCursorTask(Context ctxt) {
+            super(ctxt);
         }
 
+        @Override
+        protected Cursor doInBackground(Integer... params) {
+            int post = params[0].intValue();
+            return (doQuery(post));
+        }
         @Override
         public void onPostExecute(Cursor result) {
             if (result.getCount() > 0) {
@@ -180,26 +181,6 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                 shareText = String.format(shareText, msg.toLowerCase(), aqi, blurb, usEmbassyText, datetimeText);
             }
             task=null;
-        }
-
-        @DebugLog
-        protected Cursor doQuery(int count) {
-            String args = String.format("ts DESC LIMIT %s", count);
-            Cursor result=resolver.query(DBContract.AirQualitySample.CONTENT_URI, DBContract.PROJECTION, null, null, args);
-
-            return(result);
-        }
-    }
-
-    private class LoadCursorTask extends BaseTask<Void> {
-        LoadCursorTask(Context ctxt) {
-            super(ctxt);
-        }
-
-        @Override
-        protected Cursor doInBackground(Integer... params) {
-            int post = params[0].intValue();
-            return (doQuery(post));
         }
     }
 
