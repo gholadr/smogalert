@@ -260,7 +260,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     public void onResume(){
 
         super.onResume();
-        if (task==null) task=new LoadCursorTask(this).execute(1);
+        if (task==null) task=new LoadCursorTask(this).execute(Constants.LAST_HOUR);
     }
 
 }
