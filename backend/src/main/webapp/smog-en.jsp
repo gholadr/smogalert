@@ -37,7 +37,7 @@
     <meta name="author" content="">
      <meta property="og:title" content="Khói Bụi" />
      <meta property="og:site_name" content="Khói Bụi"/>
-     <meta property="og:url" content="https://smogalert-1248.appspot.com/khoibui" />
+     <meta property="og:url" content="http://khoibui.co" />
      <meta property="og:image" content="http://i.imgur.com/sN1B51f.png" />
      <meta property="og:description" />
     <title>Khói Bụi</title>

@@ -22,7 +22,7 @@
             String timeStamp;
             DateTime d = new DateTime(aqi.getTimestamp() * 1000, DateTimeZone.UTC);
             String timeText =d.toString("h a ");
-            String datetimeText = String.format("at %s", timeText);
+            String datetimeText = String.format("lúc %s", timeText);
             pageContext.setAttribute("airQualityIndex",aqi.getAqi()+" AQI");
             pageContext.setAttribute("message", "Level: "+aqi.getMessage());
             pageContext.setAttribute("timeStamp",datetimeText);
@@ -74,7 +74,7 @@
                 Menu <i class="fa fa-bars"></i>
             </button>
             <a class="navbar-brand">
-                <span class="light">Chỉ số Chất Lượng Không Khí lúc ${fn:escapeXml(timeStamp)} là ${fn:escapeXml(airQualityIndex)}</span>
+                <span class="light">Chỉ số Chất Lượng Không Khí  ${fn:escapeXml(timeStamp)} là ${fn:escapeXml(airQualityIndex)}</span>
             </a>
         </div>
 
