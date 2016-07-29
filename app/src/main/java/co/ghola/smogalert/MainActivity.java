@@ -198,7 +198,8 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
         @Override
         protected Cursor doInBackground(Integer... params) {
-            return (doQuery(params[0]));
+            int post = params[0].intValue();
+            return (doQuery(post));
         }
     }
 
@@ -260,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     public void onResume(){
 
         super.onResume();
-        if (task==null) task=new LoadCursorTask(this).execute(Constants.LAST_HOUR);
+        if (task==null) task=new LoadCursorTask(this).execute(new Integer(Constants.LAST_HOUR));
     }
 
 }
