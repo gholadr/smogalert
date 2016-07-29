@@ -21,14 +21,11 @@
             String message;
             String timeStamp;
             DateTime d = new DateTime(aqi.getTimestamp() * 1000, DateTimeZone.UTC);
-            String dateText =d.toString("MM/dd");
-            String timeText =d.toString("h a");
-            String datetimeText = String.format("%s at %s", dateText, timeText);
+            String timeText =d.toString("h a ");
+            String datetimeText = String.format("at %s", timeText);
             pageContext.setAttribute("airQualityIndex",aqi.getAqi()+" AQI");
-            pageContext.setAttribute("message", "Cấp Độ: "+aqi.getMessage());
-            pageContext.setAttribute("timeStamp","Thời Gian: "+datetimeText);
-            pageContext.setAttribute("location","Vị Trí: "+"Thành Phố Hồ Chí Minh");
-            pageContext.setAttribute("by","AQI sample measured by air quality sensor from the US Embassy");
+            pageContext.setAttribute("message", "Level: "+aqi.getMessage());
+            pageContext.setAttribute("timeStamp",datetimeText);
     }
 %>
 <!DOCTYPE html>
