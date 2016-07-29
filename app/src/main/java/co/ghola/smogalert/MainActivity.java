@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void doThis(String text){
-        if (task == null) task=new LoadCursorTask(this).execute();
+        if (task == null) task=new LoadCursorTask(this).execute(new Integer(Constants.LAST_HOUR));
     }
 
     @Override
