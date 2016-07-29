@@ -73,8 +73,8 @@
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-main-collapse">
                 Menu <i class="fa fa-bars"></i>
             </button>
-            <a class="navbar-brand page-scroll" href="#page-top">
-                <span class="light">Chất Lượng Không Khí hiện tại :&emsp;</span><b>${fn:escapeXml(airQualityIndex)}</b>
+            <a class="navbar-brand">
+                <span class="light">Chỉ số Chất Lượng Không Khí lúc ${fn:escapeXml(timeStamp)} là ${fn:escapeXml(airQualityIndex)}</span>
             </a>
         </div>
 

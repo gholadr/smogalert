@@ -72,8 +72,9 @@
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-main-collapse">
                 Menu <i class="fa fa-bars"></i>
             </button>
-                <span class="nav navbar-nav">Air Quality Index ${fn:escapeXml(timeStamp)} is ${fn:escapeXml(airQualityIndex)}</span>
-
+            <a class="navbar-brand">
+                <span class="light">Air Quality Index ${fn:escapeXml(timeStamp)} is ${fn:escapeXml(airQualityIndex)}</span>
+            </a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -95,6 +96,7 @@
                 <li>
                     <a class="page-scroll" href="/">VN</a>
                 </li>
+
                     <a href='https://play.google.com/store/apps/details?id=com.disruptorbeam.StarTrekTimelines&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' height="50" width="129" src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
         </div>
         <!-- /.navbar-collapse -->
