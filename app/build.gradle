@@ -8,6 +8,11 @@ buildscript {
         classpath 'io.fabric.tools:gradle:1.+'
     }
 }
+allprojects {
+    repositories {
+        maven { url "https://jitpack.io" }
+    }
+}
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
@@ -65,11 +70,15 @@ dependencies {
     compile 'com.github.JakeWharton:ViewPagerIndicator:2.4.1'
     compile 'joda-time:joda-time:2.9.2'
     compile 'com.android.support:support-v4:23.3.0'
+    compile 'com.survivingwithandroid:weatherlib:1.6.0'
+    compile 'com.survivingwithandroid:weatherlib_okhttpclient:1.6.0'
+    compile 'com.squareup.okhttp:okhttp:2.0.+'
     compile 'com.android.support:design:23.3.0'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.facebook.android:facebook-android-sdk:4.+'
     compile group: 'org.json', name: 'json', version: '20160212'
     compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2'
+    compile 'com.github.PhilJay:MPAndroidChart:v3.0.0-beta1'
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true;
     }

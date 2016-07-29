@@ -30,7 +30,7 @@
             <android.support.v4.view.ViewPager
                 android:id="@+id/vpPager"
                 android:layout_width="match_parent"
-                android:layout_height="163dp"
+                android:layout_height="155dp"
                 android:layout_gravity="top"
                 android:background="#528" />
 
@@ -81,9 +81,8 @@
                 <android.support.v4.view.ViewPager
                     android:id="@+id/vpPager2"
                     android:layout_width="match_parent"
-                    android:layout_height="176dp"
-                    android:layout_gravity="top"
-                    android:background="#528" />
+                    android:layout_height="200dp"
+                    android:layout_gravity="top" />
 
 
                 <ImageView
