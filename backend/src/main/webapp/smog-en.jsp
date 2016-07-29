@@ -31,7 +31,7 @@
           .list();
     if (aqis.isEmpty()) {
 %>
-<strong>Oh snap!</strong> <a href="#" class="alert-link">No Samples Found</a>
+
 <%
     } else {
 
@@ -52,9 +52,9 @@
 %>
 
 
-=======
+
 <body>
-<center>  
+<center>
 
 </center>
 </body>
@@ -104,7 +104,7 @@
 
 <!-- Navigation -->
 <nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
-    <div class="container">
+    <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-main-collapse">
                 Menu <i class="fa fa-bars"></i>
@@ -133,10 +133,7 @@
                 <li>
                     <a class="page-scroll" href="/">VN</a>
                 </li>
-                <li>
-                <a href='https://play.google.com/store/apps/details?id=com.disruptorbeam.StarTrekTimelines&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' height="50" width="129" src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
-                </li>
-            </ul>
+                    <a href='https://play.google.com/store/apps/details?id=com.disruptorbeam.StarTrekTimelines&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' height="50" width="129" src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
         </div>
         <!-- /.navbar-collapse -->
     </div>
@@ -215,7 +212,7 @@ Khói Bụi</h1>
             ">
                     <h2>Download Khoi Bui</h2>
                     <p>You can download Khoi Bui for free from the Google Play Store.</p>
-                    <a href="http://startbootstrap.com/template-overviews/grayscale/" class="btn btn-default btn-lg" style="background-color:="#4FC3F7"><FONT COLOR="#4FC3F7">Visit Download Page</font></a>
+                    <a href='https://play.google.com/store/apps/details?id=com.disruptorbeam.StarTrekTimelines&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' height="100" width="255" src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
                 </div>
             </div>
         </div>
@@ -244,7 +241,6 @@ Khói Bụi</h1>
                     <a href="https://plus.google.com/u/2/106428478761684802811/posts" class="btn btn-default btn-lg"><i class="fa fa-google-plus fa-fw"></i> <span class="network-name">Google+</span></a>
                 </li>
             </ul>
--->
         </div>
     </div>
 </section>
@@ -253,15 +249,13 @@ Khói Bụi</h1>
 
 <!-- Footer -->
 <footer>
-    <div class="container text-center">
-        <p>Copyright &copy; Khói Bụi 2016</p>
+    <div class="center">
+        <p>Copyright &copy; Khoi Bui 2016</p>
     </div>
 </footer>
-
 <!--
 <!-- jQuery -->
 <script src="vendor/jquery/jquery.js"></script>
--->
 
 <!-- Bootstrap Core JavaScript -->
 <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
@@ -273,7 +267,6 @@ Khói Bụi</h1>
 
 <!-- Google Maps API Key - Use your own API key to enable the map feature. More information on the Google Maps API can be found at https://developers.google.com/maps/ -->
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRngKslUGJTlibkQ3FkfTxj3Xss1UlZDA&sensor=false"></script>
--->
 
 <!-- Theme JavaScript -->
 <script src="js/grayscale.min.js"></script>
