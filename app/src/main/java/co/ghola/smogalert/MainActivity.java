@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
     }
 
-    abstract private class BaseTask<T> extends AsyncTask<T, Void, Cursor> {
+    abstract private class BaseTask<T> extends AsyncTask<Integer, Void, Cursor> {
         final ContentResolver resolver;
 
         BaseTask(Context ctxt) {
@@ -183,9 +183,9 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         }
 
         @DebugLog
-        protected Cursor doQuery() {
-            Cursor result=resolver.query(DBContract.AirQualitySample.CONTENT_URI,
-                    DBContract.PROJECTION, null, null, "ts DESC LIMIT 1");
+        protected Cursor doQuery(int count) {
+            String args = String.format("ts DESC LIMIT %i", count);
+            Cursor result=resolver.query(DBContract.AirQualitySample.CONTENT_URI, DBContract.PROJECTION, null, null, args);
 
             return(result);
         }
@@ -197,8 +197,8 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         }
 
         @Override
-        protected Cursor doInBackground(Void... params) {
-            return (doQuery());
+        protected Cursor doInBackground(Integer... params) {
+            return (doQuery(params[0]));
         }
     }
 
@@ -260,7 +260,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     public void onResume(){
 
         super.onResume();
-        if (task==null) task=new LoadCursorTask(this).execute();
+        if (task==null) task=new LoadCursorTask(this).execute(1);
     }
 
 }
