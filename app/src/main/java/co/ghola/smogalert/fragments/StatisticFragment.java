@@ -1,42 +1,42 @@
 package co.ghola.smogalert.fragments;
 
-import android.content.ContentResolver;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.RectF;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.AxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
-import co.ghola.smogalert.MainActivity;
 import co.ghola.smogalert.R;
 import co.ghola.smogalert.chart.DayAxisValueFormatter;
 import co.ghola.smogalert.chart.MyAxisValueFormatter;
@@ -44,8 +44,9 @@ import co.ghola.smogalert.chart.XYMarkerView;
 import co.ghola.smogalert.db.DBContract;
 import co.ghola.smogalert.utils.BaseTask;
 import co.ghola.smogalert.utils.Constants;
-import co.ghola.smogalert.utils.HelperSharedPreferences;
-import hugo.weaving.DebugLog;
+import rx.Observable;
+import rx.Subscriber;
+import rx.functions.Func1;
 
 /**
  * Created by alecksjohansson on 7/21/16.
@@ -54,12 +55,15 @@ public class StatisticFragment extends android.support.v4.app.Fragment {
     // Store instance variables
     private String title;
     private int page;
-    private BarChart mBarChart;
+    private LineChart mLineChart;
     private AsyncTask task = null;
     private String shareText = "";
-
-    BarDataSet mDataSet;
-    private SeekBar mSeekBarX, mSeekBarY;
+    int array;
+    List<Integer> integerList = new ArrayList<>();
+    List<Integer> InteArray = new ArrayList<>();
+    //ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
+    float start = 0f;
+    private Handler mHandler = new Handler();
 
 
     // newInstance constructor for creating fragment with arguments
@@ -80,56 +84,63 @@ public class StatisticFragment extends android.support.v4.app.Fragment {
         title = getArguments().getString("someTitle");
 
     }
-
-    private void setData(int count, float range) {
-
+    public int mCount = 0;
+    public List<Integer> mList = new ArrayList<>();
+    private void setData(int count,List<Integer> input) {
         float start = 0f;
 
-        mBarChart.getXAxis().setAxisMinValue(start);
-        mBarChart.getXAxis().setAxisMaxValue(start + count + 2);
+        mLineChart.getXAxis().setAxisMinValue(start);
+        mLineChart.getXAxis().setAxisMaxValue(start + count +2);
 
-        ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
+        ArrayList<Entry> yVals1 = new ArrayList<Entry>();
 
         for (int i = (int) start; i < start + count + 1; i++) {
-            float mult = (range + 1);
-            float val = (float) (Math.random() * mult);
-            yVals1.add(new BarEntry(i + 1f, val));
+            float val = input.get(i).floatValue();
+
+            yVals1.add(new Entry(i + 1f, Math.round(val)));
         }
 
-        BarDataSet set1;
+        LineDataSet set1;
 
-        if (mBarChart.getData() != null &&
-                mBarChart.getData().getDataSetCount() > 0) {
-            set1 = (BarDataSet) mBarChart.getData().getDataSetByIndex(0);
+        if (mLineChart.getData() != null &&
+                mLineChart.getData().getDataSetCount() > 0) {
+            set1 = (LineDataSet) mLineChart.getData().getDataSetByIndex(0);
             set1.setValues(yVals1);
-            mBarChart.getData().notifyDataChanged();
-            mBarChart.notifyDataSetChanged();
+            mLineChart.getData().notifyDataChanged();
+            mLineChart.notifyDataSetChanged();
         } else {
-            set1 = new BarDataSet(yVals1, "The year 2017");
+            set1 = new LineDataSet(yVals1, "AQI year 2017");
             set1.setColors(ColorTemplate.MATERIAL_COLORS);
-
-            ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
+            set1.enableDashedLine(10f, 5f, 0f);
+            set1.enableDashedHighlightLine(10f, 5f, 0f);
+            set1.setCircleColor(Color.BLACK);
+            set1.setLineWidth(2f);
+            set1.setCircleRadius(3f);
+            set1.setDrawCircleHole(true);
+            set1.setValueTextSize(9f);
+            set1.setDrawFilled(true);
+            ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
             dataSets.add(set1);
 
-            BarData data = new BarData(dataSets);
+            LineData data = new LineData(dataSets);
             data.setValueTextSize(10f);
             //data.setValueTypeface(mTfLight);
-            data.setBarWidth(0.9f);
+            //data.s(0.9f);
 
-            mBarChart.setData(data);
+            mLineChart.setData(data);
         }
     }
 
-    
+
     // Inflate the view for the fragment based on layout XML
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.second_fragment, container, false);
-            mBarChart =(BarChart) view.findViewById(R.id.chart);
-        AxisValueFormatter xAxisFormatter = new DayAxisValueFormatter(mBarChart);
+        mLineChart = (LineChart) view.findViewById(R.id.chart);
+        AxisValueFormatter xAxisFormatter = new DayAxisValueFormatter(mLineChart);
 
-        XAxis xAxis = mBarChart.getXAxis();
+        XAxis xAxis = mLineChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         //xAxis.setTypeface(mTfLight);
         xAxis.setDrawGridLines(false);
@@ -139,7 +150,7 @@ public class StatisticFragment extends android.support.v4.app.Fragment {
 
         AxisValueFormatter custom = new MyAxisValueFormatter();
 
-        YAxis leftAxis = mBarChart.getAxisLeft();
+        YAxis leftAxis = mLineChart.getAxisLeft();
         //leftAxis.setTypeface(mTfLight);
         leftAxis.setLabelCount(8, false);
         leftAxis.setValueFormatter(custom);
@@ -147,7 +158,7 @@ public class StatisticFragment extends android.support.v4.app.Fragment {
         leftAxis.setSpaceTop(15f);
         leftAxis.setAxisMinValue(0f); // this replaces setStartAtZero(true)
 
-        YAxis rightAxis = mBarChart.getAxisRight();
+        YAxis rightAxis = mLineChart.getAxisRight();
         rightAxis.setDrawGridLines(false);
         //rightAxis.setTypeface(mTfLight);
         rightAxis.setLabelCount(8, false);
@@ -155,14 +166,19 @@ public class StatisticFragment extends android.support.v4.app.Fragment {
         rightAxis.setSpaceTop(15f);
         rightAxis.setAxisMinValue(0f); // this replaces setStartAtZero(true)
 
-        Legend l = mBarChart.getLegend();
+        Legend l = mLineChart.getLegend();
         l.setPosition(Legend.LegendPosition.BELOW_CHART_LEFT);
         l.setForm(Legend.LegendForm.SQUARE);
         l.setFormSize(9f);
         l.setTextSize(11f);
         l.setXEntrySpace(4f);
-        mBarChart.setMarkerView(new XYMarkerView(getContext(), xAxisFormatter));
-        setData(6, 200);
+
+        //Set LineChart Attribute
+        mLineChart.setMarkerView(new XYMarkerView(getContext(), xAxisFormatter));
+        mLineChart.setDescription("");
+        mLineChart.setNoDataText("There are no data currently");
+        mLineChart.setDrawGridBackground(false);
+
         return view;
     }
 
@@ -170,20 +186,82 @@ public class StatisticFragment extends android.support.v4.app.Fragment {
         LoadCursorTask(Context ctxt) {
             super(ctxt);
         }
+
         @Override
         public void onPostExecute(Cursor result) {
+
             if (result.getCount() > 0) {
-                for(int i=0;i<250;i++) {
+                int size = 168;
+                List<String> aqis = new ArrayList<>(size);
+                for (int i = 0; i < size; i++) {
                     result.moveToPosition(i);
-                    String aqi = result.getString(DBContract.COLUMN_IDX_AQI);
-                    Log.d("res", "" + aqi);
+                    aqis.add(result.getString(DBContract.COLUMN_IDX_AQI));
                 }
+                Observable.from(aqis)
+                        .map(new Func1<String, Integer>() {
+                            @Override
+                            public Integer call(String s) {
+                                return Integer.parseInt(s);
+                            }
+                        })
+                        .buffer(24)
+                        .map(new Func1<List<Integer>, Integer>() {
+                            @Override
+                            public Integer call(List<Integer> integers) {
+                                int sum = 0;
+                                for (int i = 0, size = integers.size(); i < size; i++) {
+                                    sum += integers.get(i);
+                                }
+                                return sum / integers.size();
+                            }
+                        })
+                        .toList()
+                        .subscribe(new Subscriber<List<Integer>>() {
+                            @Override
+                            public void onCompleted() {
+
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+
+                            @Override
+                            public void onNext(List<Integer> integers) {
+                                integerList.addAll(integers);
+                                integerList = InteArray;
+                                setData(6,integers);
+                                //list average of each 24 elements
+                            }
+                        });
+
+
+
+//                Observable<ArrayList<String>> burstyBuffered = new Observable<ArrayList<Integer>>;
+//                ArrayList<Integer> mStoreData= new ArrayList<>();
+
+//                for(int i=0; i < 168; i++) {
+//                    result.moveToPosition(i);
+//                    String aqi = result.getString(DBContract.COLUMN_IDX_AQI);
+//                    burstyBuffered.onNext
+//                        if( buffer.size() == 24 ) {
+//                            for (String value : buffer) {
+//                                value += value;
+//                                array = Integer.parseInt(value) / 24;
+//                            }
+//                        }
+//                        mStoreData.add(array);
+//                        Log.d("Data", "Array" + mStoreData);
+//                }
             }
-            task=null;
+            task = null;
         }
+
         @Subscribe(threadMode = ThreadMode.MAIN)
-        public void doThis(String text){
-            if (task == null) task=new LoadCursorTask(getContext()).execute(new Integer(Constants.LAST_7_DAYS));
+        public void doThis(String text) {
+            if (task == null)
+                task = new LoadCursorTask(getContext()).execute(new Integer(Constants.LAST_7_DAYS));
         }
 
         @Override
@@ -197,6 +275,7 @@ public class StatisticFragment extends android.support.v4.app.Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (task==null) task=new LoadCursorTask(getActivity()).execute(new Integer(Constants.LAST_7_DAYS));
+        if (task == null)
+            task = new LoadCursorTask(getActivity()).execute(new Integer(Constants.LAST_7_DAYS));
     }
 }
