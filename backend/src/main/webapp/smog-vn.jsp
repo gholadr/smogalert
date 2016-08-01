@@ -189,7 +189,7 @@ Khói Bụi</h1>
         <div class="col-lg-8 col-lg-offset-2">
             <h2>Liên Hệ</h2>
             <p>Đừng ngại liên hệ chúng tôi với Email</p>
-            <p><a href="mailto:feedback@startbootstrap.com">gholadr@gmail.com</a>
+            <p><a href="mailto:gholadr@gmail.com">gholadr@gmail.com</a>
             </p>
         </div>
     </div>

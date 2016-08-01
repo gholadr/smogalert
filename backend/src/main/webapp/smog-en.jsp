@@ -189,7 +189,7 @@ Khói Bụi</h1>
         <div class="col-lg-8 col-lg-offset-2">
             <h2>Contact Us</h2>
             <p>Feel free to email us to provide some feedback on our app, or to just say hello!</p>
-            <p><a href="mailto:feedback@startbootstrap.com">gholadr@gmail.com</a>
+            <p><a href="mailto:gholadr@gmail.com">gholadr@gmail.com</a>
             </p>
             <!--
             <ul class="list-inline banner-social-buttons">
