@@ -15,12 +15,12 @@ public class MyAxisValueFormatter implements AxisValueFormatter {
     private FormattedStringCache.PrimFloat mFormattedStringCache;
 
     public MyAxisValueFormatter() {
-        mFormattedStringCache = new FormattedStringCache.PrimFloat(new DecimalFormat("###,###,###,##0.0"));
+        mFormattedStringCache = new FormattedStringCache.PrimFloat(new DecimalFormat("###,###,###,##0"));
     }
 
     @Override
     public String getFormattedValue(float value, AxisBase axis) {
-        return mFormattedStringCache.getFormattedValue(value) + " AQI";
+        return mFormattedStringCache.getFormattedValue(value);
     }
 
     @Override

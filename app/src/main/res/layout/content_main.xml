@@ -30,7 +30,7 @@
             <android.support.v4.view.ViewPager
                 android:id="@+id/vpPager"
                 android:layout_width="match_parent"
-                android:layout_height="155dp"
+                android:layout_height="139dp"
                 android:layout_gravity="top"
                 android:background="#528" />
 
@@ -90,14 +90,14 @@
                     android:layout_width="38dp"
                     android:layout_height="38dp"
                     android:layout_gravity="center_vertical|left"
-                    android:src="@drawable/ic_keyboard_arrow_left_white_24dp" />
+                    android:src="@drawable/ic_arrow_left_black" />
 
                 <ImageView
                     android:id="@+id/right_nav2"
                     android:layout_width="38dp"
                     android:layout_height="38dp"
                     android:layout_gravity="center_vertical|right"
-                    android:src="@drawable/ic_keyboard_arrow_right_white_24dp" />
+                    android:src="@drawable/ic_arrow_right_black" />
 
                 <com.viewpagerindicator.CirclePageIndicator
                     android:id="@+id/indicator2"

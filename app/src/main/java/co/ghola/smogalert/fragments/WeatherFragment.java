@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.survivingwithandroid.weather.lib.WeatherClient;
 import com.survivingwithandroid.weather.lib.WeatherConfig;
@@ -17,14 +16,9 @@ import com.survivingwithandroid.weather.lib.exception.WeatherLibException;
 import com.survivingwithandroid.weather.lib.exception.WeatherProviderInstantiationException;
 import com.survivingwithandroid.weather.lib.model.CurrentWeather;
 import com.survivingwithandroid.weather.lib.model.Weather;
-import com.survivingwithandroid.weather.lib.provider.IWeatherProvider;
-import com.survivingwithandroid.weather.lib.provider.WeatherProviderFactory;
-import com.survivingwithandroid.weather.lib.provider.forecastio.ForecastIOProviderType;
 import com.survivingwithandroid.weather.lib.provider.openweathermap.OpenweathermapProviderType;
-import com.survivingwithandroid.weather.lib.provider.yahooweather.YahooProviderType;
 import com.survivingwithandroid.weather.lib.request.WeatherRequest;
 import com.survivingwithandroid.weather.lib.util.LogUtils;
-import com.survivingwithandroid.weather.lib.util.WeatherUtility;
 import com.survivingwithandroid.weather.lib.util.WindDirection;
 
 import co.ghola.smogalert.IconMapper.WeatherIconMapper;
@@ -32,9 +26,9 @@ import co.ghola.smogalert.IconMapper.WeatherUtil;
 import co.ghola.smogalert.R;
 
 /**
- * Created by alecksjohansson on 7/21/16.
+ * Created by alecksjohansson on 8/1/16.
  */
-public class LocationFragment extends Fragment {
+public class WeatherFragment extends Fragment {
     // Store instance variables
     private String title;
     private int page;
@@ -45,13 +39,13 @@ public class LocationFragment extends Fragment {
 
 
     // newInstance constructor for creating fragment with arguments
-    public static LocationFragment newInstance(int page, String title) {
-        LocationFragment mLocationFragment= new LocationFragment();
+    public static WeatherFragment newInstance(int page, String title) {
+        WeatherFragment mWeatherFragment= new WeatherFragment();
         Bundle args = new Bundle();
         args.putInt("someInt", page);
         args.putString("someTitle", title);
-        mLocationFragment.setArguments(args);
-        return mLocationFragment;
+        mWeatherFragment.setArguments(args);
+        return mWeatherFragment;
     }
 
     // Store instance variables based on arguments passed
@@ -68,13 +62,16 @@ public class LocationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View v = inflater.inflate(R.layout.third_fragment, container, false);
+        final View v = inflater.inflate(R.layout.fouth_fragment, container, false);
         final TextView cityText = (TextView) v.findViewById(R.id.location);
-        final TextView temp = (TextView) v.findViewById(R.id.temp);
-        final TextView condDescr = (TextView) v.findViewById(R.id.descrWeather);
-        final TextView unitTemp = (TextView) v.findViewById(R.id.tempUnit);
-        final ImageView imgView = (ImageView) v.findViewById(R.id.imgWeather);
-        final TextView colorTextLine = (TextView) v.findViewById(R.id.lineTxt);
+        final TextView hum = (TextView) v.findViewById(R.id.humidity);
+        final TextView press = (TextView) v.findViewById(R.id.pressure);
+        final TextView windSpeed = (TextView) v.findViewById(R.id.windSpeed);
+        final TextView windDeg = (TextView) v.findViewById(R.id.windDeg);
+        final TextView tempMin = (TextView) v.findViewById(R.id.tempMin);
+        final TextView tempMax = (TextView) v.findViewById(R.id.tempMax);
+        final TextView sunset = (TextView) v.findViewById(R.id.sunset);
+        final TextView sunRise = (TextView) v.findViewById(R.id.sunrise);
 
 
         final WeatherConfig config = new WeatherConfig();
@@ -86,7 +83,7 @@ public class LocationFragment extends Fragment {
         WeatherClient.ClientBuilder builder = new WeatherClient.ClientBuilder();
         WeatherClient client = null;
         try {
-             client = builder.attach(getActivity())
+            client = builder.attach(getActivity())
                     .provider(new OpenweathermapProviderType())
                     .httpClient(WeatherDefaultClient.class)
                     .config(new WeatherConfig())
@@ -95,35 +92,39 @@ public class LocationFragment extends Fragment {
             e.printStackTrace();
         }
         client.updateWeatherConfig(config);
-            client.getCurrentCondition(new WeatherRequest("1566083"), new WeatherClient.WeatherEventListener() {
-                @Override
-                public void onWeatherRetrieved(CurrentWeather currentWeather) {
-                    Weather weather = currentWeather.weather;
-                    cityText.setText(weather.location.getCity() + "," + weather.location.getCountry());
-                    condDescr.setText(weather.currentCondition.getCondition() + "(" + weather.currentCondition.getDescr() + ")");
-                    LogUtils.LOGD("SwA", "Val [" + weather.temperature.getTemp() + "]");
-                    temp.setText("" + ((int) weather.temperature.getTemp()));
-                    unitTemp.setText(currentWeather.getUnit().tempUnit);
-                    colorTextLine.setBackgroundResource(WeatherUtil.getResource(weather.temperature.getTemp(), config));
-                    imgView.setImageResource(WeatherIconMapper.getWeatherResource(weather.currentCondition.getIcon(), weather.currentCondition.getWeatherId()));
+        client.getCurrentCondition(new WeatherRequest("1566083"), new WeatherClient.WeatherEventListener() {
+            @Override
+            public void onWeatherRetrieved(CurrentWeather currentWeather) {
+                Weather weather = currentWeather.weather;
+                cityText.setText(weather.location.getCity() + "," + weather.location.getCountry());
+                LogUtils.LOGD("SwA", "Val [" + weather.temperature.getTemp() + "]");
+                Log.d("test","test"+cityText);
+                hum.setText(weather.currentCondition.getHumidity() + "%");
+                tempMin.setText(weather.temperature.getMinTemp() + currentWeather.getUnit().tempUnit);
+                tempMax.setText(weather.temperature.getMaxTemp() + currentWeather.getUnit().tempUnit);
+                windSpeed.setText(weather.wind.getSpeed() + currentWeather.getUnit().speedUnit);
+                windDeg.setText((int) weather.wind.getDeg() + "° (" + WindDirection.getDir((int) weather.wind.getDeg()) + ")");
+                press.setText(weather.currentCondition.getPressure() + currentWeather.getUnit().pressureUnit);
+                sunset.setText(WeatherUtil.convertDate(weather.location.getSunset()));
+                sunRise.setText(WeatherUtil.convertDate(weather.location.getSunrise()));
 
-                }
+
+            }
 
 
 
 
-                @Override
-                public void onConnectionError(Throwable t) {
-                    Log.d("WL", "Connection Error - parsing data");
-                }
+            @Override
+            public void onConnectionError(Throwable t) {
+                Log.d("WL", "Connection Error - parsing data");
+            }
 
-                @Override
-                public void onWeatherError(WeatherLibException wle) {
-                    Log.d("WL", "Weather Error - parsing data");
-                    wle.printStackTrace();
-                }
-            });
+            @Override
+            public void onWeatherError(WeatherLibException wle) {
+                Log.d("WL", "Weather Error - parsing data");
+                wle.printStackTrace();
+            }
+        });
         return v;
     }
 }
-

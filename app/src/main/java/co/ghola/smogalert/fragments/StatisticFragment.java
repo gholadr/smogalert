@@ -193,6 +193,10 @@ public class StatisticFragment extends android.support.v4.app.Fragment {
             if (result.getCount() > 0) {
                 int size = 168;
                 List<String> aqis = new ArrayList<>(size);
+                if(aqis.size() < 24)
+                {
+                    size = result.getCount();
+                }
                 for (int i = 0; i < size; i++) {
                     result.moveToPosition(i);
                     aqis.add(result.getString(DBContract.COLUMN_IDX_AQI));
@@ -235,7 +239,6 @@ public class StatisticFragment extends android.support.v4.app.Fragment {
                                 //list average of each 24 elements
                             }
                         });
-
 
 
 //                Observable<ArrayList<String>> burstyBuffered = new Observable<ArrayList<Integer>>;

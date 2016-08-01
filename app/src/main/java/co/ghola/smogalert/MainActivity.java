@@ -47,9 +47,11 @@ import org.joda.time.DateTimeZone;
 import co.ghola.smogalert.async.SyncUtils;
 import co.ghola.smogalert.db.DBContract;
 import co.ghola.smogalert.fragments.LocationFragment;
+import co.ghola.smogalert.fragments.Statistic2Fragment;
 import co.ghola.smogalert.fragments.StatisticFragment;
 import co.ghola.smogalert.fragments.Summary2Fragment;
 import co.ghola.smogalert.fragments.SummaryFragment;
+import co.ghola.smogalert.fragments.WeatherFragment;
 import co.ghola.smogalert.utils.BaseTask;
 import co.ghola.smogalert.utils.Constants;
 import co.ghola.smogalert.utils.HelperSharedPreferences;
@@ -64,16 +66,20 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     private String shareText = "";
     FragmentPagerAdapter mAdapterViewPager;
     FragmentPagerAdapter mAdapterViewPager1;
+    FragmentPagerAdapter mAdapterViewPager2;
     ShareDialog shareDialog;
     private ViewPager vpPager;
     private ViewPager vpPager2;
     private ViewPager vpPager3;
     private int tab1;
     private int tab2;
+    private int tab3;
     private ImageView leftNav2;
     private ImageView rightNav2;
-    ImageView leftNav;
-    ImageView rightNav;
+    private ImageView leftNav;
+    private ImageView rightNav;
+    private ImageView leftNav3;
+    private ImageView rightNav3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,20 +110,27 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         setViewPagerListener();
         getSwipePosition();
 
-        //ViewPager2 Properies
+        //ViewPager2 Properties
         vpPager2 = (ViewPager) findViewById(R.id.vpPager2);
         tab2 = vpPager2.getCurrentItem();
         setViewPagerListener2();
         getSwipePosition2();
-
+        //ViewPager 3 Properties
         vpPager3 = (ViewPager) findViewById(R.id.vpPager3);
+        tab3= vpPager3.getCurrentItem();
+        setViewPagerListener3();
+        getSwipePosition3();
+
+        //Initilize new AdapterViewPager
         mAdapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
         mAdapterViewPager1 = new MyPagerAdapter1(getSupportFragmentManager());
+        mAdapterViewPager2 =new MyPagerAdapter3(getSupportFragmentManager());
+
 
         //Set Adapter for ViewPagers
         vpPager.setAdapter(mAdapterViewPager);
         vpPager2.setAdapter(mAdapterViewPager1);
-        vpPager3.setAdapter(mAdapterViewPager);
+        vpPager3.setAdapter(mAdapterViewPager2);
 
         //Set Indicators for ViewPagers
         CirclePageIndicator titleIndicator = (CirclePageIndicator) findViewById(R.id.indicator);
@@ -128,6 +141,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         titleIndicator3.setViewPager(vpPager3);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setBackgroundColor(getResources().getColor(R.color.lightblue1));
         assert fab != null;
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -366,9 +380,43 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
             switch (position) {
 
                 case 0: // Fragment # 1 - This will show SecondFragment
-                    return LocationFragment.newInstance(0, "Page # 3");
+                    return Statistic2Fragment.newInstance(0, "Page # 3");
                 case 1: // Fragment # 1 - This will show SecondFragment
                     return StatisticFragment.newInstance(1, "Page # 4");
+                default:
+                    return null;
+            }
+        }
+
+        // Returns the page title for the top indicator
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return "Page " + position;
+        }
+
+    }
+    public static class MyPagerAdapter3 extends FragmentPagerAdapter {
+        private static int NUM_ITEMS = 2;
+
+        public MyPagerAdapter3(FragmentManager fragmentManager) {
+            super(fragmentManager);
+        }
+
+        // Returns total number of pages
+        @Override
+        public int getCount() {
+            return NUM_ITEMS;
+        }
+
+        // Returns the fragment to display for that page
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+
+                case 0: // Fragment # 1 - This will show SecondFragment
+                    return LocationFragment.newInstance(0, "Page # 1");
+                case 1: // Fragment # 1 - This will show SecondFragment
+                    return WeatherFragment.newInstance(1, "Page # 2");
                 default:
                     return null;
             }
@@ -510,7 +558,70 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         });
     }
 
+    private void setViewPagerListener3()
+    {
+        leftNav3 = (ImageView) findViewById(R.id.left_nav3);
+        rightNav3 = (ImageView) findViewById(R.id.right_nav3);
+        leftNav3.setVisibility(View.INVISIBLE);
+        leftNav3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (tab3 == 1) {
+                    leftNav3.setVisibility(View.INVISIBLE);
+                    rightNav3.setVisibility(View.VISIBLE);
+                }
+                if (tab3 > 0) {
+                    tab3--;
+                    vpPager3.setCurrentItem(tab3);
+                } else if (tab3 == 0) {
+                    vpPager3.setCurrentItem(tab3);
+                }
+            }
+        });
 
+        rightNav3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tab3 = vpPager3.getCurrentItem();
+                if (tab3 == 0) {
+                    leftNav3.setVisibility(View.VISIBLE);
+                    rightNav3.setVisibility(View.INVISIBLE);
+                }
+
+                tab3++;
+                vpPager3.setCurrentItem(tab3);
+            }
+        });
+    }
+
+    private void getSwipePosition3()
+    {
+        vpPager3.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                if(position == 1)
+                {
+                    rightNav3.setVisibility(View.INVISIBLE);
+                    leftNav3.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    leftNav3.setVisibility(View.INVISIBLE);
+                    rightNav3.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+    }
 
     private void passData(String shareText) {
         SharedPreferences pref = this.getPreferences(0);
