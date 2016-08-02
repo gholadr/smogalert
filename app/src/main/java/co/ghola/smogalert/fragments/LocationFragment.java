@@ -1,6 +1,7 @@
 package co.ghola.smogalert.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -74,14 +75,16 @@ public class LocationFragment extends Fragment {
         final TextView unitTemp = (TextView) v.findViewById(R.id.tempUnit);
         final ImageView imgView = (ImageView) v.findViewById(R.id.imgWeather);
         final TextView colorTextLine = (TextView) v.findViewById(R.id.lineTxt);
-
-
         final WeatherConfig config = new WeatherConfig();
         config.unitSystem = WeatherConfig.UNIT_SYSTEM.M;
         config.lang = "en";
         config.maxResult = 5;
         config.numDays = 6;
         config.ApiKey = "fc7ebfbabac03248af36d7adb9244b0b";
+        final Handler handler = new Handler();
+        final Runnable thisThread = new Runnable() {
+            @Override
+            public void run() {
         WeatherClient.ClientBuilder builder = new WeatherClient.ClientBuilder();
         WeatherClient client = null;
         try {
@@ -93,35 +96,39 @@ public class LocationFragment extends Fragment {
         } catch (WeatherProviderInstantiationException e) {
             e.printStackTrace();
         }
-        client.updateWeatherConfig(config);
-            client.getCurrentCondition(new WeatherRequest("1566083"), new WeatherClient.WeatherEventListener() {
-                @Override
-                public void onWeatherRetrieved(CurrentWeather currentWeather) {
-                    Weather weather = currentWeather.weather;
-                    cityText.setText(weather.location.getCity() + "," + weather.location.getCountry());
-                    condDescr.setText(weather.currentCondition.getCondition() + "(" + weather.currentCondition.getDescr() + ")");
-                    LogUtils.LOGD("SwA", "Val [" + weather.temperature.getTemp() + "]");
-                    temp.setText("" + ((int) weather.temperature.getTemp()));
-                    unitTemp.setText(currentWeather.getUnit().tempUnit);
-                    colorTextLine.setBackgroundResource(WeatherUtil.getResource(weather.temperature.getTemp(), config));
-                    imgView.setImageResource(WeatherIconMapper.getWeatherResource(weather.currentCondition.getIcon(), weather.currentCondition.getWeatherId()));
-
-                }
-
-
+                handler.postDelayed(this,15000);
+                client.updateWeatherConfig(config);
+                client.getCurrentCondition(new WeatherRequest("1566083"), new WeatherClient.WeatherEventListener() {
+                    @Override
+                    public void onWeatherRetrieved(CurrentWeather currentWeather) {
+                        Weather weather = currentWeather.weather;
+                        cityText.setText(weather.location.getCity() + "," + weather.location.getCountry());
+                        condDescr.setText(weather.currentCondition.getCondition() + "(" + weather.currentCondition.getDescr() + ")");
+                        LogUtils.LOGD("SwA", "Val [" + weather.temperature.getTemp() + "]");
+                        temp.setText("" + ((int) weather.temperature.getTemp()));
+                        unitTemp.setText(currentWeather.getUnit().tempUnit);
+                        colorTextLine.setBackgroundResource(WeatherUtil.getResource(weather.temperature.getTemp(), config));
+                        imgView.setImageResource(WeatherIconMapper.getWeatherResource(weather.currentCondition.getIcon(), weather.currentCondition.getWeatherId()));
+                    }
 
 
-                @Override
-                public void onConnectionError(Throwable t) {
-                    Log.d("WL", "Connection Error - parsing data");
-                }
+                    @Override
+                    public void onConnectionError(Throwable t) {
+                        Log.d("WL", "Connection Error - parsing data");
+                    }
 
-                @Override
-                public void onWeatherError(WeatherLibException wle) {
-                    Log.d("WL", "Weather Error - parsing data");
-                    wle.printStackTrace();
-                }
-            });
+                    @Override
+                    public void onWeatherError(WeatherLibException wle) {
+                        Log.d("WL", "Weather Error - parsing data");
+                        wle.printStackTrace();
+                    }
+
+                });
+
+            }
+
+        };
+        thisThread.run();
         return v;
     }
 }

@@ -1,6 +1,7 @@
 package co.ghola.smogalert.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -72,57 +73,61 @@ public class WeatherFragment extends Fragment {
         final TextView tempMax = (TextView) v.findViewById(R.id.tempMax);
         final TextView sunset = (TextView) v.findViewById(R.id.sunset);
         final TextView sunRise = (TextView) v.findViewById(R.id.sunrise);
-
-
-        final WeatherConfig config = new WeatherConfig();
-        config.unitSystem = WeatherConfig.UNIT_SYSTEM.M;
-        config.lang = "en";
-        config.maxResult = 5;
-        config.numDays = 6;
-        config.ApiKey = "fc7ebfbabac03248af36d7adb9244b0b";
-        WeatherClient.ClientBuilder builder = new WeatherClient.ClientBuilder();
-        WeatherClient client = null;
-        try {
-            client = builder.attach(getActivity())
-                    .provider(new OpenweathermapProviderType())
-                    .httpClient(WeatherDefaultClient.class)
-                    .config(new WeatherConfig())
-                    .build();
-        } catch (WeatherProviderInstantiationException e) {
-            e.printStackTrace();
-        }
-        client.updateWeatherConfig(config);
-        client.getCurrentCondition(new WeatherRequest("1566083"), new WeatherClient.WeatherEventListener() {
+        final Handler handler = new Handler();
+        final Runnable thisThread = new Runnable() {
             @Override
-            public void onWeatherRetrieved(CurrentWeather currentWeather) {
-                Weather weather = currentWeather.weather;
-                cityText.setText(weather.location.getCity() + "," + weather.location.getCountry());
-                LogUtils.LOGD("SwA", "Val [" + weather.temperature.getTemp() + "]");
-                Log.d("test","test"+cityText);
-                hum.setText(weather.currentCondition.getHumidity() + "%");
-                tempMin.setText(weather.temperature.getMinTemp() + currentWeather.getUnit().tempUnit);
-                tempMax.setText(weather.temperature.getMaxTemp() + currentWeather.getUnit().tempUnit);
-                windSpeed.setText(weather.wind.getSpeed() + currentWeather.getUnit().speedUnit);
-                windDeg.setText((int) weather.wind.getDeg() + "° (" + WindDirection.getDir((int) weather.wind.getDeg()) + ")");
-                press.setText(weather.currentCondition.getPressure() + currentWeather.getUnit().pressureUnit);
-                sunset.setText(WeatherUtil.convertDate(weather.location.getSunset()));
-                sunRise.setText(WeatherUtil.convertDate(weather.location.getSunrise()));
+            public void run() {
+               handler.postDelayed(this,15000);
+                final WeatherConfig config = new WeatherConfig();
+                config.unitSystem = WeatherConfig.UNIT_SYSTEM.M;
+                config.lang = "en";
+                config.maxResult = 5;
+                config.numDays = 6;
+                config.ApiKey = "fc7ebfbabac03248af36d7adb9244b0b";
+                WeatherClient.ClientBuilder builder = new WeatherClient.ClientBuilder();
+                WeatherClient client = null;
+                try {
+                    client = builder.attach(getActivity())
+                            .provider(new OpenweathermapProviderType())
+                            .httpClient(WeatherDefaultClient.class)
+                            .config(new WeatherConfig())
+                            .build();
+                } catch (WeatherProviderInstantiationException e) {
+                    e.printStackTrace();
+                }
+                client.updateWeatherConfig(config);
+                client.getCurrentCondition(new WeatherRequest("1566083"), new WeatherClient.WeatherEventListener() {
+                    @Override
+                    public void onWeatherRetrieved(CurrentWeather currentWeather) {
+                        Weather weather = currentWeather.weather;
+                        cityText.setText(weather.location.getCity() + "," + weather.location.getCountry());
+                        LogUtils.LOGD("SwA", "Val [" + weather.temperature.getTemp() + "]");
+                        Log.d("test", "test" + cityText);
+                        hum.setText(weather.currentCondition.getHumidity() + "%");
+                        tempMin.setText(weather.temperature.getMinTemp() + currentWeather.getUnit().tempUnit);
+                        tempMax.setText(weather.temperature.getMaxTemp() + currentWeather.getUnit().tempUnit);
+                        windSpeed.setText(weather.wind.getSpeed() + currentWeather.getUnit().speedUnit);
+                        windDeg.setText((int) weather.wind.getDeg() + "° (" + WindDirection.getDir((int) weather.wind.getDeg()) + ")");
+                        press.setText(weather.currentCondition.getPressure() + currentWeather.getUnit().pressureUnit);
+                        sunset.setText(WeatherUtil.convertDate(weather.location.getSunset()));
+                        sunRise.setText(WeatherUtil.convertDate(weather.location.getSunrise()));
+                    }
+
+
+                    @Override
+                    public void onConnectionError(Throwable t) {
+                        Log.d("WL", "Connection Error - parsing data");
+                    }
+
+                    @Override
+                    public void onWeatherError(WeatherLibException wle) {
+                        Log.d("WL", "Weather Error - parsing data");
+                        wle.printStackTrace();
+                    }
+                });
             }
-
-
-
-
-            @Override
-            public void onConnectionError(Throwable t) {
-                Log.d("WL", "Connection Error - parsing data");
-            }
-
-            @Override
-            public void onWeatherError(WeatherLibException wle) {
-                Log.d("WL", "Weather Error - parsing data");
-                wle.printStackTrace();
-            }
-        });
+        };
+        thisThread.run();
         return v;
     }
 }
