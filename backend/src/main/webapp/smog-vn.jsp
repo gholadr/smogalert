@@ -116,7 +116,7 @@ Khói Bụi</h1>
                     <div class="jumbotron" style="background-color: rgba(0, 0, 0, 0.5);
 ">
                         <p class="intro-text">Thở dễ dàng.</br>
-                          Khói Bụi là ứng dụng thời gian thực, và có độ chính xác cao để đo chất lượng không khí ở Thành Phố Hồ Chí Minh. </br>
+                          Khói Bụi là ứng dụng thời gian thực, để đo chất lượng không khí ở Thành Phố Hồ Chí Minh. </br>
                           <span class="small"></span>
                           </p>
 
@@ -141,7 +141,7 @@ Khói Bụi</h1>
                     <div class="icon-block">
                         <h1 class="brand-heading">Giới Thiệu Khói Bụi</h1>
                         <p class="light">Khói Bụi đo chỉ số chất lượng không khí (<a href="https://en.wikipedia.org/wiki/Air_quality_index">AQI</a>), là một con số được sử dụng bởi chính phủ và tổ chức y tế toàn cầu để chỉ ra mức độ ô nhiễm của không khí.
-                        Khi ô nhiễm bao trùm thành phố, nó ảnh hưởng đến tất cả mọi người, bất kể nơi đâu bạn sống trong Thành Phố Hồ Chí Minh. Nhóm nguời dễ bị ảnh hưởng nhất là trẻ sơ sinh, người già và những người có bệnh về đường hô hấp mãn tính.</p>
+                        Khi thành phố bị ô nhiễm, nó ảnh hưởng đến tất cả mọi người, bất kể bạn đang sống nơi đâu trong Thành Phố Hồ Chí Minh. Nhóm nguời dễ bị ảnh hưởng nhất là trẻ sơ sinh, người già và những người có bệnh về đường hô hấp mãn tính.</p>
                         <h4 class="center"><font color="#4FC3F7">Giám sát chất lượng không khí chính xác</font></h4>
                         <p class="light">Ứng dụng lấy dữ liệu thời gian thực từ Đại Sứ quán Mỹ ở Quận 1, Thành Phố Hồ Chí Minh. </p>
                     </div>
@@ -150,14 +150,14 @@ Khói Bụi</h1>
                 <div class="col s12 m4">
                     <div class="icon-block">
                         <h4 class="center"><font color="#80D8FF">Lập Tức Cảnh Báo</font></h4>
-                        <p class="light">Những thông báo thời gian thực sẽ gửi trực tiếp đến điện thoại của bạn khi chất lượng không khí thay đổi đáng kể, giúp cho bạn lập kế hoạch hoạt động ngoài trời một cách an toàn hơn.</p>
+                        <p class="light">Thông báo sẽ được gửi trực tiếp đến điện thoại của bạn khi chất lượng không khí thay đổi đáng kể, giúp bạn lập kế hoạch hoạt động ngoài trời một cách an toàn hơn.</p>
                     </div>
                 </div>
 
                 <div class="col s12 m4">
                     <div class="icon-block">
                         <h4 class="center"><font color="#80D8FF">Dễ Dàng Sử Dụng</font></h4>
-                        <p class="light">Ứng dụng trực giác, và đơn giản, để cho bạn thông tin bạn cần để thở dễ dàng hơn trong Thành Phố Hồ Chí Minh.</p>
+                        <p class="light">Ứng dụng trực quan và đơn giản giúp bạn có được những thông tin cần thiết về chất lượng không khí trong Thành Phố Hồ Chí Minh.</p>
                     </div>
                 </div>
             </div>
@@ -188,7 +188,7 @@ Khói Bụi</h1>
     <div class="row">
         <div class="col-lg-8 col-lg-offset-2">
             <h2>Liên Hệ</h2>
-            <p>Đừng ngại liên hệ chúng tôi với Email</p>
+            <p>Đừng ngại liên hệ chúng tôi qua Email</p>
             <p><a href="mailto:gholadr@gmail.com">gholadr@gmail.com</a>
             </p>
         </div>
