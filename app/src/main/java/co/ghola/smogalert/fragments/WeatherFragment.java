@@ -107,8 +107,6 @@ public class WeatherFragment extends Fragment {
                 press.setText(weather.currentCondition.getPressure() + currentWeather.getUnit().pressureUnit);
                 sunset.setText(WeatherUtil.convertDate(weather.location.getSunset()));
                 sunRise.setText(WeatherUtil.convertDate(weather.location.getSunrise()));
-
-
             }
 
 

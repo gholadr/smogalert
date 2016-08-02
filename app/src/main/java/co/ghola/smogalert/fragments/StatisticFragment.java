@@ -57,12 +57,8 @@ public class StatisticFragment extends android.support.v4.app.Fragment {
     private int page;
     private LineChart mLineChart;
     private AsyncTask task = null;
-    private String shareText = "";
-    int array;
     List<Integer> integerList = new ArrayList<>();
     List<Integer> InteArray = new ArrayList<>();
-    //ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
-    float start = 0f;
     private Handler mHandler = new Handler();
 
 
@@ -84,8 +80,6 @@ public class StatisticFragment extends android.support.v4.app.Fragment {
         title = getArguments().getString("someTitle");
 
     }
-    public int mCount = 0;
-    public List<Integer> mList = new ArrayList<>();
     private void setData(int count,List<Integer> input) {
         float start = 0f;
 
@@ -111,7 +105,7 @@ public class StatisticFragment extends android.support.v4.app.Fragment {
         } else {
             set1 = new LineDataSet(yVals1, "AQI year 2017");
             set1.setColors(ColorTemplate.MATERIAL_COLORS);
-            set1.enableDashedLine(10f, 5f, 0f);
+            set1.enableDashedLine(0f, 0f, 0f);
             set1.enableDashedHighlightLine(10f, 5f, 0f);
             set1.setCircleColor(Color.BLACK);
             set1.setLineWidth(2f);
@@ -126,7 +120,7 @@ public class StatisticFragment extends android.support.v4.app.Fragment {
             data.setValueTextSize(10f);
             //data.setValueTypeface(mTfLight);
             //data.s(0.9f);
-
+            mLineChart.animateX(2500);
             mLineChart.setData(data);
         }
     }
@@ -178,6 +172,7 @@ public class StatisticFragment extends android.support.v4.app.Fragment {
         mLineChart.setDescription("");
         mLineChart.setNoDataText("There are no data currently");
         mLineChart.setDrawGridBackground(false);
+        mLineChart.animateX(1300);
 
         return view;
     }

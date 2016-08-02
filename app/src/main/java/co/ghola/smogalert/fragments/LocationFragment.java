@@ -38,7 +38,6 @@ public class LocationFragment extends Fragment {
     // Store instance variables
     private String title;
     private int page;
-    WeatherClient weatherClient;
     String cityId= "1851632";
     WeatherRequest req = new WeatherRequest(cityId);
 

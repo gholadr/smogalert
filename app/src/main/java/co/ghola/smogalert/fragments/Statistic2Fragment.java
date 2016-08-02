@@ -26,7 +26,6 @@ public class Statistic2Fragment extends Fragment {
     // Store instance variables
     private String title;
     private int page;
-    private TextView mAQITextView;
     private ImageView imageView;
     public TextView tvTime;
     public TextView tvAQI;

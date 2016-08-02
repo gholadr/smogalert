@@ -30,7 +30,7 @@
             <android.support.v4.view.ViewPager
                 android:id="@+id/vpPager"
                 android:layout_width="match_parent"
-                android:layout_height="139dp"
+                android:layout_height="151dp"
                 android:layout_gravity="top"
                 android:background="#528" />
 
@@ -53,7 +53,7 @@
                 android:id="@+id/indicator"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#03A9F4"
+                android:background="#4FC3F7"
                 android:layout_gravity="bottom"/>
         </FrameLayout>
 
@@ -81,7 +81,7 @@
                 <android.support.v4.view.ViewPager
                     android:id="@+id/vpPager2"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
+                    android:layout_height="189dp"
                     android:layout_gravity="top" />
 
 
@@ -103,7 +103,7 @@
                     android:id="@+id/indicator2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#03A9F4"
+                    android:background="#4FC3F7"
                     android:layout_gravity="bottom"/>
             </FrameLayout>
 
@@ -154,7 +154,7 @@
                     android:id="@+id/indicator3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#03A9F4"
+                    android:background="#3F51B5"
                     android:layout_gravity="bottom"/>
             </FrameLayout>
 
