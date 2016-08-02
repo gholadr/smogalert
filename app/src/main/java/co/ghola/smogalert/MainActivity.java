@@ -30,6 +30,13 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.ToxicBakery.viewpager.transforms.ABaseTransformer;
+import com.ToxicBakery.viewpager.transforms.AccordionTransformer;
+import com.ToxicBakery.viewpager.transforms.CubeInTransformer;
+import com.ToxicBakery.viewpager.transforms.CubeOutTransformer;
+import com.ToxicBakery.viewpager.transforms.DepthPageTransformer;
+import com.ToxicBakery.viewpager.transforms.RotateUpTransformer;
+import com.ToxicBakery.viewpager.transforms.StackTransformer;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
 import com.facebook.share.model.ShareLinkContent;
@@ -107,16 +114,23 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         //ViewPager1 Properties
         vpPager= (ViewPager) findViewById(R.id.vpPager);
         tab1 = vpPager.getCurrentItem();
+        vpPager.setPageTransformer(true, new CubeOutTransformer() {
+        });
         setViewPagerListener();
         getSwipePosition();
 
+
         //ViewPager2 Properties
         vpPager2 = (ViewPager) findViewById(R.id.vpPager2);
+        vpPager2.setPageTransformer(false, new FadePageTransformer());
         tab2 = vpPager2.getCurrentItem();
         setViewPagerListener2();
         getSwipePosition2();
+
+
         //ViewPager 3 Properties
         vpPager3 = (ViewPager) findViewById(R.id.vpPager3);
+        vpPager3.setPageTransformer(true, new AccordionTransformer());
         tab3= vpPager3.getCurrentItem();
         setViewPagerListener3();
         getSwipePosition3();
@@ -141,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         titleIndicator3.setViewPager(vpPager3);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setBackgroundColor(getResources().getColor(R.color.lightblue1));
+        //fab.setBackgroundColor(getResources().getColor(R.color.lightblue1));
         assert fab != null;
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -196,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
                 DateTime d = new DateTime((result.getLong(DBContract.COLUMN_IDX_TS) * 1000), DateTimeZone.UTC);
                 String dateText = d.toString("MMM d");
-                String timeText = d.toString("haa");
+                String timeText = d.toString("hh:mm aaa");
                 String datetimeText = getApplicationContext().getResources().getString(R.string.date_time);
                 EventBus.getDefault().postSticky(datetimeText);
                 String usEmbassyText = getApplicationContext().getResources().getString(R.string.us_embassy);
@@ -242,6 +256,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                 //Passing Data to Each Fragments
                 EventBus.getDefault().postSticky(aqi);
                 passData(send);
+                passText(timeText);
             }
             task = null;
         }
@@ -629,5 +644,24 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         edt.putString("sharekey", shareText);
         edt.apply();
 
+    }
+    private void passText(String dateText) {
+        SharedPreferences pref = this.getPreferences(0);
+        SharedPreferences.Editor edt = pref.edit();
+        edt.putString("dateText", dateText);
+        edt.apply();
+
+    }
+    private static class FadePageTransformer implements ViewPager.PageTransformer {
+        public void transformPage(View view, float position) {
+            view.setAlpha(1 - Math.abs(position));
+            if (position < 0) {
+                view.setScrollX((int)((float)(view.getWidth()) * position));
+            } else if (position > 0) {
+                view.setScrollX(-(int) ((float) (view.getWidth()) * -position));
+            } else {
+                view.setScrollX(0);
+            }
+        }
     }
 }

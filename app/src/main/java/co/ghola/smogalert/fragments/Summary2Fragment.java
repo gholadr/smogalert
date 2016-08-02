@@ -78,12 +78,12 @@ public class Summary2Fragment extends Fragment {
         SharedPreferences pref = getActivity().getPreferences(0);
         mSummaryText= pref.getString("sharekey",strtext);
         Log.d("JSON",mSummaryText);
-//        JSONObject jsonObject = convertJSON(mSummaryText);
-//        try {
-//           mSummaryText = jsonObject.getString("blurb");
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
+        JSONObject jsonObject = convertJSON(mSummaryText);
+        try {
+           mSummaryText = jsonObject.getString("blurb");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
     public JSONObject convertJSON (String input){
 

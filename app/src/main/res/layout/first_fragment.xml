@@ -34,6 +34,21 @@
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="left">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="40dp"
+            android:fontFamily="sans-serif"
+            android:text="Last Updated"
+            android:textColor="#FFF"
+            android:textSize="12sp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <TextView
@@ -41,12 +56,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="50dp"
             android:fontFamily="sans-serif"
-            android:text="9:00 AM"
             android:textColor="#FFF"
-            android:textSize="28sp"/>
+            android:textSize="20sp"/>
     </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/linearLayout"

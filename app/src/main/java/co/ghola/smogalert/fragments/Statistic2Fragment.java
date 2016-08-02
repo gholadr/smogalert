@@ -1,5 +1,6 @@
 package co.ghola.smogalert.fragments;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -71,14 +72,10 @@ public class Statistic2Fragment extends Fragment {
             public void run() {
 
                 tvAQI.setText("Swipe to view detail about 7 days ");
-                Calendar calendar = Calendar.getInstance();
-                int hours = calendar.get(Calendar.HOUR_OF_DAY);
-                int minutes = calendar.get(Calendar.MINUTE);
-                if (minutes < 10) {
-                    tvTime.setText("  " + hours + ":" + "0" + minutes);
-                } else {
-                    tvTime.setText("  " + hours + ":" + minutes);
-                }
+                SharedPreferences pref = getActivity().getPreferences(0);
+                String timeText =null ;
+                String text = pref.getString("dateText",timeText);
+                tvTime.setText(text);
             }
         });
         return view;

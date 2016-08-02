@@ -1,5 +1,6 @@
 package co.ghola.smogalert.fragments;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -13,8 +14,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import org.greenrobot.eventbus.EventBus;
-
-import java.util.Calendar;
 
 import co.ghola.smogalert.R;
 
@@ -47,6 +46,7 @@ public class SummaryFragment extends Fragment {
         super.onCreate(savedInstanceState);
         page = getArguments().getInt("someInt", 0);
         title = getArguments().getString("someTitle");
+
     }
 
     @Override
@@ -71,15 +71,16 @@ public class SummaryFragment extends Fragment {
             @Override
             public void run() {
                 String shareText = EventBus.getDefault().getStickyEvent(String.class);
-                tvAQI.setText(shareText + " AQI");
-                Calendar calendar = Calendar.getInstance();
-                int hours = calendar.get(Calendar.HOUR_OF_DAY);
-                int minutes = calendar.get(Calendar.MINUTE);
-                if (minutes < 10) {
-                    tvTime.setText("  " + hours + ":" + "0" + minutes);
-                } else {
-                    tvTime.setText("  " + hours + ":" + minutes);
+                if(Integer.parseInt(shareText) > 40)
+                {
+                    Glide.with(getContext()).load(R.drawable.ninja1).centerCrop().into(imageView);
                 }
+                tvAQI.setText(shareText + " AQI");
+                String timeText = null;
+                SharedPreferences pref = getActivity().getPreferences(0);
+                String text = pref.getString("dateText",timeText);
+                tvTime.setText(text);
+
             }
         });
         return view;
