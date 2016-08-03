@@ -62,7 +62,6 @@ import co.ghola.smogalert.fragments.StatisticFragment;
 import co.ghola.smogalert.fragments.Summary2Fragment;
 import co.ghola.smogalert.fragments.SummaryFragment;
 import co.ghola.smogalert.fragments.WeatherFragment;
-import co.ghola.smogalert.utils.BaseTask;
 import co.ghola.smogalert.utils.Constants;
 import co.ghola.smogalert.utils.HelperSharedPreferences;
 import hugo.weaving.DebugLog;
