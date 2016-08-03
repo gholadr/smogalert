@@ -63,7 +63,7 @@ public class Statistic2Fragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.statistic_layout, container, false);
         ImageView mImageView = (ImageView) view.findViewById(R.id.myimg);
-        Glide.with(getActivity()).load(R.drawable.statistic_highres).fitCenter().into(mImageView);
+        Glide.with(getActivity()).load(R.drawable.statistic).fitCenter().into(mImageView);
         tvAQI = (TextView) view.findViewById(R.id.tvAQI);
         tvTime = (TextView) view.findViewById(R.id.tvTime);
         mHandler.post(new Runnable() {
