@@ -32,7 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="151dp"
                 android:layout_gravity="top"
-                android:background="#528" />
+                android:background="#4FC3F7" />
 
 
             <ImageView
@@ -103,7 +103,7 @@
                     android:id="@+id/indicator2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#4FC3F7"
+                    android:background="#00B2B1"
                     android:layout_gravity="bottom"/>
             </FrameLayout>
 
