@@ -1,15 +1,8 @@
 package co.ghola.smogalert;
 
 
-import android.content.ContentResolver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -22,21 +15,14 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.Toast;
-
-import com.ToxicBakery.viewpager.transforms.ABaseTransformer;
 import com.ToxicBakery.viewpager.transforms.AccordionTransformer;
-import com.ToxicBakery.viewpager.transforms.CubeInTransformer;
 import com.ToxicBakery.viewpager.transforms.CubeOutTransformer;
-import com.ToxicBakery.viewpager.transforms.DepthPageTransformer;
-import com.ToxicBakery.viewpager.transforms.RotateUpTransformer;
-import com.ToxicBakery.viewpager.transforms.StackTransformer;
+
 import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
 import com.facebook.share.model.ShareLinkContent;
@@ -46,21 +32,15 @@ import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
+
 
 import co.ghola.smogalert.async.SyncUtils;
-import co.ghola.smogalert.db.DBContract;
 import co.ghola.smogalert.fragments.LocationFragment;
 import co.ghola.smogalert.fragments.Statistic2Fragment;
 import co.ghola.smogalert.fragments.StatisticFragment;
 import co.ghola.smogalert.fragments.Summary2Fragment;
 import co.ghola.smogalert.fragments.SummaryFragment;
 import co.ghola.smogalert.fragments.WeatherFragment;
-import co.ghola.smogalert.utils.BaseTask;
-import co.ghola.smogalert.utils.Constants;
 import co.ghola.smogalert.utils.HelperSharedPreferences;
 import hugo.weaving.DebugLog;
 import io.fabric.sdk.android.Fabric;
@@ -68,13 +48,13 @@ import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, NavigationView.OnNavigationItemSelectedListener {
 
-    private AsyncTask task = null;
-    private static String TAG = MainActivity.class.getSimpleName();
+    //private AsyncTask task = null;
+    //private static String TAG = MainActivity.class.getSimpleName();
     private String shareText = "";
-    FragmentPagerAdapter mAdapterViewPager;
-    FragmentPagerAdapter mAdapterViewPager1;
-    FragmentPagerAdapter mAdapterViewPager2;
-    ShareDialog shareDialog;
+    private FragmentPagerAdapter mAdapterViewPager;
+    private FragmentPagerAdapter mAdapterViewPager1;
+    private FragmentPagerAdapter mAdapterViewPager2;
+    private ShareDialog shareDialog;
     private ViewPager vpPager;
     private ViewPager vpPager2;
     private ViewPager vpPager3;
@@ -93,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
         Iconify.with(new FontAwesomeModule());
-        EventBus.getDefault().register(this);
 
         //setting up SyncService
         FacebookSdk.sdkInitialize(getApplicationContext());
@@ -114,8 +93,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         //ViewPager1 Properties
         vpPager= (ViewPager) findViewById(R.id.vpPager);
         tab1 = vpPager.getCurrentItem();
-        vpPager.setPageTransformer(true, new CubeOutTransformer() {
-        });
+        vpPager.setPageTransformer(true, new CubeOutTransformer());
         setViewPagerListener();
         getSwipePosition();
 
@@ -154,19 +132,13 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         CirclePageIndicator titleIndicator3 = (CirclePageIndicator) findViewById(R.id.indicator3);
         titleIndicator3.setViewPager(vpPager3);
 
+
+        //Setting up Fab Button
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        //fab.setBackgroundColor(getResources().getColor(R.color.lightblue1));
         assert fab != null;
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Click action
-                // Intent sendIntent = new Intent();
-                // sendIntent.setAction(Intent.ACTION_SEND);
-                // sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getApplicationContext().getResources().getString(R.string.share_subject));
-                // sendIntent.putExtra(Intent.EXTRA_TEXT, shareText);
-                // sendIntent.setType("text/plain");
-                // startActivity(sendIntent);
 
                 ShareLinkContent content = new ShareLinkContent.Builder()
                         .setContentUrl(Uri.parse("https://smogalert-1248.appspot.com/khoibui"))
@@ -181,10 +153,6 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
     }
 
-    @Subscribe (threadMode = ThreadMode.MAIN)
-    public void doThis(String text) {
-        if (task == null) task = new LoadCursorTask(this).execute(Constants.LAST_HOUR);
-    }
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -192,92 +160,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         HelperSharedPreferences.putSharedPreferencesBoolean(this, HelperSharedPreferences.SharedPreferencesKeys.notificationKey, isChecked);
 
     }
-    private class LoadCursorTask extends BaseTask<Integer> {
-        LoadCursorTask(Context ctxt) {
-            super(ctxt);
-        }
 
-        @Override
-        protected Cursor doInBackground(Integer... params) {
-            int post = params[0].intValue();
-            return (doQuery(post));
-        }
-
-        @Override
-        public void onPostExecute(Cursor result) {
-            if (result.getCount() > 0) {
-                result.moveToPosition(0);
-
-                DateTime d = new DateTime((result.getLong(DBContract.COLUMN_IDX_TS) * 1000), DateTimeZone.UTC);
-                String dateText = d.toString("MMM d");
-                String timeText = d.toString("hh:mm aaa");
-                String datetimeText = getApplicationContext().getResources().getString(R.string.date_time);
-                EventBus.getDefault().postSticky(datetimeText);
-                String usEmbassyText = getApplicationContext().getResources().getString(R.string.us_embassy);
-                datetimeText = String.format(datetimeText, dateText, timeText);
-                String aqi = result.getString(DBContract.COLUMN_IDX_AQI);
-                String msg = result.getString(DBContract.COLUMN_IDX_MESSAGE);
-                String blurb = "";
-                String sharedWithText = getApplicationContext().getResources().getString(R.string.shared_with);
-//                TextView view = (TextView) findViewById(R.id.aqi);
-//                view.setText(aqi + " " + getResources().getString(R.string.aqi_text));
-//                view = (TextView) findViewById(R.id.message);
-//                view.setText(msg);
-//                view = (TextView) findViewById(R.id.date);
-//                view.setText(datetimeText);
-                Integer previousLevel = HelperSharedPreferences.getSharedPreferencesInt(getApplicationContext(), HelperSharedPreferences.SharedPreferencesKeys.levelsKey, - 1);
-                SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-
-                switch (previousLevel) {
-
-                    case Constants.GOOD:
-                        blurb = getApplicationContext().getResources().getString(R.string.good_blurb);
-                        break;
-                    case Constants.MODERATE:
-                        blurb = getApplicationContext().getResources().getString(R.string.moderate_blurb);
-                        break;
-                    case Constants.SENSITIVE:
-                        blurb = getApplicationContext().getResources().getString(R.string.sensitive_blurb);
-                        break;
-                    case Constants.UNHEALTHY:
-                        blurb = getApplicationContext().getResources().getString(R.string.unhealthy_blurb);
-                        break;
-                }
-
-                shareText = getApplicationContext().getResources().getString(R.string.share);
-
-                String send = "";
-                send = msg + " #"
-                        + aqi + " #"
-                        + returnBlurb(aqi) + " #"
-                        + usEmbassyText + " #"
-                        + datetimeText;
-                shareText = String.format(shareText, msg.toLowerCase(), aqi, blurb, usEmbassyText, datetimeText);
-                //Passing Data to Each Fragments
-                EventBus.getDefault().postSticky(aqi);
-                passData(send);
-                passText(timeText);
-            }
-            task = null;
-        }
-
-
-        public String returnBlurb(String aqi) {
-            if (aqi != null || aqi != "") {
-                Integer convertedAqi = Integer.parseInt(aqi);
-                if (convertedAqi.intValue() > 151) {
-                    return getApplicationContext().getResources().getString(R.string.unhealthy_blurb);
-                } else if (convertedAqi.intValue() > 100) {
-                    return getApplicationContext().getResources().getString(R.string.sensitive_blurb);
-                } else if (convertedAqi.intValue() > 51) {
-                    return getApplicationContext().getResources().getString(R.string.moderate_blurb);
-                } else {
-                    return getApplicationContext().getResources().getString(R.string.good_blurb);
-                }
-            }
-            return "";
-        }
-    }
 
     @Override
     public void onBackPressed() {
@@ -325,22 +208,6 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         return true;
     }
 
-    @Override
-    public void onDestroy() {
-
-        EventBus.getDefault().unregister(this);
-        super.onDestroy();
-
-    }
-
-    @Override
-    public void onResume() {
-
-        super.onResume();
-        if (task==null) task=new LoadCursorTask(this).execute(new Integer(Constants.LAST_HOUR));
-
-
-    }
 
     public static class MyPagerAdapter extends FragmentPagerAdapter {
         private static int NUM_ITEMS = 2;
@@ -636,21 +503,6 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
             }
         });
-    }
-
-    private void passData(String shareText) {
-        SharedPreferences pref = this.getPreferences(0);
-        SharedPreferences.Editor edt = pref.edit();
-        edt.putString("sharekey", shareText);
-        edt.apply();
-
-    }
-    private void passText(String dateText) {
-        SharedPreferences pref = this.getPreferences(0);
-        SharedPreferences.Editor edt = pref.edit();
-        edt.putString("dateText", dateText);
-        edt.apply();
-
     }
     private static class FadePageTransformer implements ViewPager.PageTransformer {
         public void transformPage(View view, float position) {

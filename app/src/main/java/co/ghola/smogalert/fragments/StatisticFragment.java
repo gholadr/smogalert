@@ -78,6 +78,7 @@ public class StatisticFragment extends android.support.v4.app.Fragment {
         super.onCreate(savedInstanceState);
         page = getArguments().getInt("someInt", 0);
         title = getArguments().getString("someTitle");
+        EventBus.getDefault().register(this);
 
     }
     private void setData(int count,List<Integer> input) {
@@ -176,7 +177,11 @@ public class StatisticFragment extends android.support.v4.app.Fragment {
 
         return view;
     }
-
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void doThis(String text) {
+        if (task == null)
+            task = new LoadCursorTask(getContext()).execute(new Integer(Constants.LAST_7_DAYS));
+    }
     private class LoadCursorTask extends BaseTask<Integer> {
         LoadCursorTask(Context ctxt) {
             super(ctxt);
@@ -234,33 +239,11 @@ public class StatisticFragment extends android.support.v4.app.Fragment {
                                 //list average of each 24 elements
                             }
                         });
-
-
-//                Observable<ArrayList<String>> burstyBuffered = new Observable<ArrayList<Integer>>;
-//                ArrayList<Integer> mStoreData= new ArrayList<>();
-
-//                for(int i=0; i < 168; i++) {
-//                    result.moveToPosition(i);
-//                    String aqi = result.getString(DBContract.COLUMN_IDX_AQI);
-//                    burstyBuffered.onNext
-//                        if( buffer.size() == 24 ) {
-//                            for (String value : buffer) {
-//                                value += value;
-//                                array = Integer.parseInt(value) / 24;
-//                            }
-//                        }
-//                        mStoreData.add(array);
-//                        Log.d("Data", "Array" + mStoreData);
-//                }
             }
             task = null;
         }
 
-        @Subscribe(threadMode = ThreadMode.MAIN)
-        public void doThis(String text) {
-            if (task == null)
-                task = new LoadCursorTask(getContext()).execute(new Integer(Constants.LAST_7_DAYS));
-        }
+
 
         @Override
         protected Cursor doInBackground(Integer... params) {
