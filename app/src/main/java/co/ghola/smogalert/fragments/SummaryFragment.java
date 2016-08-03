@@ -81,24 +81,24 @@ public class SummaryFragment extends Fragment {
                 int hours = calendar.get( Calendar.HOUR );
                 if(shareText != null) {
                     if (Integer.parseInt(shareText) > 150) {
-                        Glide.with(getContext()).load(R.drawable.ninja1).centerCrop().into(imageView);
+                        Glide.with(getActivity()).load(R.drawable.ninja1).centerCrop().into(imageView);
                     }
                     if (Integer.parseInt(shareText) < 149) {
                         if (calendar.get(Calendar.AM_PM) == 0) {
                             am_pm = "AM";
                             if (hours >= 6 && am_pm.equals("AM")) {
-                                Glide.with(getContext()).load(R.drawable.bg1).centerCrop().into(imageView);
+                                Glide.with(getActivity()).load(R.drawable.bg1).centerCrop().into(imageView);
                             } else {
-                                Glide.with(getContext()).load(R.drawable.sandiegonight).centerCrop().into(imageView);
+                                Glide.with(getActivity()).load(R.drawable.sandiegonight).centerCrop().into(imageView);
                             }
 
                         } else {
                             am_pm = "PM";
                             if (hours >= 6 && am_pm.equals("PM")) {
-                                Glide.with(getContext()).load(R.drawable.sandiegonight).centerCrop().into(imageView);
+                                Glide.with(getActivity()).load(R.drawable.sandiegonight).centerCrop().into(imageView);
                                 System.out.println("welcome");
                             } else {
-                                Glide.with(getContext()).load(R.drawable.bg1).centerCrop().into(imageView);
+                                Glide.with(getActivity()).load(R.drawable.bg1).centerCrop().into(imageView);
                             }
 
                         }
