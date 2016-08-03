@@ -2,8 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#4FC3F7">
-
+    android:background="#00B2B1">
 
 
     <LinearLayout
