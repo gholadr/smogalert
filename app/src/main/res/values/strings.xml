@@ -15,7 +15,7 @@
     <string name="sensitive">Unhealthy for Sensitive Groups</string>
     <string name="unhealthy">Unhealthy</string>
     <string name="good_blurb">The air is fresh. Enjoy the outdoors!</string>
-    <string name="moderate_blurb">Ok to be outside still, but don\'t go for a run!.</string>
+    <string name="moderate_blurb">Ok to be outside still, but don\'t go for a run!</string>
     <string name="sensitive_blurb">Seniors, people with chronic respiratory issues and toddlers should stay inside.</string>
     <string name="unhealthy_blurb">You should probably stay indoors today.</string>
     <string name="notification_title">Pollution Alert</string>
