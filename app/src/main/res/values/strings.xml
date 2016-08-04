@@ -15,7 +15,7 @@
     <string name="sensitive">Unhealthy for Sensitive Groups</string>
     <string name="unhealthy">Unhealthy</string>
     <string name="good_blurb">The air is fresh. Enjoy the outdoors!</string>
-    <string name="moderate_blurb">Ok to be outside still, but don\'t go for a run!.</string>
+    <string name="moderate_blurb">Ok to be outside still, but don\'t go for a run!</string>
     <string name="sensitive_blurb">Seniors, people with chronic respiratory issues and toddlers should stay inside.</string>
     <string name="unhealthy_blurb">You should probably stay indoors today.</string>
     <string name="notification_title">Pollution Alert</string>
@@ -23,6 +23,7 @@
     <string name="us_embassy">Air quality sample taken from HCMC US Embassy</string>
     <string name="date_time" formatted="false">%s, %s</string>
     <string name="share_subject">Air Pollution Report</string>
-    <string name="share" formatted="false">Air quality in HCMC is %s.  %s AQI. \n %s.\n  %s, %s"</string>
+    <string name="share" formatted="false">Current AQI is %s</string>
     <string name="shared_with">Shared with SmogAlert. Get it on Play store here: http://www.google.com</string>
+    <string name="swipe_detail" formatted="false">Swipe to view last 24 hours. </string>
 </resources>

@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
         Iconify.with(new FontAwesomeModule());
-
+        EventBus.getDefault().register(this);
         //setting up SyncService
         FacebookSdk.sdkInitialize(getApplicationContext());
         shareDialog = new ShareDialog(this);
@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
             public void onClick(View view) {
 
                 ShareLinkContent content = new ShareLinkContent.Builder()
-                        .setContentUrl(Uri.parse("https://smogalert-1248.appspot.com/khoibui"))
+                        .setContentUrl(Uri.parse("http://khoibui.co"))
                         .setContentTitle(getApplicationContext().getResources().getString(R.string.share_subject))
                         .setContentDescription(shareText)
                         .setImageUrl(Uri.parse("http://i.imgur.com/sN1B51f.png"))
@@ -167,12 +167,12 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
     }
 
-//
-//    @Subscribe(threadMode = ThreadMode.MAIN)
-//    public void doThis(String text){
-//        if (task == null) task=new LoadCursorTask(this).execute(new Integer(Constants.LAST_HOUR));
-//
-//    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void doThis(String text){
+        if (task == null) task=new LoadCursorTask(this).execute(new Integer(Constants.LAST_HOUR));
+
+    }
 
 
     @Override
@@ -202,27 +202,14 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                 String timeText = d.toString("hh:mm aaa");
                 String datetimeText = getApplicationContext().getResources().getString(R.string.date_time);
                 EventBus.getDefault().postSticky(datetimeText);
-                String usEmbassyText = getApplicationContext().getResources().getString(R.string.us_embassy);
+               // String usEmbassyText = getApplicationContext().getResources().getString(R.string.us_embassy);
                 datetimeText = String.format(datetimeText, dateText, timeText);
                 String aqi = result.getString(DBContract.COLUMN_IDX_AQI);
-                String msg = result.getString(DBContract.COLUMN_IDX_MESSAGE);
-                String blurb = "";
+               // String msg = result.getString(DBContract.COLUMN_IDX_MESSAGE);
+               // String blurb = "";
                 String sharedWithText = getApplicationContext().getResources().getString(R.string.shared_with);
-
-
-                        shareText = getApplicationContext().getResources().getString(R.string.share);
-
-                        String send = "";
-                        send = msg + " #"
-                                + aqi + " #"
-                                + returnBlurb(aqi) + " #"
-                                + usEmbassyText + " #"
-                                + datetimeText;
-                        shareText = String.format(shareText, msg.toLowerCase(), aqi, blurb, usEmbassyText, datetimeText);
-                        //Passing Data to Each Fragments
-                        EventBus.getDefault().postSticky(aqi);
-                       // passData(send);
-                       // passText(timeText);
+                shareText = getApplicationContext().getResources().getString(R.string.share);
+                shareText = String.format(shareText, aqi);
                 }
                 task = null;
             }
@@ -299,14 +286,14 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         super.onDestroy();
 
     }
-//
-//    @Override
-//    public void onResume() {
-//
-//        super.onResume();
-//        if (task==null) task=new LoadCursorTask(this).execute(new Integer(Constants.LAST_HOUR));
-//
-//    }
+
+    @Override
+    public void onResume() {
+
+        super.onResume();
+        if (task==null) task=new LoadCursorTask(this).execute(new Integer(Constants.LAST_HOUR));
+
+    }
 
 
     public static class MyPagerAdapter extends FragmentPagerAdapter {

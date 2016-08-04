@@ -103,7 +103,7 @@ public class WeatherFragment extends Fragment {
                         Weather weather = currentWeather.weather;
                         cityText.setText(weather.location.getCity() + "," + weather.location.getCountry());
                         LogUtils.LOGD("SwA", "Val [" + weather.temperature.getTemp() + "]");
-                        Log.d("test", "test" + cityText);
+                       // Log.d("test", "test" + cityText);
                         hum.setText(weather.currentCondition.getHumidity() + "%");
                         tempMin.setText(weather.temperature.getMinTemp() + currentWeather.getUnit().tempUnit);
                         tempMax.setText(weather.temperature.getMaxTemp() + currentWeather.getUnit().tempUnit);

@@ -39,7 +39,7 @@
         />
         <!--End of Facebook Protocol-->
 
-        <provider android:authorities="com.facebook.app.FacebookContentProvider162661434145142"
+        <provider android:authorities="com.facebook.app.FacebookContentProvider1051710394878963"
                   android:name="com.facebook.FacebookContentProvider"
                   android:exported="true"/>
         <activity
