@@ -95,6 +95,7 @@ public class RssFetcher extends HttpServlet {
 
         Iterator<AirQualitySample> itr = cleanRssList.iterator();
 
+
     }
 
     private ArrayList<AirQualitySample> prepRssList(List<AirQualitySample> listWithDuplicates, Long timestamp) {

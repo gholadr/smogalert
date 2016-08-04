@@ -3,6 +3,7 @@
 /local.properties
 /.idea/workspace.xml
 /.idea/libraries
+/ .idea/
 .DS_Store
 /build
 /captures
@@ -11,3 +12,4 @@
 /backend/build
 /test
 /app/app-release.apk
+.idea/

@@ -1,0 +1,157 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#3F51B5"
+    android:gravity="center_horizontal"
+    >
+    <RelativeLayout
+    android:background="#3F51B5"
+        android:layout_marginTop="5dp"
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/location"
+        android:textStyle="bold"
+        android:textColor="#FFF"
+        android:layout_marginTop="4dp" />
+
+
+    <!-- Here the current weather data -->
+
+    <!-- Temperature data -->
+    <ImageView
+        android:layout_width="@dimen/weatherIcon.width"
+        android:layout_height="@dimen/weatherIcon.height"
+        android:id="@+id/tempIcon"
+        android:src="@drawable/temperature"
+        android:layout_below="@id/location"
+        android:layout_marginTop="10dp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tempMin"
+        android:layout_toRightOf="@id/tempIcon"
+        android:layout_alignTop="@id/tempIcon"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="15dp"
+        style="@style/textSmallWeather"
+        android:textColor="#4CAF50"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tempMax"
+        android:layout_toRightOf="@id/tempMin"
+        android:layout_alignBaseline="@id/tempMin"
+        android:layout_marginLeft="10dp"
+        style="@style/textSmallWeather"
+        android:textColor="#F44336"/>
+    <!-- End temp Data -->
+    <!-- Wind data -->
+    <ImageView
+        android:layout_width="@dimen/weatherIcon.width"
+        android:layout_height="@dimen/weatherIcon.height"
+        android:id="@+id/windIcon"
+        android:src="@drawable/wind"
+        android:layout_below="@id/tempIcon"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/windSpeed"
+            android:layout_toRightOf="@id/windIcon"
+            android:layout_alignTop="@id/windIcon"
+            android:layout_marginTop="12dp"
+            android:layout_alignStart="@id/tempMin"
+            android:layout_marginLeft="10dp"
+            style="@style/textSmallWeather"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/windDeg"
+            android:layout_toRightOf="@id/windSpeed"
+            android:layout_alignBaseline="@id/windSpeed"
+            android:layout_marginLeft="10dp"
+            style="@style/textSmallWeather"
+            android:layout_marginRight="50dp" />
+    <!-- End wind Data -->
+
+    <!-- Humidity -->
+    <ImageView
+        android:layout_width="@dimen/weatherIcon.width"
+        android:layout_height="@dimen/weatherIcon.height"
+        android:id="@+id/humidityIcon"
+        android:src="@drawable/humidity"
+        android:layout_below="@id/windIcon"
+        android:layout_marginTop="10dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/humidity"
+        android:layout_toRightOf="@id/humidityIcon"
+        android:layout_alignTop="@id/humidityIcon"
+        android:layout_marginTop="12dp"
+        android:layout_alignStart="@id/tempMin"
+        android:layout_marginLeft="10dp"
+        style="@style/textSmallWeather"/>
+    <!-- End Humidity Data -->
+
+    <!-- Pressure data -->
+        <!-- End Pressure data -->
+
+    <!-- Astronomy -->
+    <ImageView
+        android:layout_width="@dimen/weatherIcon.width"
+        android:layout_height="@dimen/weatherIcon.height"
+        android:id="@+id/sunIcon"
+        android:src="@drawable/sun"
+        android:layout_toRightOf="@id/windDeg"
+        android:layout_alignBaseline="@id/tempIcon"
+        android:layout_below="@id/location"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sunrise"
+        android:layout_toRightOf="@id/sunIcon"
+        android:layout_alignTop="@id/sunIcon"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="10dp"
+        style="@style/textSmallWeather"/>
+    <ImageView
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:id="@+id/moonIcon"
+        android:src="@drawable/moon"
+        android:layout_below="@id/sunIcon"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/windDeg"
+        android:layout_alignBaseline="@id/humidityIcon"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sunset"
+        android:layout_toRightOf="@id/moonIcon"
+        android:layout_alignTop="@id/moonIcon"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="10dp"
+        style="@style/textSmallWeather"/>
+    <!-- End astronomy -->
+
+    <!-- Rain -->
+
+    <!-- End Rain -->
+
+    <!-- Cloud -->
+
+
+</RelativeLayout>
+    </RelativeLayout>

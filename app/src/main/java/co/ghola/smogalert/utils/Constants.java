@@ -9,4 +9,6 @@ public class Constants {
     public static final int MODERATE = 99;
     public static final int SENSITIVE = 149;
     public static final int UNHEALTHY = 199;
+    public static final int LAST_HOUR = 1;
+    public static final int LAST_7_DAYS = 168;
 }
