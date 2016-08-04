@@ -4,6 +4,7 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -47,6 +48,7 @@ public class Summary2Fragment extends Fragment {
     private String mSummaryText;
     private String mAQI;
     private TextView mTextView;
+    private Typeface mTypeFace;
 
     // newInstance constructor for creating fragment with arguments
     public static Summary2Fragment newInstance(int page, String title) {
@@ -64,6 +66,7 @@ public class Summary2Fragment extends Fragment {
         page = getArguments().getInt("someInt", 1);
         title = getArguments().getString("SummaryFragment");
         EventBus.getDefault().register(this);
+        mTypeFace  = Typeface.createFromAsset(getActivity().getAssets(),"fonts/RobotoCondensed-Regular.ttf");
     }
 
     @Override
@@ -74,7 +77,6 @@ public class Summary2Fragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void doThis(String text) {
-        EventBus.getDefault().register(this);
         if (task == null)
             task = new LoadCursorTask(getContext()).execute(new Integer(Constants.LAST_HOUR));
     }
@@ -91,7 +93,9 @@ public class Summary2Fragment extends Fragment {
                 result.moveToPosition(0);
                 mAQI= result.getString(DBContract.COLUMN_IDX_AQI);
                 mSummaryText =returnBlurb(mAQI);
+                mTextView.setTypeface(mTypeFace);
                 mTextView.setText(mSummaryText);
+
             }
             task = null;
         }

@@ -66,12 +66,11 @@ public class SummaryFragment extends Fragment {
         page = getArguments().getInt("someInt", 0);
         title = getArguments().getString("someTitle");
         EventBus.getDefault().register(this);
-        mTypeFace  = Typeface.createFromAsset(getActivity().getAssets(),"fonts/Roboto-Regular.ttf");
+        mTypeFace  = Typeface.createFromAsset(getActivity().getAssets(),"fonts/RobotoCondensed-Regular.ttf");
 
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void doThis(String text) {
-        EventBus.getDefault().register(this);
         if (task == null)
             task = new LoadCursorTask(getContext()).execute(new Integer(Constants.LAST_HOUR));
     }
@@ -97,7 +96,6 @@ public class SummaryFragment extends Fragment {
                 String mAQI= result.getString(DBContract.COLUMN_IDX_AQI);
                 tvTime.setText(mTimeText);
                 tvAQI.setText(mAQI+ " AQI");
-
             }
             task = null;
         }

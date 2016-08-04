@@ -73,13 +73,13 @@ public class WeatherFragment extends Fragment {
         final TextView tempMax = (TextView) v.findViewById(R.id.tempMax);
         final TextView sunset = (TextView) v.findViewById(R.id.sunset);
         final TextView sunRise = (TextView) v.findViewById(R.id.sunrise);
-        Typeface mTypeFace  = Typeface.createFromAsset(getActivity().getAssets(),"fonts/Roboto-Regular.ttf");
+        Typeface mTypeFace  = Typeface.createFromAsset(getActivity().getAssets(),"fonts/RobotoCondensed-Regular.ttf");
         cityText.setTypeface(mTypeFace);
         final Handler handler = new Handler();
         final Runnable thisThread = new Runnable() {
             @Override
             public void run() {
-               handler.postDelayed(this,15000);
+               handler.postDelayed(this,20000);
                 final WeatherConfig config = new WeatherConfig();
                 config.unitSystem = WeatherConfig.UNIT_SYSTEM.M;
                 config.lang = "en";

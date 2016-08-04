@@ -40,8 +40,10 @@ public class Statistic2Fragment extends Fragment {
     private ImageView imageView;
     public TextView tvTime;
     public TextView tvAQI;
-    private Handler mHandler = new Handler();
+    private Typeface mTypeFace;
     private AsyncTask task = null;
+
+
     // newInstance constructor for creating fragment with arguments
     public static Statistic2Fragment newInstance(int page, String title) {
         Statistic2Fragment mStatistic2Fragment = new Statistic2Fragment();
@@ -58,12 +60,12 @@ public class Statistic2Fragment extends Fragment {
         super.onCreate(savedInstanceState);
         page = getArguments().getInt("someInt", 0);
         title = getArguments().getString("someTitle");
+        mTypeFace  = Typeface.createFromAsset(getActivity().getAssets(),"fonts/RobotoCondensed-Regular.ttf");
         EventBus.getDefault().register(this);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void doThis(String text) {
-        EventBus.getDefault().register(this);
         if (task == null)
             task = new LoadCursorTask(getContext()).execute(new Integer(Constants.LAST_HOUR));
     }
@@ -86,7 +88,9 @@ public class Statistic2Fragment extends Fragment {
                 result.moveToPosition(0);
                 DateTime d = new DateTime((result.getLong(DBContract.COLUMN_IDX_TS) * 1000), DateTimeZone.UTC);
                 String mTimeText = d.toString("hh:mm aaa");
+                tvTime.setTypeface(mTypeFace);
                 tvTime.setText(mTimeText);
+
             }
             task = null;
         }
@@ -121,6 +125,7 @@ public class Statistic2Fragment extends Fragment {
         Glide.with(getActivity()).load(R.drawable.statistic).fitCenter().into(mImageView);
         tvAQI = (TextView) view.findViewById(R.id.tvAQI);
         tvTime = (TextView) view.findViewById(R.id.tvTime);
+        tvAQI.setTypeface(mTypeFace);
         tvAQI.setText("Swipe to view detail about 7 days ");
         return view;
     }
