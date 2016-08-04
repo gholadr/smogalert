@@ -1,6 +1,10 @@
 package co.ghola.smogalert.fragments;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -16,10 +20,22 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import co.ghola.smogalert.R;
+import co.ghola.smogalert.db.DBContract;
+import co.ghola.smogalert.utils.BaseTask;
+import co.ghola.smogalert.utils.Constants;
+import rx.Observable;
+import rx.Subscriber;
+import rx.functions.Func1;
 
 /**
  * Created by alecksjohansson on 7/21/16.
@@ -28,11 +44,11 @@ public class SummaryFragment extends Fragment {
     // Store instance variables
     private String title;
     private int page;
-    private ImageView imageView;
     public TextView tvTime;
+    private AsyncTask task = null;
+    private String mTimeText;
     public TextView tvAQI;
-    private Handler mHandler = new Handler();
-
+    Typeface mTypeFace;
     // newInstance constructor for creating fragment with arguments
     public static SummaryFragment newInstance(int page, String title) {
         SummaryFragment mSummaryFragment = new SummaryFragment();
@@ -49,18 +65,63 @@ public class SummaryFragment extends Fragment {
         super.onCreate(savedInstanceState);
         page = getArguments().getInt("someInt", 0);
         title = getArguments().getString("someTitle");
+        EventBus.getDefault().register(this);
+        mTypeFace  = Typeface.createFromAsset(getActivity().getAssets(),"fonts/RobotoCondensed-Regular.ttf");
 
     }
-
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void doThis(String text) {
+        if (task == null)
+            task = new LoadCursorTask(getContext()).execute(new Integer(Constants.LAST_HOUR));
+    }
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        imageView = (ImageView) view.findViewById(R.id.imageBackground);
-        Glide.with(getContext()).load(R.drawable.bg1).centerCrop().into(imageView);
+
         super.onViewCreated(view, savedInstanceState);
 
 
     }
+    public class LoadCursorTask extends BaseTask<Integer> {
 
+        LoadCursorTask(Context ctxt) {
+            super(ctxt);
+        }
+
+        @Override
+        public void onPostExecute(Cursor result) {
+            if (result.getCount() > 0) {
+                result.moveToPosition(0);
+                DateTime d = new DateTime((result.getLong(DBContract.COLUMN_IDX_TS) * 1000), DateTimeZone.UTC);
+                mTimeText = d.toString("hh:mm aaa");
+                String mAQI= result.getString(DBContract.COLUMN_IDX_AQI);
+                tvTime.setText(mTimeText);
+                tvAQI.setText(mAQI+ " AQI");
+            }
+            task = null;
+        }
+
+
+        @Override
+        protected Cursor doInBackground(Integer... params) {
+            int post = params[0].intValue();
+            return (doQuery(post));
+        }
+    }
+
+
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //EventBus.getDefault().hasSubscriberForEvent(SummaryFragment.class);
+        if (task == null)
+            task = new LoadCursorTask(getActivity()).execute(new Integer(Constants.LAST_HOUR));
+    }
     // Inflate the view for the fragment based on layout XML
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,52 +129,10 @@ public class SummaryFragment extends Fragment {
         View view = inflater.inflate(R.layout.first_fragment, container, false);
         ImageView mImageView = (ImageView) view.findViewById(R.id.myimg);
         Glide.with(getActivity()).load(R.drawable.cloud).fitCenter().into(mImageView);
-        imageView = (ImageView) view.findViewById(R.id.imageBackground);
         tvAQI = (TextView) view.findViewById(R.id.tvAQI);
         tvTime = (TextView) view.findViewById(R.id.tvTime);
-        Runnable thisThread = new Runnable() {
-            @Override
-            public void run() {
-                mHandler.postDelayed(this, 15000);
-                String shareText = EventBus.getDefault().getStickyEvent(String.class);
-                Calendar calendar = Calendar.getInstance();
-                String am_pm;
-                int hours = calendar.get( Calendar.HOUR );
-                if(shareText != null) {
-                    if (Integer.parseInt(shareText) > 150) {
-                        Glide.with(getActivity()).load(R.drawable.ninja1).centerCrop().into(imageView);
-                    }
-                    if (Integer.parseInt(shareText) < 149) {
-                        if (calendar.get(Calendar.AM_PM) == 0) {
-                            am_pm = "AM";
-                            if (hours >= 6 && am_pm.equals("AM")) {
-                                Glide.with(getActivity()).load(R.drawable.bg1).centerCrop().into(imageView);
-                            } else {
-                                Glide.with(getActivity()).load(R.drawable.sandiegonight).centerCrop().into(imageView);
-                            }
-
-                        } else {
-                            am_pm = "PM";
-                            if (hours >= 6 && am_pm.equals("PM")) {
-                                Glide.with(getActivity()).load(R.drawable.sandiegonight).centerCrop().into(imageView);
-                                System.out.println("welcome");
-                            } else {
-                                Glide.with(getActivity()).load(R.drawable.bg1).centerCrop().into(imageView);
-                            }
-
-                        }
-                    }
-                }
-
-                tvAQI.setText(shareText + " AQI");
-                String timeText = null;
-                SharedPreferences pref = getActivity().getPreferences(0);
-                String text = pref.getString("dateText",timeText);
-                tvTime.setText(text);
-            }
-
-        };
-        thisThread.run();
+        tvAQI.setTypeface(mTypeFace);
+        tvTime.setTypeface(mTypeFace);
         return view;
     }
 

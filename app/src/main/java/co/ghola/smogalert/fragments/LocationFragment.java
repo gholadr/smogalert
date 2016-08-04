@@ -1,5 +1,6 @@
 package co.ghola.smogalert.fragments;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -75,6 +76,7 @@ public class LocationFragment extends Fragment {
         final TextView unitTemp = (TextView) v.findViewById(R.id.tempUnit);
         final ImageView imgView = (ImageView) v.findViewById(R.id.imgWeather);
         final TextView colorTextLine = (TextView) v.findViewById(R.id.lineTxt);
+        final Typeface mTypeFace  = Typeface.createFromAsset(getActivity().getAssets(),"fonts/RobotoCondensed-Regular.ttf");
         final WeatherConfig config = new WeatherConfig();
         config.unitSystem = WeatherConfig.UNIT_SYSTEM.M;
         config.lang = "en";
@@ -96,12 +98,13 @@ public class LocationFragment extends Fragment {
         } catch (WeatherProviderInstantiationException e) {
             e.printStackTrace();
         }
-                handler.postDelayed(this,15000);
+                handler.postDelayed(this,60000);
                 client.updateWeatherConfig(config);
                 client.getCurrentCondition(new WeatherRequest("1566083"), new WeatherClient.WeatherEventListener() {
                     @Override
                     public void onWeatherRetrieved(CurrentWeather currentWeather) {
                         Weather weather = currentWeather.weather;
+                        cityText.setTypeface(mTypeFace);
                         cityText.setText(weather.location.getCity() + "," + weather.location.getCountry());
                         condDescr.setText(weather.currentCondition.getCondition() + "(" + weather.currentCondition.getDescr() + ")");
                         LogUtils.LOGD("SwA", "Val [" + weather.temperature.getTemp() + "]");

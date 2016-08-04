@@ -1,5 +1,6 @@
 package co.ghola.smogalert.fragments;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -66,18 +67,18 @@ public class WeatherFragment extends Fragment {
         final View v = inflater.inflate(R.layout.fouth_fragment, container, false);
         final TextView cityText = (TextView) v.findViewById(R.id.location);
         final TextView hum = (TextView) v.findViewById(R.id.humidity);
-        final TextView press = (TextView) v.findViewById(R.id.pressure);
         final TextView windSpeed = (TextView) v.findViewById(R.id.windSpeed);
-        final TextView windDeg = (TextView) v.findViewById(R.id.windDeg);
         final TextView tempMin = (TextView) v.findViewById(R.id.tempMin);
         final TextView tempMax = (TextView) v.findViewById(R.id.tempMax);
         final TextView sunset = (TextView) v.findViewById(R.id.sunset);
         final TextView sunRise = (TextView) v.findViewById(R.id.sunrise);
+        Typeface mTypeFace  = Typeface.createFromAsset(getActivity().getAssets(),"fonts/RobotoCondensed-Regular.ttf");
+        cityText.setTypeface(mTypeFace);
         final Handler handler = new Handler();
         final Runnable thisThread = new Runnable() {
             @Override
             public void run() {
-               handler.postDelayed(this,15000);
+               handler.postDelayed(this,60000);
                 final WeatherConfig config = new WeatherConfig();
                 config.unitSystem = WeatherConfig.UNIT_SYSTEM.M;
                 config.lang = "en";
@@ -107,8 +108,7 @@ public class WeatherFragment extends Fragment {
                         tempMin.setText(weather.temperature.getMinTemp() + currentWeather.getUnit().tempUnit);
                         tempMax.setText(weather.temperature.getMaxTemp() + currentWeather.getUnit().tempUnit);
                         windSpeed.setText(weather.wind.getSpeed() + currentWeather.getUnit().speedUnit);
-                        windDeg.setText((int) weather.wind.getDeg() + "° (" + WindDirection.getDir((int) weather.wind.getDeg()) + ")");
-                        press.setText(weather.currentCondition.getPressure() + currentWeather.getUnit().pressureUnit);
+                        //windDeg.setText((int) weather.wind.getDeg() );
                         sunset.setText(WeatherUtil.convertDate(weather.location.getSunset()));
                         sunRise.setText(WeatherUtil.convertDate(weather.location.getSunrise()));
                     }
