@@ -3,6 +3,7 @@ package co.ghola.smogalert;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -220,8 +221,8 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                         shareText = String.format(shareText, msg.toLowerCase(), aqi, blurb, usEmbassyText, datetimeText);
                         //Passing Data to Each Fragments
                         EventBus.getDefault().postSticky(aqi);
-                        passData(send);
-                        passText(timeText);
+                       // passData(send);
+                       // passText(timeText);
                 }
                 task = null;
             }
