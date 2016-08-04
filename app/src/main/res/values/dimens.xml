@@ -13,7 +13,7 @@
 
     <dimen name="textBig.size">50sp</dimen>
     <dimen name="textSmall.size">14sp</dimen>
-    <dimen name="textVerySmall.size">8sp</dimen>
+    <dimen name="textVerySmall.size">14sp</dimen>
     <dimen name="textSmallWeather.size">12sp</dimen>
     <dimen name="dayText.size">13sp</dimen>
     <dimen name="infoText.size">11sp</dimen>

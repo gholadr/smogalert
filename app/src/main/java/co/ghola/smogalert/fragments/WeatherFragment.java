@@ -68,7 +68,6 @@ public class WeatherFragment extends Fragment {
         final TextView cityText = (TextView) v.findViewById(R.id.location);
         final TextView hum = (TextView) v.findViewById(R.id.humidity);
         final TextView windSpeed = (TextView) v.findViewById(R.id.windSpeed);
-        final TextView windDeg = (TextView) v.findViewById(R.id.windDeg);
         final TextView tempMin = (TextView) v.findViewById(R.id.tempMin);
         final TextView tempMax = (TextView) v.findViewById(R.id.tempMax);
         final TextView sunset = (TextView) v.findViewById(R.id.sunset);
@@ -79,7 +78,7 @@ public class WeatherFragment extends Fragment {
         final Runnable thisThread = new Runnable() {
             @Override
             public void run() {
-               handler.postDelayed(this,20000);
+               handler.postDelayed(this,60000);
                 final WeatherConfig config = new WeatherConfig();
                 config.unitSystem = WeatherConfig.UNIT_SYSTEM.M;
                 config.lang = "en";

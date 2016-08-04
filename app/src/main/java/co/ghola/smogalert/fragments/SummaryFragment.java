@@ -95,6 +95,9 @@ public class SummaryFragment extends Fragment {
                 mTimeText = d.toString("hh:mm aaa");
                 String mAQI= result.getString(DBContract.COLUMN_IDX_AQI);
                 tvTime.setText(mTimeText);
+                if(mAQI == "null"){
+                    tvAQI.setText("Loading...");
+                }
                 tvAQI.setText(mAQI+ " AQI");
             }
             task = null;

@@ -31,13 +31,11 @@ import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.viewpagerindicator.CirclePageIndicator;
 
-import org.greenrobot.eventbus.EventBus;
-
 
 import co.ghola.smogalert.async.SyncUtils;
 import co.ghola.smogalert.fragments.LocationFragment;
-import co.ghola.smogalert.fragments.Statistic2Fragment;
 import co.ghola.smogalert.fragments.StatisticFragment;
+import co.ghola.smogalert.fragments.OneDayFragment;
 import co.ghola.smogalert.fragments.Summary2Fragment;
 import co.ghola.smogalert.fragments.SummaryFragment;
 import co.ghola.smogalert.fragments.WeatherFragment;
@@ -262,9 +260,9 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
             switch (position) {
 
                 case 0: // Fragment # 1 - This will show SecondFragment
-                    return Statistic2Fragment.newInstance(0, "Page # 3");
+                    return StatisticFragment.newInstance(0, "Page # 3");
                 case 1: // Fragment # 1 - This will show SecondFragment
-                    return StatisticFragment.newInstance(1, "Page # 4");
+                    return OneDayFragment.newInstance(1, "Page # 4");
                 default:
                     return null;
             }

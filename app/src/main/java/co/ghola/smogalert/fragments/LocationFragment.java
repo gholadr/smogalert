@@ -98,7 +98,7 @@ public class LocationFragment extends Fragment {
         } catch (WeatherProviderInstantiationException e) {
             e.printStackTrace();
         }
-                handler.postDelayed(this,20000);
+                handler.postDelayed(this,60000);
                 client.updateWeatherConfig(config);
                 client.getCurrentCondition(new WeatherRequest("1566083"), new WeatherClient.WeatherEventListener() {
                     @Override

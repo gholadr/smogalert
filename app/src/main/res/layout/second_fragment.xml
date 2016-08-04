@@ -13,7 +13,8 @@
             android:id="@+id/chart"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#00B2B1"/>
+            android:background="#00B2B1"
+            android:layout_marginBottom="7dp" />
     </LinearLayout>
 
 </RelativeLayout>
