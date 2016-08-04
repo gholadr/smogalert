@@ -25,4 +25,5 @@
     <string name="share_subject">Air Pollution Report</string>
     <string name="share" formatted="false">Current AQI is %s</string>
     <string name="shared_with">Shared with SmogAlert. Get it on Play store here: http://www.google.com</string>
+    <string name="swipe_detail" formatted="false">Swipe to view last 24 hours. </string>
 </resources>
