@@ -23,6 +23,6 @@
     <string name="us_embassy">Air quality sample taken from HCMC US Embassy</string>
     <string name="date_time" formatted="false">%s, %s</string>
     <string name="share_subject">Air Pollution Report</string>
-    <string name="share" formatted="false">Air quality in HCMC is %s.  %s AQI. \n %s.\n  %s, %s"</string>
+    <string name="share" formatted="false">Current AQI is %s</string>
     <string name="shared_with">Shared with SmogAlert. Get it on Play store here: http://www.google.com</string>
 </resources>
