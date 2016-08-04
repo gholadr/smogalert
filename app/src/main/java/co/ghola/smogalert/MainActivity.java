@@ -257,8 +257,8 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                         shareText = String.format(shareText, msg.toLowerCase(), aqi, blurb, usEmbassyText, datetimeText);
                         //Passing Data to Each Fragments
                         EventBus.getDefault().postSticky(aqi);
-                       // passData(send);
-                     //   passText(timeText);
+                        passData(send);
+                        passText(timeText);
                 }
                 task = null;
             }
