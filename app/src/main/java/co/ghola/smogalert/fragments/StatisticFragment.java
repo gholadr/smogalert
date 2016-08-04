@@ -76,6 +76,7 @@ public class StatisticFragment extends android.support.v4.app.Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
         page = getArguments().getInt("someInt", 0);
         title = getArguments().getString("someTitle");
 
@@ -256,11 +257,7 @@ public class StatisticFragment extends android.support.v4.app.Fragment {
             task = null;
         }
 
-        @Subscribe(threadMode = ThreadMode.MAIN)
-        public void doThis(String text) {
-            if (task == null)
-                task = new LoadCursorTask(getContext()).execute(new Integer(Constants.LAST_7_DAYS));
-        }
+
 
         @Override
         protected Cursor doInBackground(Integer... params) {
@@ -269,6 +266,11 @@ public class StatisticFragment extends android.support.v4.app.Fragment {
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void doThis(String text) {
+        if (task == null)
+            task = new LoadCursorTask(getContext()).execute(new Integer(Constants.LAST_7_DAYS));
+    }
 
     @Override
     public void onResume() {
