@@ -58,7 +58,6 @@ public class StatisticFragment extends Fragment {
         page = getArguments().getInt("someInt", 0);
         title = getArguments().getString("someTitle");
         mTypeFace  = Typeface.createFromAsset(getActivity().getAssets(),"fonts/RobotoCondensed-Regular.ttf");
-        EventBus.getDefault().register(this);
     }
 
     @Override
