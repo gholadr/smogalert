@@ -91,7 +91,6 @@ public class StatisticFragment extends android.support.v4.app.Fragment {
 
         for (int i = (int) start; i < start + count + 1; i++) {
             float val = input.get(i).floatValue();
-
             yVals1.add(new Entry(i + 1f, Math.round(val)));
         }
 
@@ -105,10 +104,9 @@ public class StatisticFragment extends android.support.v4.app.Fragment {
             mLineChart.notifyDataSetChanged();
         } else {
             set1 = new LineDataSet(yVals1, "AQI year 2017");
-            set1.setColors(ColorTemplate.MATERIAL_COLORS);
+            set1.setColor(Color.WHITE);
             set1.enableDashedLine(0f, 0f, 0f);
             set1.enableDashedHighlightLine(10f, 5f, 0f);
-            set1.setCircleColor(Color.BLACK);
             set1.setLineWidth(2f);
             set1.setCircleRadius(3f);
             set1.setDrawCircleHole(true);
@@ -119,6 +117,7 @@ public class StatisticFragment extends android.support.v4.app.Fragment {
 
             LineData data = new LineData(dataSets);
             data.setValueTextSize(10f);
+            data.setValueTextColor(Color.WHITE);
             //data.setValueTypeface(mTfLight);
             //data.s(0.9f);
             mLineChart.animateX(2500);
@@ -142,6 +141,9 @@ public class StatisticFragment extends android.support.v4.app.Fragment {
         xAxis.setGranularity(1f); // only intervals of 1 day
         xAxis.setLabelCount(7);
         xAxis.setValueFormatter(xAxisFormatter);
+        xAxis.setTextColor(Color.WHITE);
+        xAxis.setGridColor(Color.WHITE);
+        xAxis.setAxisLineColor(Color.WHITE);
 
         AxisValueFormatter custom = new MyAxisValueFormatter();
 
@@ -152,12 +154,18 @@ public class StatisticFragment extends android.support.v4.app.Fragment {
         leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
         leftAxis.setSpaceTop(15f);
         leftAxis.setAxisMinValue(0f); // this replaces setStartAtZero(true)
+        leftAxis.setTextColor(Color.WHITE);
+        leftAxis.setGridColor(Color.WHITE);
+        leftAxis.setAxisLineColor(Color.WHITE);
 
         YAxis rightAxis = mLineChart.getAxisRight();
         rightAxis.setDrawGridLines(false);
         //rightAxis.setTypeface(mTfLight);
         rightAxis.setLabelCount(8, false);
         rightAxis.setValueFormatter(custom);
+        rightAxis.setTextColor(Color.WHITE);
+        rightAxis.setGridColor(Color.WHITE);
+        rightAxis.setAxisLineColor(Color.WHITE);
         rightAxis.setSpaceTop(15f);
         rightAxis.setAxisMinValue(0f); // this replaces setStartAtZero(true)
 
@@ -165,11 +173,15 @@ public class StatisticFragment extends android.support.v4.app.Fragment {
         l.setPosition(Legend.LegendPosition.BELOW_CHART_LEFT);
         l.setForm(Legend.LegendForm.SQUARE);
         l.setFormSize(9f);
+        l.setTextColor(Color.WHITE);
+
         l.setTextSize(11f);
         l.setXEntrySpace(4f);
 
         //Set LineChart Attribute
         mLineChart.setMarkerView(new XYMarkerView(getContext(), xAxisFormatter));
+        mLineChart.setGridBackgroundColor(Color.WHITE);
+        mLineChart.setBorderColor(Color.WHITE);
         mLineChart.setDescription("");
         mLineChart.setNoDataText("There are no data currently");
         mLineChart.setDrawGridBackground(false);

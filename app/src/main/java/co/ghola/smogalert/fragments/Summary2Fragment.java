@@ -131,8 +131,6 @@ public class Summary2Fragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.summary_fragment, container, false);
-        ImageView mImageView = (ImageView) view.findViewById(R.id.background2);
-        Glide.with(getActivity()).load(R.drawable.background_test_2).centerCrop().into(mImageView);
          mTextView = (TextView) view.findViewById(R.id.tvShareText);
 
         return view;

@@ -3,6 +3,7 @@ package co.ghola.smogalert.fragments;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -43,14 +44,11 @@ public class SummaryFragment extends Fragment {
     // Store instance variables
     private String title;
     private int page;
-    private ImageView imageView;
     public TextView tvTime;
     private AsyncTask task = null;
     private String mTimeText;
     public TextView tvAQI;
-    private String mAQI;
-    private  EventBus eventBus;
-
+    Typeface mTypeFace;
     // newInstance constructor for creating fragment with arguments
     public static SummaryFragment newInstance(int page, String title) {
         SummaryFragment mSummaryFragment = new SummaryFragment();
@@ -68,6 +66,7 @@ public class SummaryFragment extends Fragment {
         page = getArguments().getInt("someInt", 0);
         title = getArguments().getString("someTitle");
         EventBus.getDefault().register(this);
+        mTypeFace  = Typeface.createFromAsset(getActivity().getAssets(),"fonts/Roboto-Regular.ttf");
 
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -78,8 +77,7 @@ public class SummaryFragment extends Fragment {
     }
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        imageView = (ImageView) view.findViewById(R.id.imageBackground);
-        Glide.with(getContext()).load(R.drawable.bg1).centerCrop().into(imageView);
+
         super.onViewCreated(view, savedInstanceState);
 
 
@@ -96,11 +94,10 @@ public class SummaryFragment extends Fragment {
                 result.moveToPosition(0);
                 DateTime d = new DateTime((result.getLong(DBContract.COLUMN_IDX_TS) * 1000), DateTimeZone.UTC);
                 mTimeText = d.toString("hh:mm aaa");
-                String usEmbassyText = getActivity().getResources().getString(R.string.us_embassy);
                 String mAQI= result.getString(DBContract.COLUMN_IDX_AQI);
                 tvTime.setText(mTimeText);
                 tvAQI.setText(mAQI+ " AQI");
-                Log.d("THEAQI",""+mAQI);
+
             }
             task = null;
         }
@@ -134,10 +131,10 @@ public class SummaryFragment extends Fragment {
         View view = inflater.inflate(R.layout.first_fragment, container, false);
         ImageView mImageView = (ImageView) view.findViewById(R.id.myimg);
         Glide.with(getActivity()).load(R.drawable.cloud).fitCenter().into(mImageView);
-        imageView = (ImageView) view.findViewById(R.id.imageBackground);
         tvAQI = (TextView) view.findViewById(R.id.tvAQI);
         tvTime = (TextView) view.findViewById(R.id.tvTime);
-
+        tvAQI.setTypeface(mTypeFace);
+        tvTime.setTypeface(mTypeFace);
         return view;
     }
 

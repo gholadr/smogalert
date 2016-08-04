@@ -32,7 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="151dp"
                 android:layout_gravity="top"
-                android:background="#4FC3F7" />
+                />
 
 
             <ImageView
@@ -53,8 +53,12 @@
                 android:id="@+id/indicator"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#4FC3F7"
-                android:layout_gravity="bottom"/>
+                android:foregroundGravity="center_horizontal"
+                android:paddingTop="1dp"
+                android:paddingBottom="5dp"
+                android:background="#03A9F4"
+                android:layout_gravity="bottom"
+                />
         </FrameLayout>
 
     </LinearLayout>
@@ -90,7 +94,7 @@
                     android:layout_width="38dp"
                     android:layout_height="38dp"
                     android:layout_gravity="center_vertical|left"
-                    android:src="@drawable/ic_arrow_left_black" />
+                    android:src="@drawable/ic_keyboard_arrow_left_white_24dp" />
 
                 <ImageView
                     android:id="@+id/right_nav2"
@@ -104,7 +108,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#00B2B1"
-                    android:layout_gravity="bottom"/>
+                    android:layout_gravity="bottom"
+                    android:paddingTop="1dp"
+                    android:paddingBottom="5dp"/>
             </FrameLayout>
 
         </LinearLayout>
@@ -155,7 +161,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#3F51B5"
-                    android:layout_gravity="bottom"/>
+                    android:layout_gravity="bottom"
+                    android:paddingTop="1dp"
+                    android:paddingBottom="5dp"/>
             </FrameLayout>
 
         </LinearLayout>
