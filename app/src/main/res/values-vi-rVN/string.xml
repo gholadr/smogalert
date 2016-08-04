@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Khói bụi</string>
+    <string name="app_name">Khói Bụi</string>
     <string name="tab1">Gần đây</string>
     <string name="tab2">24 giờ qua</string>
     <string name="aqi_text">PM 2.5</string>

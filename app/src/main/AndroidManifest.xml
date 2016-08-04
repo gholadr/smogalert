@@ -43,7 +43,7 @@
                   android:name="com.facebook.FacebookContentProvider"
                   android:exported="true"/>
         <activity
-            android:name=".SplashActivity"
+            android:name="co.ghola.smogalert.SplashActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:theme="@style/SplashTheme">
