@@ -17,6 +17,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -155,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
             public void onClick(View view) {
 
                 ShareLinkContent content = new ShareLinkContent.Builder()
-                        .setContentUrl(Uri.parse("http://khoibui.co"))
+                        .setContentUrl(Uri.parse(getResources().getString(R.string.share_link)))
                         .setContentTitle(getApplicationContext().getResources().getString(R.string.share_subject))
                         .setContentDescription(shareText)
                         .setImageUrl(Uri.parse("http://i.imgur.com/sN1B51f.png"))
@@ -198,18 +199,18 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                 result.moveToPosition(0);
 
                 DateTime d = new DateTime((result.getLong(DBContract.COLUMN_IDX_TS) * 1000), DateTimeZone.UTC);
-                String dateText = d.toString("MMM d");
+                //String dateText = d.toString("MMM d");
                 String timeText = d.toString("h a");
+
                 String datetimeText = getApplicationContext().getResources().getString(R.string.date_time);
                 EventBus.getDefault().postSticky(datetimeText);
-               // String usEmbassyText = getApplicationContext().getResources().getString(R.string.us_embassy);
-                datetimeText = String.format(datetimeText, dateText, timeText);
+               // String usEmbassyText = getApplicationContext().getResources().getString(R.string.us_embassy);//datetimeText = String.format(datetimeText, dateText, timeText);
                 String aqi = result.getString(DBContract.COLUMN_IDX_AQI);
                // String msg = result.getString(DBContract.COLUMN_IDX_MESSAGE);
                // String blurb = "";
-                String sharedWithText = getApplicationContext().getResources().getString(R.string.shared_with);
+               //  String sharedWithText = getApplicationContext().getResources().getString(R.string.shared_with);
                 shareText = getApplicationContext().getResources().getString(R.string.share);
-                shareText = String.format(shareText, timeText, aqi);
+                shareText = String.format(shareText, timeText, aqi,returnBlurb(aqi));
                 }
                 task = null;
             }

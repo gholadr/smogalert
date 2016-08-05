@@ -3,7 +3,7 @@
     <string name="tab1">Gần đây</string>
     <string name="tab2">24 giờ qua</string>
     <string name="aqi_text">PM 2.5</string>
-
+    <string name="share_link">https://www.khoibui.co</string>
     <string name="navigation_drawer_open">Mở thanh điều hướng</string>
     <string name="navigation_drawer_close">Đóng thanh điều hướng</string>
     <string name="action_settings">Cài đặt</string>
@@ -21,6 +21,8 @@
     <string name="us_embassy">Mẫu không khí được lấy từ đại sứ quán Hoa Kỳ ở HCM</string>
     <string name="date_time" formatted="false">%s, %s</string>
     <string name="share_subject">Báo cáo ô nhiễm không khí</string>
-    <string name="share" formatted="false">Chất lượng không khí ở HCM đạt %s.  %s AQI. \n %s.\n  %s, %s"</string>
+    <string name="share" formatted="false">AQI vào lúc %s là %s. %s</string>
     <string name="shared_with">Chia sẻ qua SmogAlert. Tải về trên CH Play: http://www.google.com</string>
+    <string name="loading">Đang tải...</string>
+    <string name="swipe">Vuốt để xem thêm.</string>
 </resources>

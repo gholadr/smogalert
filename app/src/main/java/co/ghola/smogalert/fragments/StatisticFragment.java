@@ -123,7 +123,7 @@ public class StatisticFragment extends Fragment {
         tvAQI = (TextView) view.findViewById(R.id.tvAQI);
         tvTime = (TextView) view.findViewById(R.id.tvTime);
         tvAQI.setTypeface(mTypeFace);
-        tvAQI.setText(getContext().getResources().getString(R.string.swipe_detail));
+        tvAQI.setText(getContext().getResources().getString(R.string.swipe));
         return view;
     }
 
