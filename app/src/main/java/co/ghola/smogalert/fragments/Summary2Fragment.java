@@ -135,7 +135,6 @@ public class Summary2Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.summary_fragment, container, false);
          mTextView = (TextView) view.findViewById(R.id.tvShareText);
-
         return view;
     }
 
