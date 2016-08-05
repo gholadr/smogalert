@@ -83,7 +83,7 @@
             android:layout_marginTop="80dp"
             android:fontFamily="sans-serif"
             android:gravity="center"
-            android:text="Loading..."
+            android:text="@string/loading"
             android:textColor="#FFF"
             android:textSize="28sp"/>
 
