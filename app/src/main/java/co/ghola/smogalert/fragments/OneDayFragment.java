@@ -73,14 +73,14 @@ public class OneDayFragment extends android.support.v4.app.Fragment {
 
     }
     private void setData(int count,List<Integer> input) {
-        float start = 0f;
+        float start = 1f;
 
         mLineChart.getXAxis().setAxisMinValue(start);
-        mLineChart.getXAxis().setAxisMaxValue(start + count +2);
+        mLineChart.getXAxis().setAxisMaxValue(start + count );
 
         ArrayList<Entry> yVals1 = new ArrayList<Entry>();
 
-        for (int i = (int) start; i < start + count + 1; i++) {
+        for (int i = 0; i < start + count ; i++) {
             float val = input.get(i).floatValue();
             yVals1.add(new Entry(i + 1f, Math.round(val)));
         }
@@ -94,7 +94,7 @@ public class OneDayFragment extends android.support.v4.app.Fragment {
             mLineChart.getData().notifyDataChanged();
             mLineChart.notifyDataSetChanged();
         } else {
-            set1 = new LineDataSet(yVals1, "AQI year 2017");
+            set1 = new LineDataSet(yVals1,null);
             set1.setColor(Color.WHITE);
             set1.enableDashedLine(0f, 0f, 0f);
             set1.enableDashedHighlightLine(10f, 5f, 0f);
@@ -109,6 +109,7 @@ public class OneDayFragment extends android.support.v4.app.Fragment {
             LineData data = new LineData(dataSets);
             data.setValueTextSize(10f);
             data.setValueTextColor(Color.WHITE);
+            data.setDrawValues(false);
             //data.setValueTypeface(mTfLight);
             //data.s(0.9f);
             mLineChart.animateX(2500);
@@ -130,11 +131,12 @@ public class OneDayFragment extends android.support.v4.app.Fragment {
         //xAxis.setTypeface(mTfLight);
         xAxis.setDrawGridLines(false);
         xAxis.setGranularity(1f); // only intervals of 1 day
-        xAxis.setLabelCount(7);
+        xAxis.setLabelCount(23);
         xAxis.setValueFormatter(xAxisFormatter);
         xAxis.setTextColor(Color.WHITE);
         xAxis.setGridColor(Color.WHITE);
         xAxis.setAxisLineColor(Color.WHITE);
+
 
         AxisValueFormatter custom = new MyAxisValueFormatter();
 
@@ -144,7 +146,7 @@ public class OneDayFragment extends android.support.v4.app.Fragment {
         leftAxis.setValueFormatter(custom);
         leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
         leftAxis.setSpaceTop(15f);
-        leftAxis.setAxisMinValue(0f); // this replaces setStartAtZero(true)
+        leftAxis.setAxisMinValue(1f); // this replaces setStartAtZero(true)
         leftAxis.setTextColor(Color.WHITE);
         leftAxis.setGridColor(Color.WHITE);
         leftAxis.setAxisLineColor(Color.WHITE);
@@ -157,8 +159,8 @@ public class OneDayFragment extends android.support.v4.app.Fragment {
         rightAxis.setTextColor(Color.WHITE);
         rightAxis.setGridColor(Color.WHITE);
         rightAxis.setAxisLineColor(Color.WHITE);
-        rightAxis.setSpaceTop(15f);
-        rightAxis.setAxisMinValue(0f); // this replaces setStartAtZero(true)
+        rightAxis.setAxisMinValue(1f);
+        rightAxis.setSpaceTop(15f);// this replaces setStartAtZero(true)
 
         Legend l = mLineChart.getLegend();
         l.setPosition(Legend.LegendPosition.BELOW_CHART_LEFT);
@@ -185,7 +187,7 @@ public class OneDayFragment extends android.support.v4.app.Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void doThis(String text) {
         if (task == null)
-            task = new LoadCursorTask(getContext()).execute(new Integer(Constants.LAST_7_DAYS));
+            task = new LoadCursorTask(getContext()).execute(new Integer(Constants.LAST_24_HOURS));
     }
     private class LoadCursorTask extends BaseTask<Integer> {
         LoadCursorTask(Context ctxt) {
@@ -198,57 +200,59 @@ public class OneDayFragment extends android.support.v4.app.Fragment {
             if (result.getCount() > 0) {
                 Log.d("RESULT","COUNT"+result.getCount());
                 int size = 24;
-                List<String> aqis = new ArrayList<>(size);
+                List<Integer> aqis = new ArrayList<>(size);
                 if(aqis.size() <= 24)
                 {
                     size = result.getCount();
                 }
                 for (int i = 0; i < size; i++) {
                     result.moveToPosition(i);
-                    aqis.add(result.getString(DBContract.COLUMN_IDX_AQI));
+                    aqis.add(Integer.parseInt(result.getString(DBContract.COLUMN_IDX_AQI)));
+
                 }
-                Observable.from(aqis)
-                        .map(new Func1<String, Integer>() {
-                            @Override
-                            public Integer call(String s) {
-                                return Integer.parseInt(s);
-                            }
-                        })
-                        .buffer(4)
-                        .map(new Func1<List<Integer>, Integer>() {
-                            @Override
-                            public Integer call(List<Integer> integers) {
-                                int sum = 0;
-                                for (int i = 0, size = integers.size(); i < size; i++) {
-                                    sum += integers.get(i);
-                                    Log.d("check",""+integers.get(i));
-                                }
-                                Log.d("check",""+integers.size());
-                                return sum / integers.size();
-                            }
-                        })
-                        .toList()
-                        .subscribe(new Subscriber<List<Integer>>() {
-                            @Override
-                            public void onCompleted() {
-
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-
-                            }
-
-                            @Override
-                            public void onNext(List<Integer> integers) {
-                                integerList.addAll(integers);
-                                Log.d("integer",""+integers);
-                                integerList = InteArray;
-                                setData(5,integers);
-
-                                //list average of each 24 elements
-                            }
-                        });
+                setData(23,aqis);
+//                Observable.from(aqis)
+//                        .map(new Func1<String, Integer>() {
+//                            @Override
+//                            public Integer call(String s) {
+//                                return Integer.parseInt(s);
+//                            }
+//                        })
+//                        .buffer(24)
+//                        .map(new Func1<List<Integer>, Integer>() {
+//                            @Override
+//                            public Integer call(List<Integer> integers) {
+//                                int sum = 0;
+//                                for (int i = 0, size = integers.size(); i < size; i++) {
+//                                    sum += integers.get(i);
+//                                    Log.d("check",""+integers.get(i));
+//                                }
+//                                Log.d("check",""+integers.size());
+//                                return sum / integers.size();
+//                            }
+//                        })
+//                        .toList()
+//                        .subscribe(new Subscriber<List<Integer>>() {
+//                            @Override
+//                            public void onCompleted() {
+//
+//                            }
+//
+//                            @Override
+//                            public void onError(Throwable e) {
+//
+//                            }
+//
+//                            @Override
+//                            public void onNext(List<Integer> integers) {
+//                                integerList.addAll(integers);
+//                                Log.d("integer",""+integers);
+//                                integerList = InteArray;
+//                                setData(23,integers);
+//
+//                                //list average of each 24 elements
+//                            }
+//                        });
             }
             task = null;
         }
@@ -267,6 +271,6 @@ public class OneDayFragment extends android.support.v4.app.Fragment {
     public void onResume() {
         super.onResume();
         if (task == null)
-            task = new LoadCursorTask(getActivity()).execute(new Integer(Constants.LAST_7_DAYS));
+            task = new LoadCursorTask(getActivity()).execute(new Integer(Constants.LAST_24_HOURS));
     }
 }
