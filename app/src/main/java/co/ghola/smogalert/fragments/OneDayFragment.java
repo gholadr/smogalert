@@ -94,7 +94,7 @@ public class OneDayFragment extends android.support.v4.app.Fragment {
             mLineChart.getData().notifyDataChanged();
             mLineChart.notifyDataSetChanged();
         } else {
-            set1 = new LineDataSet(yVals1,"");
+            set1 = new LineDataSet(yVals1,null);
             set1.setColor(Color.WHITE);
             set1.enableDashedLine(0f, 0f, 0f);
             set1.enableDashedHighlightLine(10f, 5f, 0f);
