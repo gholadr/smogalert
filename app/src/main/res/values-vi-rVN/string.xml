@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Khói Bụi</string>
+    <string name="tab1">Gần đây</string>
+    <string name="tab2">24 giờ qua</string>
+    <string name="aqi_text">PM 2.5</string>
+
+    <string name="navigation_drawer_open">Mở thanh điều hướng</string>
+    <string name="navigation_drawer_close">Đóng thanh điều hướng</string>
+    <string name="action_settings">Cài đặt</string>
+    <string name="notifications">Tắt cảnh báo ô nhiễm</string>
+    <string name="good">Chất lượng không khí tốt</string>
+    <string name="moderate">Chất lượng không khí trung bình</string>
+    <string name="sensitive">Không tốt cho nhóm đối tượng nhạy cảm</string>
+    <string name="unhealthy">Không tốt cho sức khoẻ</string>
+    <string name="good_blurb">Hãy tận hưởng bầu không khí trong lành!</string>
+    <string name="moderate_blurb">Chất lượng không khí không tệ nhưng đừng tập thể dục ngoài trời!.</string>
+    <string name="sensitive_blurb">Người già, người có bệnh đường hô hấp và trẻ em nên ở trong nhà.</string>
+    <string name="unhealthy_blurb">Tốt nhất nên ở nhà ngày hôm nay.</string>
+    <string name="notification_title">Cảnh báo ô nhiễm</string>
+    <string name="default_share">Chưa có gì để chia sẻ.</string>
+    <string name="us_embassy">Mẫu không khí được lấy từ đại sứ quán Hoa Kỳ ở HCM</string>
+    <string name="date_time" formatted="false">%s, %s</string>
+    <string name="share_subject">Báo cáo ô nhiễm không khí</string>
+    <string name="share" formatted="false">Chất lượng không khí ở HCM đạt %s.  %s AQI. \n %s.\n  %s, %s"</string>
+    <string name="shared_with">Chia sẻ qua SmogAlert. Tải về trên CH Play: http://www.google.com</string>
+</resources>

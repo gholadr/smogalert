@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SmogAlert - HCMC</string>
+    <string name="app_name">Khói Bụi</string>
     <string name="tab1">Most Recent</string>
     <string name="tab2">Last 24hrs</string>
     <string name="aqi_text">PM 2.5</string>
@@ -9,10 +9,13 @@
     <string name="notifications">Turn Off Pollution Alerts</string>
     <string name="good">Good Air Quality</string>
     <string name="moderate">Moderate Air Quality</string>
+    <string name="moderate_msg">Moderate</string>
+    <string name="healthy_msg">Healthy</string>
+    <string name="unhelthy_msg">Unhealthy</string>
     <string name="sensitive">Unhealthy for Sensitive Groups</string>
     <string name="unhealthy">Unhealthy</string>
     <string name="good_blurb">The air is fresh. Enjoy the outdoors!</string>
-    <string name="moderate_blurb">Ok to be outside still, but don\'t go for a run!.</string>
+    <string name="moderate_blurb">Ok to be outside still, but don\'t go for a run!</string>
     <string name="sensitive_blurb">Seniors, people with chronic respiratory issues and toddlers should stay inside.</string>
     <string name="unhealthy_blurb">You should probably stay indoors today.</string>
     <string name="notification_title">Pollution Alert</string>
@@ -20,6 +23,7 @@
     <string name="us_embassy">Air quality sample taken from HCMC US Embassy</string>
     <string name="date_time" formatted="false">%s, %s</string>
     <string name="share_subject">Air Pollution Report</string>
-    <string name="share" formatted="false">Air quality in HCMC is %s.  %s AQI. \n %s.\n  %s, %s"</string>
+    <string name="share" formatted="false">AQI at %s is %s</string>
     <string name="shared_with">Shared with SmogAlert. Get it on Play store here: http://www.google.com</string>
+    <string name="swipe_detail" formatted="false">Swipe to view the last 24 hours </string>
 </resources>

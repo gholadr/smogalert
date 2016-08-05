@@ -10,7 +10,7 @@
     </declare-styleable>
 
     <declare-styleable name="GaugeView">
-        <attr name="radius" format="dimension"/>
+
         <attr name="value" format="string"/>
     </declare-styleable>
 
