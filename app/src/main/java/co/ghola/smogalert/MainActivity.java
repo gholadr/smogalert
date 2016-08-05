@@ -199,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
                 DateTime d = new DateTime((result.getLong(DBContract.COLUMN_IDX_TS) * 1000), DateTimeZone.UTC);
                 String dateText = d.toString("MMM d");
-                String timeText = d.toString("hh:mm aaa");
+                String timeText = d.toString("h a");
                 String datetimeText = getApplicationContext().getResources().getString(R.string.date_time);
                 EventBus.getDefault().postSticky(datetimeText);
                // String usEmbassyText = getApplicationContext().getResources().getString(R.string.us_embassy);
@@ -209,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                // String blurb = "";
                 String sharedWithText = getApplicationContext().getResources().getString(R.string.shared_with);
                 shareText = getApplicationContext().getResources().getString(R.string.share);
-                shareText = String.format(shareText, aqi);
+                shareText = String.format(shareText, timeText, aqi);
                 }
                 task = null;
             }
