@@ -39,7 +39,6 @@ public class DayAxisValueFormatter implements AxisValueFormatter {
         }
     }
 
-
     @Override
     public int getDecimalDigits() {
         return 0;
