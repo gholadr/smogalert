@@ -1,21 +1,17 @@
 package co.ghola.smogalert.fragments;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -25,55 +21,45 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
 import co.ghola.smogalert.R;
 import co.ghola.smogalert.db.DBContract;
 import co.ghola.smogalert.utils.BaseTask;
 import co.ghola.smogalert.utils.Constants;
-import rx.Observable;
-import rx.Subscriber;
-import rx.functions.Func1;
 
 /**
- * Created by alecksjohansson on 7/21/16.
+ * Created by alecksjohansson on 8/1/16.
  */
-public class SummaryFragment extends Fragment {
+public class OneDayFragmentDetail extends Fragment {
     // Store instance variables
     private String title;
     private int page;
+    private ImageView imageView;
     public TextView tvTime;
-    private AsyncTask task = null;
-    private String mTimeText;
     public TextView tvAQI;
-    Typeface mTypeFace;
+    private Typeface mTypeFace;
+    private AsyncTask task = null;
+
+
     // newInstance constructor for creating fragment with arguments
-    public static SummaryFragment newInstance(int page, String title) {
-        SummaryFragment mSummaryFragment = new SummaryFragment();
+    public static OneDayFragmentDetail newInstance(int page, String title) {
+        OneDayFragmentDetail mOneDayFragmentDetail = new OneDayFragmentDetail();
         Bundle args = new Bundle();
         args.putInt("someInt", page);
         args.putString("someTitle", title);
-        mSummaryFragment.setArguments(args);
-        return mSummaryFragment;
+        mOneDayFragmentDetail.setArguments(args);
+        return mOneDayFragmentDetail;
     }
 
     // Store instance variables based on arguments passed
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
         page = getArguments().getInt("someInt", 0);
         title = getArguments().getString("someTitle");
-        EventBus.getDefault().register(this);
         mTypeFace  = Typeface.createFromAsset(getActivity().getAssets(),"fonts/RobotoCondensed-Regular.ttf");
+    }
 
-    }
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void doThis(String text) {
-        if (task == null)
-            task = new LoadCursorTask(getContext()).execute(new Integer(Constants.LAST_HOUR));
-    }
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
@@ -92,13 +78,14 @@ public class SummaryFragment extends Fragment {
             if (result.getCount() > 0) {
                 result.moveToPosition(0);
                 DateTime d = new DateTime((result.getLong(DBContract.COLUMN_IDX_TS) * 1000), DateTimeZone.UTC);
-                mTimeText = d.toString("hh:mm aaa");
-                String mAQI= result.getString(DBContract.COLUMN_IDX_AQI);
+                String mTimeText = d.toString("hh:mm aaa");
+                tvTime.setTypeface(mTypeFace);
                 tvTime.setText(mTimeText);
-                tvAQI.setText(mAQI+ " AQI");
+
             }
             task = null;
         }
+
 
 
         @Override
@@ -108,6 +95,11 @@ public class SummaryFragment extends Fragment {
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void doThis(String text) {
+        if (task == null)
+            task = new LoadCursorTask(getContext()).execute(new Integer(Constants.LAST_7_DAYS));
+    }
 
     @Override
     public void onDestroy() {
@@ -118,7 +110,6 @@ public class SummaryFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        //EventBus.getDefault().hasSubscriberForEvent(SummaryFragment.class);
         if (task == null)
             task = new LoadCursorTask(getActivity()).execute(new Integer(Constants.LAST_HOUR));
     }
@@ -126,13 +117,13 @@ public class SummaryFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.first_fragment, container, false);
+        View view = inflater.inflate(R.layout.one_day_fragment, container, false);
         ImageView mImageView = (ImageView) view.findViewById(R.id.myimg);
-        Glide.with(getActivity()).load(R.drawable.cloud).fitCenter().into(mImageView);
+        Glide.with(getActivity()).load(R.drawable.statistic).fitCenter().into(mImageView);
         tvAQI = (TextView) view.findViewById(R.id.tvAQI);
         tvTime = (TextView) view.findViewById(R.id.tvTime);
         tvAQI.setTypeface(mTypeFace);
-        tvTime.setTypeface(mTypeFace);
+        tvAQI.setText(getContext().getResources().getString(R.string.swipe));
         return view;
     }
 

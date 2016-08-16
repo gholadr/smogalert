@@ -259,7 +259,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         ArrayList<AirQualitySample> duplicateList =  new ArrayList<AirQualitySample>();
         Uri uri = DBContract.AirQualitySample.CONTENT_URI; // Get all entries
         //Iterator<AirQualitySample> itr = remoteList.iterator();
-        Cursor c = getContext().getContentResolver().query(uri, DBContract.PROJECTION, null, null, "ts DESC LIMIT 175");
+        Cursor c = getContext().getContentResolver().query(uri, DBContract.PROJECTION, null, null, "ts DESC LIMIT 24");
 
         if (c == null)
             throw new NullPointerException("null cursor when fetching local db");

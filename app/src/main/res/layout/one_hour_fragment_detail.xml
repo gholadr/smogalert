@@ -30,7 +30,7 @@
             android:background="#00000000"
             android:gravity="center"
             android:singleLine="false"
-            android:text="rrrrr"
+            android:text=""
 
             android:textAlignment="center"
             android:textColor="#FFFFFF"

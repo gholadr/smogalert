@@ -35,9 +35,6 @@ import co.ghola.smogalert.chart.XYMarkerView;
 import co.ghola.smogalert.db.DBContract;
 import co.ghola.smogalert.utils.BaseTask;
 import co.ghola.smogalert.utils.Constants;
-import rx.Observable;
-import rx.Subscriber;
-import rx.functions.Func1;
 
 /**
  * Created by alecksjohansson on 7/21/16.
@@ -90,6 +87,7 @@ public class OneDayFragment extends android.support.v4.app.Fragment {
         if (mLineChart.getData() != null &&
                 mLineChart.getData().getDataSetCount() > 0) {
             set1 = (LineDataSet) mLineChart.getData().getDataSetByIndex(0);
+            Log.d(OneDayFragment.class.getSimpleName(), yVals1.toString());
             set1.setValues(yVals1);
             mLineChart.getData().notifyDataChanged();
             mLineChart.notifyDataSetChanged();
@@ -122,7 +120,7 @@ public class OneDayFragment extends android.support.v4.app.Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.second_fragment, container, false);
+        View view = inflater.inflate(R.layout.one_day_fragment_detail, container, false);
         mLineChart = (LineChart) view.findViewById(R.id.chart);
         AxisValueFormatter xAxisFormatter = new DayAxisValueFormatter(mLineChart);
 

@@ -25,9 +25,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 import android.net.Uri;
 
-import org.greenrobot.eventbus.EventBus;
-
-import co.ghola.smogalert.contentprovider.SelectionBuilder;
 import co.ghola.smogalert.db.DBContract;
 import co.ghola.smogalert.db.DBHelper;
 

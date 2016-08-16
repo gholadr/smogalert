@@ -10,16 +10,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import org.greenrobot.eventbus.Subscribe;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 
 import co.ghola.smogalert.R;
 import co.ghola.smogalert.db.DBContract;
@@ -27,48 +23,50 @@ import co.ghola.smogalert.utils.BaseTask;
 import co.ghola.smogalert.utils.Constants;
 
 /**
- * Created by alecksjohansson on 8/1/16.
+ * Created by alecksjohansson on 7/21/16.
  */
-public class StatisticFragment extends Fragment {
+public class OneHourFragmentDetail extends Fragment {
     // Store instance variables
     private String title;
     private int page;
-    private ImageView imageView;
-    public TextView tvTime;
-    public TextView tvAQI;
-    private Typeface mTypeFace;
     private AsyncTask task = null;
-
+    private String mSummaryText;
+    private String mAQI;
+    private TextView mTextView;
+    private Typeface mTypeFace;
 
     // newInstance constructor for creating fragment with arguments
-    public static StatisticFragment newInstance(int page, String title) {
-        StatisticFragment mStatisticFragment = new StatisticFragment();
+    public static OneHourFragmentDetail newInstance(int page, String title) {
+        OneHourFragmentDetail mSummary2Fragment = new OneHourFragmentDetail();
         Bundle args = new Bundle();
         args.putInt("someInt", page);
         args.putString("someTitle", title);
-        mStatisticFragment.setArguments(args);
-        return mStatisticFragment;
+        mSummary2Fragment.setArguments(args);
+        return mSummary2Fragment;
     }
-
     // Store instance variables based on arguments passed
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        page = getArguments().getInt("someInt", 1);
+        title = getArguments().getString("OneHourFragment");
         EventBus.getDefault().register(this);
-        page = getArguments().getInt("someInt", 0);
-        title = getArguments().getString("someTitle");
         mTypeFace  = Typeface.createFromAsset(getActivity().getAssets(),"fonts/RobotoCondensed-Regular.ttf");
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-
         super.onViewCreated(view, savedInstanceState);
-
-
     }
-    public class LoadCursorTask extends BaseTask<Integer> {
 
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void doThis(String text) {
+        if (task == null)
+            task = new LoadCursorTask(getContext()).execute(new Integer(Constants.LAST_HOUR));
+    }
+
+    private class LoadCursorTask extends BaseTask<Integer> {
         LoadCursorTask(Context ctxt) {
             super(ctxt);
         }
@@ -77,10 +75,10 @@ public class StatisticFragment extends Fragment {
         public void onPostExecute(Cursor result) {
             if (result.getCount() > 0) {
                 result.moveToPosition(0);
-                DateTime d = new DateTime((result.getLong(DBContract.COLUMN_IDX_TS) * 1000), DateTimeZone.UTC);
-                String mTimeText = d.toString("hh:mm aaa");
-                tvTime.setTypeface(mTypeFace);
-                tvTime.setText(mTimeText);
+                mAQI= result.getString(DBContract.COLUMN_IDX_AQI);
+                mSummaryText =returnBlurb(mAQI);
+                mTextView.setTypeface(mTypeFace);
+                mTextView.setText(mSummaryText);
 
             }
             task = null;
@@ -95,17 +93,6 @@ public class StatisticFragment extends Fragment {
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void doThis(String text) {
-        if (task == null)
-            task = new LoadCursorTask(getContext()).execute(new Integer(Constants.LAST_7_DAYS));
-    }
-
-    @Override
-    public void onDestroy() {
-        EventBus.getDefault().unregister(this);
-        super.onDestroy();
-    }
 
     @Override
     public void onResume() {
@@ -113,17 +100,26 @@ public class StatisticFragment extends Fragment {
         if (task == null)
             task = new LoadCursorTask(getActivity()).execute(new Integer(Constants.LAST_HOUR));
     }
-    // Inflate the view for the fragment based on layout XML
+
+    public String returnBlurb(String aqi) {
+        if (aqi != null || aqi != "") {
+            Integer convertedAqi = Integer.parseInt(aqi);
+            if (convertedAqi.intValue() > 151) {
+                return getContext().getResources().getString(R.string.unhealthy_blurb);
+            } else if (convertedAqi.intValue() > 100) {
+                return getContext().getResources().getString(R.string.sensitive_blurb);
+            } else if (convertedAqi.intValue() > 51) {
+                return getContext().getResources().getString(R.string.moderate_blurb);
+            } else {
+                return getContext().getResources().getString(R.string.good_blurb);
+            }
+        }
+        return "";
+    }
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.statistic_layout, container, false);
-        ImageView mImageView = (ImageView) view.findViewById(R.id.myimg);
-        Glide.with(getActivity()).load(R.drawable.statistic).fitCenter().into(mImageView);
-        tvAQI = (TextView) view.findViewById(R.id.tvAQI);
-        tvTime = (TextView) view.findViewById(R.id.tvTime);
-        tvAQI.setTypeface(mTypeFace);
-        tvAQI.setText(getContext().getResources().getString(R.string.swipe));
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.one_hour_fragment_detail, container, false);
+         mTextView = (TextView) view.findViewById(R.id.tvShareText);
         return view;
     }
 

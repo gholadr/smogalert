@@ -60,7 +60,14 @@
             android:theme="@style/AppTheme.NoActionBar"/>
         <!-- receiver sends a notification to user when pollution levels are high -->
         <receiver android:name=".broadcastreceiver.PushReceiver" android:enabled="true" android:exported="true" />
-
+        <receiver
+            android:name=".broadcastreceiver.NetWatcher"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
         <provider
             android:name=".contentprovider.AQIContentProvider"
             android:authorities="co.ghola.smogalert"

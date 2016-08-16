@@ -1,37 +1,26 @@
 package co.ghola.smogalert.fragments;
 
-import android.animation.ValueAnimator;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.api.client.json.JsonParser;
-import org.greenrobot.eventbus.Subscribe;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import co.ghola.smogalert.MainActivity;
 import co.ghola.smogalert.R;
 import co.ghola.smogalert.db.DBContract;
 import co.ghola.smogalert.utils.BaseTask;
@@ -40,48 +29,49 @@ import co.ghola.smogalert.utils.Constants;
 /**
  * Created by alecksjohansson on 7/21/16.
  */
-public class Summary2Fragment extends Fragment {
+public class OneHourFragment extends Fragment {
     // Store instance variables
     private String title;
     private int page;
+    public TextView tvTime;
     private AsyncTask task = null;
-    private String mSummaryText;
-    private String mAQI;
-    private TextView mTextView;
-    private Typeface mTypeFace;
-
+    private String mTimeText;
+    public TextView tvAQI;
+    Typeface mTypeFace;
     // newInstance constructor for creating fragment with arguments
-    public static Summary2Fragment newInstance(int page, String title) {
-        Summary2Fragment mSummary2Fragment = new Summary2Fragment();
+    public static OneHourFragment newInstance(int page, String title) {
+        OneHourFragment mOneHourFragment = new OneHourFragment();
         Bundle args = new Bundle();
         args.putInt("someInt", page);
         args.putString("someTitle", title);
-        mSummary2Fragment.setArguments(args);
-        return mSummary2Fragment;
+        mOneHourFragment.setArguments(args);
+        return mOneHourFragment;
     }
+
     // Store instance variables based on arguments passed
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        page = getArguments().getInt("someInt", 1);
-        title = getArguments().getString("SummaryFragment");
+        page = getArguments().getInt("someInt", 0);
+        title = getArguments().getString("someTitle");
         EventBus.getDefault().register(this);
         mTypeFace  = Typeface.createFromAsset(getActivity().getAssets(),"fonts/RobotoCondensed-Regular.ttf");
+
     }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
-
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void doThis(String text) {
         if (task == null)
             task = new LoadCursorTask(getContext()).execute(new Integer(Constants.LAST_HOUR));
     }
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
-    private class LoadCursorTask extends BaseTask<Integer> {
+        super.onViewCreated(view, savedInstanceState);
+
+
+    }
+    public class LoadCursorTask extends BaseTask<Integer> {
+
         LoadCursorTask(Context ctxt) {
             super(ctxt);
         }
@@ -90,15 +80,14 @@ public class Summary2Fragment extends Fragment {
         public void onPostExecute(Cursor result) {
             if (result.getCount() > 0) {
                 result.moveToPosition(0);
-                mAQI= result.getString(DBContract.COLUMN_IDX_AQI);
-                mSummaryText =returnBlurb(mAQI);
-                mTextView.setTypeface(mTypeFace);
-                mTextView.setText(mSummaryText);
-
+                DateTime d = new DateTime((result.getLong(DBContract.COLUMN_IDX_TS) * 1000), DateTimeZone.UTC);
+                mTimeText = d.toString("hh:mm aaa");
+                String mAQI= result.getString(DBContract.COLUMN_IDX_AQI);
+                tvTime.setText(mTimeText);
+                tvAQI.setText(mAQI+ " AQI");
             }
             task = null;
         }
-
 
 
         @Override
@@ -110,31 +99,29 @@ public class Summary2Fragment extends Fragment {
 
 
     @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
+        //EventBus.getDefault().hasSubscriberForEvent(OneHourFragment.class);
         if (task == null)
             task = new LoadCursorTask(getActivity()).execute(new Integer(Constants.LAST_HOUR));
     }
-
-    public String returnBlurb(String aqi) {
-        if (aqi != null || aqi != "") {
-            Integer convertedAqi = Integer.parseInt(aqi);
-            if (convertedAqi.intValue() > 151) {
-                return getContext().getResources().getString(R.string.unhealthy_blurb);
-            } else if (convertedAqi.intValue() > 100) {
-                return getContext().getResources().getString(R.string.sensitive_blurb);
-            } else if (convertedAqi.intValue() > 51) {
-                return getContext().getResources().getString(R.string.moderate_blurb);
-            } else {
-                return getContext().getResources().getString(R.string.good_blurb);
-            }
-        }
-        return "";
-    }
+    // Inflate the view for the fragment based on layout XML
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.summary_fragment, container, false);
-         mTextView = (TextView) view.findViewById(R.id.tvShareText);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.one_hour_fragment, container, false);
+        ImageView mImageView = (ImageView) view.findViewById(R.id.myimg);
+        Glide.with(getActivity()).load(R.drawable.cloud).fitCenter().into(mImageView);
+        tvAQI = (TextView) view.findViewById(R.id.tvAQI);
+        tvTime = (TextView) view.findViewById(R.id.tvTime);
+        tvAQI.setTypeface(mTypeFace);
+        tvTime.setTypeface(mTypeFace);
         return view;
     }
 

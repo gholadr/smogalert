@@ -1,19 +1,17 @@
 package co.ghola.smogalert.fragments;
 
-import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.survivingwithandroid.weather.lib.WeatherClient;
 import com.survivingwithandroid.weather.lib.WeatherConfig;
@@ -24,42 +22,40 @@ import com.survivingwithandroid.weather.lib.model.CurrentWeather;
 import com.survivingwithandroid.weather.lib.model.Weather;
 import com.survivingwithandroid.weather.lib.provider.openweathermap.OpenweathermapProviderType;
 import com.survivingwithandroid.weather.lib.request.WeatherRequest;
-import com.survivingwithandroid.weather.lib.util.LogUtils;
-import com.survivingwithandroid.weather.lib.util.WindDirection;
 
-import java.io.BufferedReader;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 import co.ghola.smogalert.IconMapper.WeatherIconMapper;
 import co.ghola.smogalert.IconMapper.WeatherUtil;
 import co.ghola.smogalert.R;
+import co.ghola.smogalert.utils.Constants;
 
 /**
- * Created by alecksjohansson on 8/1/16.
+ * Created by alecksjohansson on 7/21/16.
  */
 public class WeatherFragment extends Fragment {
     // Store instance variables
-    private String title;
-    private int page;
-    WeatherClient weatherClient;
+//    private String title;
+//    private int page;
     String cityId= "1851632";
     WeatherRequest req = new WeatherRequest(cityId);
-    private TextView cityText;
-    private TextView hum;
-    private TextView windSpeed;
-    private TextView tempMin;
-    private TextView tempMax;
-    private TextView sunRise;
-    private TextView sunset;
+    private TextView noData;
+    private TextView condDescr;
+    private TextView temp;
+    private TextView unitTemp;
+    private ImageView imgView;
+    private TextView colorTextLine;
+    private LinearLayout layout;
+
 
 
     // newInstance constructor for creating fragment with arguments
     public static WeatherFragment newInstance(int page, String title) {
-        WeatherFragment mWeatherFragment= new WeatherFragment();
+        WeatherFragment mWeatherFragment = new WeatherFragment();
         Bundle args = new Bundle();
         args.putInt("someInt", page);
         args.putString("someTitle", title);
@@ -71,28 +67,34 @@ public class WeatherFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        page = getArguments().getInt("someInt", 0);
-        title = getArguments().getString("someTitle");
+        EventBus.getDefault().register(this);
+//        page = getArguments().getInt("someInt", 0);
+//        title = getArguments().getString("someTitle");
 
     }
-    private Boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getActivity().getSystemService(getContext().CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
-    }
-    public boolean isOnline() {
-        Runtime runtime = Runtime.getRuntime();
-        try {
-            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
-            int     exitValue = ipProcess.waitFor();
-            return (exitValue == 0);
-        } catch (IOException e)          { e.printStackTrace(); }
-        catch (InterruptedException e) { e.printStackTrace(); }
-        return false;
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        new WeatherOperationAsyncTask().execute();
 
     }
-    private class WeatherOperation extends AsyncTask<Void, Void , String>
+
+    // Inflate the view for the fragment based on layout XML
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+         View v = inflater.inflate(R.layout.weather_fragment, container, false);
+         noData= (TextView) v.findViewById(R.id.no_data);
+         temp = (TextView) v.findViewById(R.id.temp);
+         unitTemp = (TextView) v.findViewById(R.id.tempUnit);
+         imgView = (ImageView) v.findViewById(R.id.imgWeather);
+         colorTextLine = (TextView) v.findViewById(R.id.lineTxt);
+         layout = (LinearLayout) v.findViewById(R.id.weather_box);
+        return v;
+    }
+    private class WeatherOperationAsyncTask extends AsyncTask<Void, Void , String>
     {
         @Override
         protected String doInBackground(Void... params) {
@@ -117,26 +119,31 @@ public class WeatherFragment extends Fragment {
             client.getCurrentCondition(new WeatherRequest("1566083"), new WeatherClient.WeatherEventListener() {
                 @Override
                 public void onWeatherRetrieved(CurrentWeather currentWeather) {
+                    //                  ViewGroup container = (ViewGroup) getView().findViewById(R.id.weather);
+                    //                View viewer= LayoutInflater.from(getContext()).inflate(R.layout.weather_fragment,container);
                     Weather weather = currentWeather.weather;
-                    cityText.setText(weather.location.getCity() + "," + weather.location.getCountry());
-                    hum.setText(weather.currentCondition.getHumidity() + "%");
-                    tempMin.setText(weather.temperature.getMinTemp() + currentWeather.getUnit().tempUnit);
-                    tempMax.setText(weather.temperature.getMaxTemp() + currentWeather.getUnit().tempUnit);
-                    windSpeed.setText(weather.wind.getSpeed() + currentWeather.getUnit().speedUnit);
-                    sunset.setText(WeatherUtil.convertDate(weather.location.getSunset()));
-                    sunRise.setText(WeatherUtil.convertDate(weather.location.getSunrise()));
+//                    cityText.setText(weather.location.getCity() + "," + weather.location.getCountry());
+                    temp.setText("" + ((int) weather.temperature.getTemp()));
+                    unitTemp.setText(currentWeather.getUnit().tempUnit);
+                    colorTextLine.setBackgroundResource(WeatherUtil.getResource(weather.temperature.getTemp(), config));
+                    imgView.setImageResource(WeatherIconMapper.getWeatherResource(weather.currentCondition.getIcon(), weather.currentCondition.getWeatherId()));
+                    noData.setVisibility(View.INVISIBLE);
+                    layout.setVisibility(View.VISIBLE);
                 }
 
 
                 @Override
                 public void onConnectionError(Throwable t) {
-                    Log.d("WL", "Connection Error - parsing data");
+                    Log.e("WL", "Connection Error - parsing data");
+                    noData.setVisibility(View.VISIBLE);
+                    layout.setVisibility(View.INVISIBLE);
                 }
 
                 @Override
                 public void onWeatherError(WeatherLibException wle) {
-                    Log.d("WL", "Weather Error - parsing data");
-                    wle.printStackTrace();
+                    Log.e("WL", "Weather Error - parsing data");
+                    noData.setVisibility(View.VISIBLE);
+                    layout.setVisibility(View.INVISIBLE);
                 }
             });
             return null;
@@ -144,46 +151,9 @@ public class WeatherFragment extends Fragment {
 
     }
 
-    @Override
-    public void onResume() {
-        new WeatherOperation().execute();
-        super.onResume();
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void doThis(Boolean online) {
+        new WeatherOperationAsyncTask().execute();
     }
-
-    // Inflate the view for the fragment based on layout XML
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        final View v = inflater.inflate(R.layout.fouth_fragment, container, false);
-        cityText = (TextView) v.findViewById(R.id.location);
-        hum = (TextView) v.findViewById(R.id.humidity);
-        windSpeed = (TextView) v.findViewById(R.id.windSpeed);
-        tempMin = (TextView) v.findViewById(R.id.tempMin);
-        tempMax = (TextView) v.findViewById(R.id.tempMax);
-        sunset = (TextView) v.findViewById(R.id.sunset);
-        sunRise = (TextView) v.findViewById(R.id.sunrise);
-        if(isNetworkAvailable() )
-        {
-            Toast.makeText(getActivity(),"Connected to Network",Toast.LENGTH_SHORT).show();
-            if(isOnline())
-            {
-                Toast.makeText(getActivity(),"Getting Data from Weather Server",Toast.LENGTH_SHORT).show();
-                new WeatherOperation().execute();
-                Log.d("RUN","RUNDAWEATHER");
-            }
-            else
-            {
-                Toast.makeText(getActivity(),"Internet something wrong with the Internet",Toast.LENGTH_SHORT).show();
-                cityText.setText(getResources().getString(R.string.loading));
-            }
-
-        }
-        else
-        {
-            Toast.makeText(getActivity(),"Please connect to the Wi-Fi",Toast.LENGTH_SHORT).show();
-            cityText.setText(getResources().getString(R.string.loading));
-        }
-        return v;
-    }
-
 }
+

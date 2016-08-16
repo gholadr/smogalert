@@ -17,7 +17,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,12 +44,12 @@ import org.joda.time.DateTimeZone;
 
 import co.ghola.smogalert.async.SyncUtils;
 import co.ghola.smogalert.db.DBContract;
-import co.ghola.smogalert.fragments.LocationFragment;
-import co.ghola.smogalert.fragments.StatisticFragment;
-import co.ghola.smogalert.fragments.OneDayFragment;
-import co.ghola.smogalert.fragments.Summary2Fragment;
-import co.ghola.smogalert.fragments.SummaryFragment;
 import co.ghola.smogalert.fragments.WeatherFragment;
+import co.ghola.smogalert.fragments.OneDayFragmentDetail;
+import co.ghola.smogalert.fragments.OneDayFragment;
+import co.ghola.smogalert.fragments.OneHourFragmentDetail;
+import co.ghola.smogalert.fragments.OneHourFragment;
+import co.ghola.smogalert.fragments.WeatherFragmentDetail;
 import co.ghola.smogalert.utils.Constants;
 import co.ghola.smogalert.utils.HelperSharedPreferences;
 import hugo.weaving.DebugLog;
@@ -307,9 +306,9 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         public Fragment getItem(int position) {
             switch (position) {
                 case 0: // Fragment # 0 - This will show FirstFragment
-                    return SummaryFragment.newInstance(0, "Page # 1");
+                    return OneHourFragment.newInstance(0, "Page # 1");
                 case 1: // Fragment # 0 - This will show FirstFragment different title
-                    return Summary2Fragment.newInstance(1, "Page # 2");
+                    return OneHourFragmentDetail.newInstance(1, "Page # 2");
                 default:
                     return null;
             }
@@ -342,7 +341,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
             switch (position) {
 
                 case 0: // Fragment # 1 - This will show SecondFragment
-                    return StatisticFragment.newInstance(0, "Page # 3");
+                    return OneDayFragmentDetail.newInstance(0, "Page # 3");
                 case 1: // Fragment # 1 - This will show SecondFragment
                     return OneDayFragment.newInstance(1, "Page # 4");
                 default:
@@ -376,9 +375,9 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
             switch (position) {
 
                 case 0: // Fragment # 1 - This will show SecondFragment
-                    return LocationFragment.newInstance(0, "Page # 1");
+                    return WeatherFragment.newInstance(0, "Page # 1");
                 case 1: // Fragment # 1 - This will show SecondFragment
-                    return WeatherFragment.newInstance(1, "Page # 2");
+                    return WeatherFragmentDetail.newInstance(1, "Page # 2");
                 default:
                     return null;
             }
