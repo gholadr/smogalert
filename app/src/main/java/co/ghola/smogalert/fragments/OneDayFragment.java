@@ -205,14 +205,9 @@ public class OneDayFragment extends android.support.v4.app.Fragment {
 
         @Override
         public void onPostExecute(Cursor result) {
-            Boolean scaled = false;
             if (result.getCount() > 0) {
-                if(scaled == false)
-                {
                     mLineChart.animate().scaleXBy(0f);
                     mLineChart.animate().scaleYBy(0f);
-                    scaled = true;
-                }
                 Log.d("RESULT","COUNT"+result.getCount());
                 int size = 24;
                 List<Integer> aqis = new ArrayList<>(size);
@@ -269,6 +264,13 @@ public class OneDayFragment extends android.support.v4.app.Fragment {
 //                            }
 //                        });
             }
+            else {
+                mLineChart.animate().scaleXBy(0.65f);
+                mLineChart.animate().scaleYBy(0.65f);
+                mLineChart.setNoDataTextColor(getResources().getColor(R.color.color_white));
+                mLineChart.setNoDataText(getContext().getResources().getString(R.string.no_data));
+            }
+
             task = null;
         }
 
