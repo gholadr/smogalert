@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                 String datetimeText = getApplicationContext().getResources().getString(R.string.date_time);
                 EventBus.getDefault().postSticky(datetimeText);
                 String aqi = result.getString(DBContract.COLUMN_IDX_AQI);
-                shareText = String.format(shareText, timeText, aqi,returnBlurb(aqi));
+                shareText = String.format(getResources().getString(R.string.share), timeText, aqi,returnBlurb(aqi));
                 }
                 task = null;
             }

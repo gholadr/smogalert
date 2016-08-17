@@ -28,15 +28,7 @@ public class DayAxisValueFormatter implements AxisValueFormatter {
 
     @Override
     public String getFormattedValue(float value, AxisBase axis) {
-        if((int) value == 7){
-            return "";
-        }
-        int days = (int) value * 4;
-        if(days<=12){
-            return days+" AM";
-        } else {
-            return (days-12)+" PM";
-        }
+        return String.valueOf((int) value);
     }
 
     @Override
