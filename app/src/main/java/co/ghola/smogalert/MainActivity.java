@@ -207,18 +207,15 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                // String usEmbassyText = getApplicationContext().getResources().getString(R.string.us_embassy);
                 datetimeText = String.format(datetimeText, dateText, timeText);
                 String aqi = result.getString(DBContract.COLUMN_IDX_AQI);
-<<<<<<< Updated upstream
                // String msg = result.getString(DBContract.COLUMN_IDX_MESSAGE);
                // String blurb = "";
                 String sharedWithText = getApplicationContext().getResources().getString(R.string.shared_with);
                 shareText = getApplicationContext().getResources().getString(R.string.share);
                 shareText = String.format(shareText, timeText, aqi);
-=======
                 shareText = String.format(getResources().getString(R.string.share), timeText, aqi,returnBlurb(aqi));
 
->>>>>>> Stashed changes
                 }
-                task = null;
+            task = null;
             }
         }
 
