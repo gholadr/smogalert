@@ -28,9 +28,14 @@ public class DayAxisValueFormatter implements AxisValueFormatter {
 
     @Override
     public String getFormattedValue(float value, AxisBase axis) {
+<<<<<<< Updated upstream
       int days = (int) value;
         return days+ "";
 
+=======
+
+        return String.valueOf((int)value);
+>>>>>>> Stashed changes
     }
 
 

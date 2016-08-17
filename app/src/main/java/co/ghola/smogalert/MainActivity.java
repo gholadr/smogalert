@@ -17,6 +17,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -154,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
             @Override
             public void onClick(View view) {
 
+                Log.d("Share",shareText);
                 ShareLinkContent content = new ShareLinkContent.Builder()
                         .setContentUrl(Uri.parse("http://khoibui.co"))
                         .setContentTitle(getApplicationContext().getResources().getString(R.string.share_subject))
@@ -205,11 +207,16 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                // String usEmbassyText = getApplicationContext().getResources().getString(R.string.us_embassy);
                 datetimeText = String.format(datetimeText, dateText, timeText);
                 String aqi = result.getString(DBContract.COLUMN_IDX_AQI);
+<<<<<<< Updated upstream
                // String msg = result.getString(DBContract.COLUMN_IDX_MESSAGE);
                // String blurb = "";
                 String sharedWithText = getApplicationContext().getResources().getString(R.string.shared_with);
                 shareText = getApplicationContext().getResources().getString(R.string.share);
                 shareText = String.format(shareText, timeText, aqi);
+=======
+                shareText = String.format(getResources().getString(R.string.share), timeText, aqi,returnBlurb(aqi));
+
+>>>>>>> Stashed changes
                 }
                 task = null;
             }

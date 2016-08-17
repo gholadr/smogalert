@@ -167,7 +167,6 @@ public class OneDayFragment extends android.support.v4.app.Fragment {
         l.setForm(Legend.LegendForm.SQUARE);
         l.setFormSize(9f);
         l.setTextColor(Color.WHITE);
-
         l.setTextSize(11f);
         l.setXEntrySpace(4f);
 
@@ -209,8 +208,10 @@ public class OneDayFragment extends android.support.v4.app.Fragment {
                     result.moveToPosition(i);
                     aqis.add(Integer.parseInt(result.getString(DBContract.COLUMN_IDX_AQI)));
 
+
                 }
                 setData(23,aqis);
+
 //                Observable.from(aqis)
 //                        .map(new Func1<String, Integer>() {
 //                            @Override

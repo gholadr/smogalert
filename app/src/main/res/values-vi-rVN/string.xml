@@ -23,4 +23,10 @@
     <string name="share_subject">Báo cáo ô nhiễm không khí</string>
     <string name="share" formatted="false">Chất lượng không khí ở HCM đạt %s.  %s AQI. \n %s.\n  %s, %s"</string>
     <string name="shared_with">Chia sẻ qua SmogAlert. Tải về trên CH Play: http://www.google.com</string>
+<<<<<<< Updated upstream
+=======
+
+    <string name="loading">Đang tải...</string>
+    <string name="swipe">Vuốt để xem thêm.</string>
+>>>>>>> Stashed changes
 </resources>
