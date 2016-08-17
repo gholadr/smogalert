@@ -180,6 +180,10 @@ public class OneDayFragment extends android.support.v4.app.Fragment {
             mLineChart.animate().scaleYBy(0.65f);
             mLineChart.setNoDataTextColor(getResources().getColor(R.color.color_white));
             mLineChart.setNoDataText(getContext().getResources().getString(R.string.no_data));
+        }else
+        {
+            mLineChart.animate().scaleXBy(0f);
+            mLineChart.animate().scaleYBy(0f);
         }
 
         mLineChart.setDrawGridBackground(false);
