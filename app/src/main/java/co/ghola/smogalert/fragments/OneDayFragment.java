@@ -173,8 +173,19 @@ public class OneDayFragment extends android.support.v4.app.Fragment {
         mLineChart.setMarkerView(new XYMarkerView(getContext(), xAxisFormatter));
         mLineChart.setGridBackgroundColor(Color.WHITE);
         mLineChart.setBorderColor(Color.WHITE);
-        mLineChart.setDescription("");
-        mLineChart.setNoDataText("There are no data currently");
+        mLineChart.setDescription(null);
+        if(mLineChart.isEmpty())
+        {
+            mLineChart.animate().scaleXBy(0.65f);
+            mLineChart.animate().scaleYBy(0.65f);
+            mLineChart.setNoDataTextColor(getResources().getColor(R.color.color_white));
+            mLineChart.setNoDataText(getContext().getResources().getString(R.string.no_data));
+        }else
+        {
+            mLineChart.animate().scaleXBy(0f);
+            mLineChart.animate().scaleYBy(0f);
+        }
+
         mLineChart.setDrawGridBackground(false);
         mLineChart.getAxisLeft().setDrawGridLines(false);
         mLineChart.getXAxis().setDrawGridLines(false);
@@ -194,8 +205,9 @@ public class OneDayFragment extends android.support.v4.app.Fragment {
 
         @Override
         public void onPostExecute(Cursor result) {
-
             if (result.getCount() > 0) {
+                    mLineChart.animate().scaleXBy(0f);
+                    mLineChart.animate().scaleYBy(0f);
                 Log.d("RESULT","COUNT"+result.getCount());
                 int size = 24;
                 List<Integer> aqis = new ArrayList<>(size);
@@ -252,6 +264,13 @@ public class OneDayFragment extends android.support.v4.app.Fragment {
 //                            }
 //                        });
             }
+            else {
+                mLineChart.animate().scaleXBy(0.65f);
+                mLineChart.animate().scaleYBy(0.65f);
+                mLineChart.setNoDataTextColor(getResources().getColor(R.color.color_white));
+                mLineChart.setNoDataText(getContext().getResources().getString(R.string.no_data));
+            }
+
             task = null;
         }
 
