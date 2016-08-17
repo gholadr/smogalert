@@ -201,10 +201,14 @@ public class OneDayFragment extends android.support.v4.app.Fragment {
 
         @Override
         public void onPostExecute(Cursor result) {
-
+            Boolean scaled = false;
             if (result.getCount() > 0) {
-                mLineChart.animate().scaleXBy(0f);
-                mLineChart.animate().scaleYBy(0f);
+                if(scaled == false)
+                {
+                    mLineChart.animate().scaleXBy(0f);
+                    mLineChart.animate().scaleYBy(0f);
+                    scaled = true;
+                }
                 Log.d("RESULT","COUNT"+result.getCount());
                 int size = 24;
                 List<Integer> aqis = new ArrayList<>(size);
