@@ -210,49 +210,6 @@ public class OneDayFragment extends android.support.v4.app.Fragment {
                 }
                 setData(23,aqis);
                 rescale();
-
-//                Observable.from(aqis)
-//                        .map(new Func1<String, Integer>() {
-//                            @Override
-//                            public Integer call(String s) {
-//                                return Integer.parseInt(s);
-//                            }
-//                        })
-//                        .buffer(24)
-//                        .map(new Func1<List<Integer>, Integer>() {
-//                            @Override
-//                            public Integer call(List<Integer> integers) {
-//                                int sum = 0;
-//                                for (int i = 0, size = integers.size(); i < size; i++) {
-//                                    sum += integers.get(i);
-//                                    Log.d("check",""+integers.get(i));
-//                                }
-//                                Log.d("check",""+integers.size());
-//                                return sum / integers.size();
-//                            }
-//                        })
-//                        .toList()
-//                        .subscribe(new Subscriber<List<Integer>>() {
-//                            @Override
-//                            public void onCompleted() {
-//
-//                            }
-//
-//                            @Override
-//                            public void onError(Throwable e) {
-//
-//                            }
-//
-//                            @Override
-//                            public void onNext(List<Integer> integers) {
-//                                integerList.addAll(integers);
-//                                Log.d("integer",""+integers);
-//                                integerList = InteArray;
-//                                setData(23,integers);
-//
-//                                //list average of each 24 elements
-//                            }
-//                        });
             }
 
             task = null;

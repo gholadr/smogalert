@@ -98,30 +98,4 @@
     </RelativeLayout>
 
 
-    <!-- Here the current weather data -->
-
-    <!-- Temperature data -->
-
-    <!-- End temp Data -->
-
-    <!-- Wind data -->
-    <!-- End wind Data -->
-
-    <!-- Humidity -->
-    <!-- End Humidity Data -->
-
-    <!-- Pressure data -->
-    <!-- End Pressure data -->
-
-    <!-- Astronomy -->
-
-    <!-- End astronomy -->
-
-    <!-- Rain -->
-
-    <!-- End Rain -->
-
-    <!-- Cloud -->
-
-
 </RelativeLayout>

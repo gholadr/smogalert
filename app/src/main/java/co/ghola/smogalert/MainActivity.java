@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
         Iconify.with(new FontAwesomeModule());
-        EventBus.getDefault().register(this);
+       // EventBus.getDefault().register(this);
         //setting up SyncService
         FacebookSdk.sdkInitialize(getApplicationContext());
         shareDialog = new ShareDialog(this);
@@ -167,12 +167,12 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
     }
 
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void doThis(String text){
-        if (task == null) task=new LoadCursorTask(this).execute(new Integer(Constants.LAST_HOUR));
-
-    }
+//
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void doThis(String text){
+//        if (task == null) task=new LoadCursorTask(this).execute(new Integer(Constants.LAST_HOUR));
+//
+//    }
 
 
     @Override
@@ -283,7 +283,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     public void onResume() {
 
         super.onResume();
-        if (task==null) task=new LoadCursorTask(this).execute(new Integer(Constants.LAST_HOUR));
+     //   if (task==null) task=new LoadCursorTask(this).execute(new Integer(Constants.LAST_HOUR));
 
     }
 
