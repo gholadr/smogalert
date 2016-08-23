@@ -1,5 +1,6 @@
 package co.ghola.smogalert;
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -56,9 +57,8 @@ import hugo.weaving.DebugLog;
 import io.fabric.sdk.android.Fabric;
 
 
-public class MainActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, NavigationView.OnNavigationItemSelectedListener, OneHourFragment.OnFabSelectedListener {
 
-    private AsyncTask task = null;
     //private static String TAG = MainActivity.class.getSimpleName();
     private String shareText = null;
     private FragmentPagerAdapter mAdapterViewPager;
@@ -144,17 +144,10 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         CirclePageIndicator titleIndicator3 = (CirclePageIndicator) findViewById(R.id.indicator3);
         titleIndicator3.setViewPager(vpPager3);
 
-
         //Setting up Fab Button
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         assert fab != null;
 
-        if(task == null) {
-            task = new LoadCursorTask(this).execute(new Integer(Constants.LAST_HOUR));
-        }
-        else{
-            task.execute(new Integer(Constants.LAST_HOUR));
-        }
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -173,14 +166,21 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
 
     }
-
-//
-//    @Subscribe(threadMode = ThreadMode.MAIN)
-//    public void doThis(String text){
-//        if (task == null) task=new LoadCursorTask(this).execute(new Integer(Constants.LAST_HOUR));
-//
-//    }
-
+    public String returnBlurb(String aqi) {
+        if (aqi != null || aqi != "") {
+            Integer convertedAqi = Integer.parseInt(aqi);
+            if (convertedAqi.intValue() > 151) {
+                return getApplicationContext().getResources().getString(R.string.unhealthy_blurb);
+            } else if (convertedAqi.intValue() > 100) {
+                return getApplicationContext().getResources().getString(R.string.sensitive_blurb);
+            } else if (convertedAqi.intValue() > 51) {
+                return getApplicationContext().getResources().getString(R.string.moderate_blurb);
+            } else {
+                return getApplicationContext().getResources().getString(R.string.good_blurb);
+            }
+        }
+        return "";
+    }
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -189,57 +189,9 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
     }
 
-    private class LoadCursorTask extends BaseTask<Integer> {
-        LoadCursorTask(Context ctxt) {
-            super(ctxt);
-        }
-
-        @Override
-        protected Cursor doInBackground(Integer... params) {
-            int post = params[0].intValue();
-            return (doQuery(post));
-        }
-        @Override
-        public void onPostExecute(Cursor result) {
-            if (result.getCount() > 0) {
-                result.moveToPosition(0);
-                DateTime d = new DateTime((result.getLong(DBContract.COLUMN_IDX_TS) * 1000), DateTimeZone.UTC);
-                String timeText = d.toString("h a");
-                String datetimeText = getApplicationContext().getResources().getString(R.string.date_time);
-                EventBus.getDefault().postSticky(datetimeText);
-                String aqi = result.getString(DBContract.COLUMN_IDX_AQI);
-                shareText = String.format(getResources().getString(R.string.share), timeText, aqi,returnBlurb(aqi));
-                }
-                task = null;
-            }
-        }
-
-
-        public String returnBlurb(String aqi) {
-            if (aqi != null || aqi != "") {
-                Integer convertedAqi = Integer.parseInt(aqi);
-                if (convertedAqi.intValue() > 151) {
-                    return getApplicationContext().getResources().getString(R.string.unhealthy_blurb);
-                } else if (convertedAqi.intValue() > 100) {
-                    return getApplicationContext().getResources().getString(R.string.sensitive_blurb);
-                } else if (convertedAqi.intValue() > 51) {
-                    return getApplicationContext().getResources().getString(R.string.moderate_blurb);
-                } else {
-                    return getApplicationContext().getResources().getString(R.string.good_blurb);
-                }
-            }
-            return "";
-        }
-
-
     @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+    public void OnFabSelected(String aqi, String timeText) {
+        shareText = String.format(getResources().getString(R.string.share), timeText, aqi,returnBlurb(aqi));
     }
 
     @Override
@@ -288,10 +240,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
     @Override
     public void onResume() {
-
         super.onResume();
-     //   if (task==null) task=new LoadCursorTask(this).execute(new Integer(Constants.LAST_HOUR));
-
     }
 
 

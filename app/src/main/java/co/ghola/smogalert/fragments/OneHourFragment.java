@@ -1,5 +1,6 @@
 package co.ghola.smogalert.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Typeface;
@@ -38,6 +39,28 @@ public class OneHourFragment extends Fragment {
     private String mTimeText;
     public TextView tvAQI;
     Typeface mTypeFace;
+
+    OnFabSelectedListener mCallback;
+
+    // Container Activity must implement this interface
+    public interface OnFabSelectedListener {
+        public void OnFabSelected(String aqi, String timetext);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mCallback = (OnFabSelectedListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnFabSelectedListener");
+        }
+    }
+
     // newInstance constructor for creating fragment with arguments
     public static OneHourFragment newInstance(int page, String title) {
         OneHourFragment mOneHourFragment = new OneHourFragment();
@@ -85,6 +108,7 @@ public class OneHourFragment extends Fragment {
                 String mAQI= result.getString(DBContract.COLUMN_IDX_AQI);
                 tvTime.setText(mTimeText);
                 tvAQI.setText(mAQI+ " AQI");
+                mCallback.OnFabSelected(mAQI, mTimeText);
             }
             task = null;
         }
@@ -123,6 +147,9 @@ public class OneHourFragment extends Fragment {
         tvAQI.setTypeface(mTypeFace);
         tvTime.setTypeface(mTypeFace);
         return view;
+    }
+    public interface OnDataPass {
+        public void onDataPass(String data);
     }
 
 }
