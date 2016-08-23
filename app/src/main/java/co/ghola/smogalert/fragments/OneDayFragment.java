@@ -6,6 +6,9 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
+import android.text.Html;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,9 +49,12 @@ public class OneDayFragment extends android.support.v4.app.Fragment {
     private LineChart mLineChart;
     private AsyncTask task = null;
     List<Integer> integerList = new ArrayList<>();
-    List<Integer> InteArray = new ArrayList<>();
+    List<Integer> arrays = new ArrayList<>();
     private Handler mHandler = new Handler();
-
+    int size = 24;
+    float scale = 0f;
+    View v;
+    List<Integer> aqis = new ArrayList<>(size);
 
     // newInstance constructor for creating fragment with arguments
     public static OneDayFragment newInstance(int page, String title) {
@@ -91,6 +97,7 @@ public class OneDayFragment extends android.support.v4.app.Fragment {
             set1.setValues(yVals1);
             mLineChart.getData().notifyDataChanged();
             mLineChart.notifyDataSetChanged();
+
         } else {
             set1 = new LineDataSet(yVals1,null);
             set1.setColor(Color.WHITE);
@@ -103,16 +110,14 @@ public class OneDayFragment extends android.support.v4.app.Fragment {
             set1.setDrawFilled(true);
             ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
             dataSets.add(set1);
-
             LineData data = new LineData(dataSets);
             data.setValueTextSize(10f);
             data.setValueTextColor(Color.WHITE);
             data.setDrawValues(false);
-            //data.setValueTypeface(mTfLight);
-            //data.s(0.9f);
             mLineChart.animateX(2500);
             mLineChart.setData(data);
         }
+
     }
 
 
@@ -120,8 +125,8 @@ public class OneDayFragment extends android.support.v4.app.Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.one_day_fragment_detail, container, false);
-        mLineChart = (LineChart) view.findViewById(R.id.chart);
+        v = inflater.inflate(R.layout.one_day_fragment_detail, container, false);
+        mLineChart = (LineChart) v.findViewById(R.id.chart);
         AxisValueFormatter xAxisFormatter = new DayAxisValueFormatter(mLineChart);
 
         XAxis xAxis = mLineChart.getXAxis();
@@ -137,9 +142,7 @@ public class OneDayFragment extends android.support.v4.app.Fragment {
 
 
         AxisValueFormatter custom = new MyAxisValueFormatter();
-
         YAxis leftAxis = mLineChart.getAxisLeft();
-        //leftAxis.setTypeface(mTfLight);
         leftAxis.setLabelCount(8, false);
         leftAxis.setValueFormatter(custom);
         leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
@@ -165,33 +168,23 @@ public class OneDayFragment extends android.support.v4.app.Fragment {
         l.setForm(Legend.LegendForm.SQUARE);
         l.setFormSize(9f);
         l.setTextColor(Color.WHITE);
-
-        l.setTextSize(11f);
+        l.setTextSize(50f);
         l.setXEntrySpace(4f);
+        mLineChart.getLegend().setEnabled(false);
 
-        //Set LineChart Attribute
         mLineChart.setMarkerView(new XYMarkerView(getContext(), xAxisFormatter));
         mLineChart.setGridBackgroundColor(Color.WHITE);
         mLineChart.setBorderColor(Color.WHITE);
         mLineChart.setDescription(null);
-        if(mLineChart.isEmpty())
-        {
-            mLineChart.animate().scaleXBy(0.65f);
-            mLineChart.animate().scaleYBy(0.65f);
-            mLineChart.setNoDataTextColor(getResources().getColor(R.color.color_white));
-            mLineChart.setNoDataText(getContext().getResources().getString(R.string.no_data));
-        }else
-        {
-            mLineChart.animate().scaleXBy(0f);
-            mLineChart.animate().scaleYBy(0f);
-        }
-
+        mLineChart.setNoDataTextColor(getResources().getColor(R.color.color_white));
+        mLineChart.setNoDataText(getContext().getResources().getString(R.string.no_data));
         mLineChart.setDrawGridBackground(false);
         mLineChart.getAxisLeft().setDrawGridLines(false);
         mLineChart.getXAxis().setDrawGridLines(false);
         mLineChart.animateX(1300);
-
-        return view;
+        checkData();
+        rescale();
+        return v;
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void doThis(String text) {
@@ -206,11 +199,7 @@ public class OneDayFragment extends android.support.v4.app.Fragment {
         @Override
         public void onPostExecute(Cursor result) {
             if (result.getCount() > 0) {
-                    mLineChart.animate().scaleXBy(0f);
-                    mLineChart.animate().scaleYBy(0f);
                 Log.d("RESULT","COUNT"+result.getCount());
-                int size = 24;
-                List<Integer> aqis = new ArrayList<>(size);
                 if(aqis.size() <= 24)
                 {
                     size = result.getCount();
@@ -218,9 +207,10 @@ public class OneDayFragment extends android.support.v4.app.Fragment {
                 for (int i = 0; i < size; i++) {
                     result.moveToPosition(i);
                     aqis.add(Integer.parseInt(result.getString(DBContract.COLUMN_IDX_AQI)));
-
                 }
                 setData(23,aqis);
+                rescale();
+
 //                Observable.from(aqis)
 //                        .map(new Func1<String, Integer>() {
 //                            @Override
@@ -264,12 +254,6 @@ public class OneDayFragment extends android.support.v4.app.Fragment {
 //                            }
 //                        });
             }
-            else {
-                mLineChart.animate().scaleXBy(0.65f);
-                mLineChart.animate().scaleYBy(0.65f);
-                mLineChart.setNoDataTextColor(getResources().getColor(R.color.color_white));
-                mLineChart.setNoDataText(getContext().getResources().getString(R.string.no_data));
-            }
 
             task = null;
         }
@@ -287,7 +271,24 @@ public class OneDayFragment extends android.support.v4.app.Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (task == null)
+        if (task == null) {
+            checkData();
+            rescale();
             task = new LoadCursorTask(getActivity()).execute(new Integer(Constants.LAST_24_HOURS));
+
+        }
     }
+    private void checkData() {
+        if (aqis.size() < 23 ) {
+            mLineChart.setScaleX(1.65f);
+            mLineChart.setScaleY(1.65f);
+        }
+    }
+    private void rescale() {
+        if (aqis.size() > 0) {
+            mLineChart.setScaleX(0.999f);
+            mLineChart.setScaleY(0.999f);
+        }
+    }
+
 }
