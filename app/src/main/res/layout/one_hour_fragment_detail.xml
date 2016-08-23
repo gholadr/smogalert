@@ -34,7 +34,7 @@
 
             android:textAlignment="center"
             android:textColor="#FFFFFF"
-            android:textSize="13sp"
+            android:textSize="18sp"
             android:lines="3"
             />
 

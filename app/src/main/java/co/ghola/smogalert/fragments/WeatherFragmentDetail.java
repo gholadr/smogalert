@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.survivingwithandroid.weather.lib.WeatherClient;
@@ -18,6 +20,10 @@ import com.survivingwithandroid.weather.lib.model.CurrentWeather;
 import com.survivingwithandroid.weather.lib.model.Weather;
 import com.survivingwithandroid.weather.lib.provider.openweathermap.OpenweathermapProviderType;
 import com.survivingwithandroid.weather.lib.request.WeatherRequest;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,16 +38,16 @@ public class WeatherFragmentDetail extends Fragment {
     // Store instance variables
     private String title;
     private int page;
-    WeatherClient weatherClient;
     String cityId= "1851632";
     WeatherRequest req = new WeatherRequest(cityId);
-    private TextView cityText;
     private TextView hum;
     private TextView windSpeed;
     private TextView tempMin;
     private TextView tempMax;
     private TextView sunRise;
     private TextView sunset;
+    private TextView noData;
+    private RelativeLayout layout;
 
     // newInstance constructor for creating fragment with arguments
     public static WeatherFragmentDetail newInstance(int page, String title) {
@@ -57,27 +63,11 @@ public class WeatherFragmentDetail extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
         page = getArguments().getInt("someInt", 0);
         title = getArguments().getString("someTitle");
 
     }
-//    private Boolean isNetworkAvailable() {
-//        ConnectivityManager connectivityManager
-//                = (ConnectivityManager) getActivity().getSystemService(getContext().CONNECTIVITY_SERVICE);
-//        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-//        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
-//    }
-//    public boolean isOnline() {
-//        Runtime runtime = Runtime.getRuntime();
-//        try {
-//            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
-//            int     exitValue = ipProcess.waitFor();
-//            return (exitValue == 0);
-//        } catch (IOException e)          { e.printStackTrace(); }
-//        catch (InterruptedException e) { e.printStackTrace(); }
-//        return false;
-//    }
-
 
     private class WeatherOperationAsyncTask extends AsyncTask<Void, Void , HashMap>
     {
@@ -117,16 +107,20 @@ public class WeatherFragmentDetail extends Fragment {
                     windSpeed.setText(weather.wind.getSpeed() + currentWeather.getUnit().speedUnit);
                     sunset.setText(WeatherUtil.convertDate(weather.location.getSunset()));
                     sunRise.setText(WeatherUtil.convertDate(weather.location.getSunrise()));
+                    noData.setVisibility(View.INVISIBLE);
+                    layout.setVisibility(View.VISIBLE);
                         }
 
                 @Override
                 public void onConnectionError(Throwable t) {
-                    Log.d("WL", "Connection Error - parsing data");
+                    Log.e(WeatherFragmentDetail.class.getSimpleName(), "Connection Error - parsing data");
+                    noData.setVisibility(View.VISIBLE);
+                    layout.setVisibility(View.INVISIBLE);
                 }
 
                 @Override
                 public void onWeatherError(WeatherLibException wle) {
-                    Log.d("WL", "Weather Error - parsing data");
+                    Log.e(WeatherFragment.class.getSimpleName(), "Weather Error - parsing data");
                     wle.printStackTrace();
                 }
             });
@@ -152,35 +146,21 @@ public class WeatherFragmentDetail extends Fragment {
                              Bundle savedInstanceState) {
         Log.d(WeatherOperationAsyncTask.class.getSimpleName(), "onCreateView");
         final View v = inflater.inflate(R.layout.weather_fragment_detail, container, false);
-       // cityText = (TextView) v.findViewById(R.id.location);
+        noData= (TextView) v.findViewById(R.id.no_data);
+        layout = (RelativeLayout) v.findViewById(R.id.weather_box);
         hum = (TextView) v.findViewById(R.id.humidity);
         windSpeed = (TextView) v.findViewById(R.id.windSpeed);
         tempMin = (TextView) v.findViewById(R.id.tempMin);
         tempMax = (TextView) v.findViewById(R.id.tempMax);
         sunset = (TextView) v.findViewById(R.id.sunset);
         sunRise = (TextView) v.findViewById(R.id.sunrise);
-//        if(isNetworkAvailable() )
-//        {
-//            Toast.makeText(getActivity(),"Connected to Network",Toast.LENGTH_SHORT).show();
-//            if(isOnline())
-//            {
-//                Toast.makeText(getActivity(),"Getting Data from Weather Server",Toast.LENGTH_SHORT).show();
-//                new WeatherOperation().execute();
-//                Log.d("RUN","RUNDAWEATHER");
-//            }
-//            else
-//            {
-//                Toast.makeText(getActivity(),"Internet something wrong with the Internet",Toast.LENGTH_SHORT).show();
-//                cityText.setText(getResources().getString(R.string.loading));
-//            }
-//
-//        }
-//        else
-//        {
-//            Toast.makeText(getActivity(),"Please connect to the Wi-Fi",Toast.LENGTH_SHORT).show();
-//            cityText.setText(getResources().getString(R.string.loading));
-//        }
         return v;
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void doThis(Boolean online) {
+        new WeatherOperationAsyncTask().execute();
     }
 
 }

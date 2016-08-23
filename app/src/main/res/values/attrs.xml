@@ -8,11 +8,9 @@
         <attr name="metaButtonBarStyle" format="reference" />
         <attr name="metaButtonBarButtonStyle" format="reference" />
     </declare-styleable>
+    <!--<declare-styleable name="GaugeView">-->
 
-    <declare-styleable name="GaugeView">
-
-        <attr name="value" format="string"/>
-    </declare-styleable>
-
+        <!--<attr name="value" format="string"/>-->
+    <!--</declare-styleable>-->
 
 </resources>
