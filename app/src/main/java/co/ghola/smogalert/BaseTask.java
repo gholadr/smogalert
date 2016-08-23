@@ -4,6 +4,8 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.util.Log;
+
 import co.ghola.smogalert.db.DBContract;
 import hugo.weaving.DebugLog;
 
@@ -22,6 +24,7 @@ abstract public class BaseTask<T> extends AsyncTask<Integer, Void, Cursor> {
     protected Cursor doQuery(int count) {
         String args = String.format("ts DESC LIMIT %s", count);
         Cursor result=resolver.query(DBContract.AirQualitySample.CONTENT_URI, DBContract.PROJECTION, null, null, args);
+        Log.d(BaseTask.class.getSimpleName(), "doQuery:" + count);
 
         return(result);
     }

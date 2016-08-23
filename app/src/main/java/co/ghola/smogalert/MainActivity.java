@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
     private AsyncTask task = null;
     //private static String TAG = MainActivity.class.getSimpleName();
-    private String shareText = "";
+    private String shareText = null;
     private FragmentPagerAdapter mAdapterViewPager;
     private FragmentPagerAdapter mAdapterViewPager1;
     private FragmentPagerAdapter mAdapterViewPager2;
@@ -83,7 +83,6 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
         Iconify.with(new FontAwesomeModule());
-       // EventBus.getDefault().register(this);
         //setting up SyncService
         FacebookSdk.sdkInitialize(getApplicationContext());
         shareDialog = new ShareDialog(this);
@@ -93,7 +92,6 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        shareDialog = new ShareDialog(this);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -150,10 +148,19 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         //Setting up Fab Button
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         assert fab != null;
+
+        if(task == null) {
+            task = new LoadCursorTask(this).execute(new Integer(Constants.LAST_HOUR));
+        }
+        else{
+            task.execute(new Integer(Constants.LAST_HOUR));
+        }
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                if (shareText== null)
+                    shareText = getApplicationContext().getResources().getString(R.string.no_data);
                 ShareLinkContent content = new ShareLinkContent.Builder()
                         .setContentUrl(Uri.parse(getResources().getString(R.string.share_link)))
                         .setContentTitle(getApplicationContext().getResources().getString(R.string.share_subject))
