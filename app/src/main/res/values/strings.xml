@@ -10,9 +10,9 @@
     <string name="notifications">Turn Off Pollution Alerts</string>
     <string name="good">Good Air Quality</string>
     <string name="moderate">Moderate Air Quality</string>
-    <string name="moderate_msg">Moderate</string>
-    <string name="healthy_msg">Healthy</string>
-    <string name="unhelthy_msg">Unhealthy</string>
+    <!--<string name="moderate_msg">Moderate</string>-->
+    <!--<string name="healthy_msg">Healthy</string>-->
+    <!--<string name="unhelthy_msg">Unhealthy</string>-->
     <string name="sensitive">Unhealthy for Sensitive Groups</string>
     <string name="unhealthy">Unhealthy</string>
     <string name="good_blurb">The air is fresh. Enjoy the outdoors!</string>
@@ -25,7 +25,7 @@
     <string name="date_time" formatted="false">%s, %s</string>
     <string name="share_subject">Air Pollution Report</string>
     <string name="share" formatted="false">AQI at %s is %s.%s</string>
-    <string name="shared_with">Shared with SmogAlert. Get it on Play store here: http://www.google.com</string>
+    <string name="shared_with">Shared with Khói Bụi. Get it on Play store here: http://www.google.com</string>
     <string name="loading">Loading...</string>
     <string name="swipe">Swipe to view the last 24 hours</string>
     <string name="current_weather">Current Weather</string>

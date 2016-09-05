@@ -1,3 +1,4 @@
+khoibui.jks
 *.iml
 .gradle
 /local.properties
@@ -13,3 +14,4 @@
 /test
 /app/app-release.apk
 .idea/
+/app/*

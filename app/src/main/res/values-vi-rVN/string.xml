@@ -22,8 +22,9 @@
     <string name="date_time" formatted="false">%s, %s</string>
     <string name="share_subject">Báo cáo ô nhiễm không khí</string>
     <string name="share" formatted="false">AQI vào lúc %s là %s. %s</string>
-    <string name="shared_with">Chia sẻ qua SmogAlert. Tải về trên CH Play: http://www.google.com</string>
+    <string name="shared_with">Chia sẻ qua Khói Bụi. Tải về trên CH Play: http://www.google.com</string>
     <string name="loading">Đang tải...</string>
     <string name="swipe">Vuốt để xem thêm.</string>
+    <string name="current_weather">Thời Tiết Hiện Tại</string>
     <string name="no_data">Không có dữ liệu, xin hãy thử lại</string>
 </resources>

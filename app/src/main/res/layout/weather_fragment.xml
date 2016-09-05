@@ -92,7 +92,6 @@
             android:layout_height="3dp"
 
             android:id="@+id/lineTxt"
-            android:layout_below="@id/temp"
             android:layout_marginTop="0dp" />
 
     </RelativeLayout>

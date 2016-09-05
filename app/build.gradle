@@ -32,8 +32,8 @@ android {
         applicationId "co.ghola.smogalert"
         minSdkVersion 17
         targetSdkVersion 23
-        versionCode 1
-        versionName "alpha"
+        versionCode 2
+        versionName "1.0"
         multiDexEnabled true
     }
     buildTypes {
@@ -49,7 +49,7 @@ android {
         }
 
         prod {
-            applicationId "co.ghola.smogalert.release"
+            applicationId "co.ghola.smogalert"
         }
         applicationVariants.all { variant ->
             variant.outputs.each { output ->
