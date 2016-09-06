@@ -36,6 +36,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Khói Bụi là ứng dụng thời gian thực, và có độ chính xác cao để đo chất lượng không khí ở Thành Phố Hồ Chí Minh.">
     <meta name="author" content="Khói Bụi">
+    <meta property="fb:app_id" content="1051710394878963"  />
      <meta property="og:title" content="Khói Bụi" />
      <meta property="og:site_name" content="Khói Bụi"/>
      <meta property="og:url" content="http://khoibui.co" />
@@ -97,7 +98,7 @@
                 <li>
                     <a class="page-scroll" href="/en">EN</a>
                 </li>
-                <li><a style="padding:0" href='https://play.google.com/store/apps/details?id=com.disruptorbeam.StarTrekTimelines&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' height="50" width="129" src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a></li>
+                <li><a style="padding:0" href='https://play.google.com/store/apps/details?id=co.ghola.smogalert'><img alt='Get it on Google Play' height="50" width="129" src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a></li>
 
         </div>
         <!-- /.navbar-collapse -->
@@ -177,7 +178,7 @@ Khói Bụi</h1>
             ">
                     <h2>Tải về Khói Bụi</h2>
                     <p>Bạn có thể tải Khói Bụi ở Google Play Store.</p>
-                    <a href='https://play.google.com/store/apps/details?id=com.disruptorbeam.StarTrekTimelines&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' height="100" width="255" src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
+                    <a href='https://play.google.com/store/apps/details?id=co.ghola.smogalert'><img alt='Get it on Google Play' height="100" width="255" src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
                 </div>
             </div>
         </div>
