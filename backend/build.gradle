@@ -20,13 +20,13 @@ apply plugin: 'com.google.cloud.tools.endpoints-framework-server'
 
 dependencies {
     // V2: Endpoints Framework v2 migration
-    compile 'com.google.endpoints:endpoints-framework:2.0.9'
-    compile 'com.googlecode.objectify:objectify:5.1.11'
-    compile 'javax.servlet:servlet-api:2.5'
-    compile 'rome:rome:1.0'
-    compile 'joda-time:joda-time:2.9.2'
-    compile 'com.google.endpoints:endpoints-management-control-appengine:1.0.5'
-    compile 'com.google.endpoints:endpoints-framework-auth:1.0.5'
+    implementation 'com.google.endpoints:endpoints-framework:2.0.9'
+    implementation 'com.googlecode.objectify:objectify:5.1.11'
+    implementation 'javax.servlet:servlet-api:2.5'
+    implementation 'rome:rome:1.0'
+    implementation 'joda-time:joda-time:2.9.2'
+    implementation 'com.google.endpoints:endpoints-management-control-appengine:1.0.5'
+    implementation 'com.google.endpoints:endpoints-framework-auth:1.0.5'
 }
 
 
