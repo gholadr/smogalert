@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
     <application>smogalert-1248</application>
+    <env-variables>
+        <env-var name="ENDPOINTS_SERVICE_NAME" value="smogalert-1248.appspot.com" />
+    </env-variables>
     <version>2</version>
     <runtime>java8</runtime>
     <threadsafe>true</threadsafe>
