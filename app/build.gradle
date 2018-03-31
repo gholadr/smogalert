@@ -7,6 +7,7 @@ buildscript {
 
     dependencies {
         classpath 'io.fabric.tools:gradle:1.+'
+        classpath 'com.google.cloud.tools:endpoints-framework-gradle-plugin:1.0.2'
     }
 }
 allprojects {
@@ -17,6 +18,9 @@ allprojects {
 }
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
+
+// V2: Apply the new Endpoints Framework client plugin
+apply plugin: 'com.google.cloud.tools.endpoints-framework-client'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
@@ -64,7 +68,7 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    //compile project(path: ':backend', configuration: 'endpointsServer')
+
     //noinspection GradleCompatible
     compile 'com.android.support:appcompat-v7:27.0.2'
     compile 'com.android.support:recyclerview-v7:27.0.2'
@@ -87,4 +91,8 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
         transitive = true;
     }
+    // V2: Endpoints Framework v2 migration
+    endpointsServer project(path: ':backend', configuration: 'endpoints')
+    compile 'com.google.api-client:google-api-client:+'
+    compile 'com.google.http-client:google-http-client-android:1.22.0'
 }
