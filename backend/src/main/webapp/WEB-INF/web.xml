@@ -14,12 +14,12 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>rssfetcher</servlet-name>
-        <servlet-class>co.ghola.backend.service.RssFetcher</servlet-class>
+        <servlet-name>airnow</servlet-name>
+        <servlet-class>co.ghola.backend.service.AirNowAPI</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>rssfetcher</servlet-name>
-        <url-pattern>/rssfetch</url-pattern>
+        <servlet-name>airnow</servlet-name>
+        <url-pattern>/airnow</url-pattern>
     </servlet-mapping>
     <servlet>
         <servlet-name>khoibui-en</servlet-name>

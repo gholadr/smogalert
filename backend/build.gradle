@@ -27,6 +27,8 @@ dependencies {
     implementation 'joda-time:joda-time:2.9.2'
     implementation 'com.google.endpoints:endpoints-management-control-appengine:1.0.5'
     implementation 'com.google.endpoints:endpoints-framework-auth:1.0.5'
+
+    implementation 'io.rest-assured:rest-assured:3.0.7'
 }
 
 

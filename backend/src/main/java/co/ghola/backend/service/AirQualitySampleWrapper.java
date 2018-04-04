@@ -27,6 +27,7 @@ public final class AirQualitySampleWrapper {
     private  AirQualitySampleWrapper(){
 
     }
+
     public static AirQualitySampleWrapper getInstance(){
 
         return instance;

@@ -28,8 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import co.ghola.backend.entity.AirQualitySample;
 
-// [START example]
-@SuppressWarnings("serial")
+
 public class RssFetcher extends HttpServlet {
 
     private static AirQualitySampleWrapper api =   AirQualitySampleWrapper.getInstance();
@@ -39,10 +38,6 @@ public class RssFetcher extends HttpServlet {
     private List<AirQualitySample> rssList = new ArrayList<>();
 
     private final static String RSS_URL ="http://www.stateair.net/dos/RSS/HoChiMinhCity/HoChiMinhCity-PM2.5.xml";
-
-   // private static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
-
-   // private static DateTimeFormatter format =  DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 
     private static Logger log = Logger.getLogger(RssFetcher.class.getName());
 
