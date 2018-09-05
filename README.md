@@ -24,7 +24,7 @@ https://apis-explorer.appspot.com/apis-explorer/?base=http%3A%2F%2Flocalhost%3A8
 
 This app uses:
 
- [Rome 1.0](https://github.com/rometools/rome) for rss parsing
+ [AirNow](https://docs.airnowapi.org/) to retrieve air pollution data from the US Embassy in HCMC.
 
  [Objectify](https://github.com/objectify/objectify) as a simple interface to GAE's datastore
 
